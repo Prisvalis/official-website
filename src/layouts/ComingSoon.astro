@@ -26,9 +26,14 @@ const year = new Date().getFullYear();
 
 		<div class="page">
 			<header class="topbar">
-				<a class="brand" href={LOCALE_HOME[locale]} aria-label={COMPANY.nameEn}>
-					<span class="brand-mark" aria-hidden="true">P</span>
-					<span class="brand-name">{COMPANY.shortEn}</span>
+				<a class="brand" href={LOCALE_HOME[locale]}>
+					<img
+						class="brand-logo"
+						src="/logo.png"
+						alt={COMPANY.nameEn}
+						width="583"
+						height="86"
+					/>
 				</a>
 
 				<nav class="controls">
@@ -154,24 +159,11 @@ const year = new Date().getFullYear();
 			.brand {
 				display: inline-flex;
 				align-items: center;
-				gap: 0.6rem;
-				color: var(--text);
-				font-weight: 600;
-				letter-spacing: 0.01em;
 			}
-			.brand-mark {
-				display: grid;
-				place-items: center;
-				width: 34px;
-				height: 34px;
-				border-radius: 9px;
-				color: #fff;
-				font-weight: 700;
-				background: linear-gradient(135deg, var(--accent), var(--accent-2));
-				box-shadow: var(--shadow);
-			}
-			.brand-name {
-				font-size: 1.05rem;
+			.brand-logo {
+				display: block;
+				height: 28px;
+				width: auto;
 			}
 
 			.controls {
@@ -324,8 +316,8 @@ const year = new Date().getFullYear();
 			}
 
 			@media (max-width: 480px) {
-				.brand-name {
-					display: none;
+				.brand-logo {
+					height: 24px;
 				}
 			}
 		</style>
