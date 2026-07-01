@@ -257,8 +257,10 @@ const year = new Date().getFullYear();
 
 			.title {
 				margin: 1.4rem 0 0;
+				/* Extra room so gradient-clipped descenders (g, y, p) aren't cut off */
+				padding-bottom: 0.12em;
 				font-size: clamp(2.75rem, 9vw, 6rem);
-				line-height: 1.02;
+				line-height: 1.12;
 				letter-spacing: -0.03em;
 				font-weight: 800;
 				background: linear-gradient(180deg, var(--text), var(--text-muted));
