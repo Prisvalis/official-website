@@ -1,0 +1,331 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import { COMPANY, LOCALE_HOME, type Locale } from "../consts";
+import { t } from "../i18n/ui";
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const htmlLang = t(locale, "html.lang");
+const otherLocale: Locale = locale === "zh-Hant" ? "en" : "zh-Hant";
+const switchHref = LOCALE_HOME[otherLocale];
+
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang={htmlLang}>
+	<head>
+		<BaseHead locale={locale} />
+	</head>
+	<body>
+		<div class="glow" aria-hidden="true"></div>
+		<div class="grid" aria-hidden="true"></div>
+
+		<div class="page">
+			<header class="topbar">
+				<a class="brand" href={LOCALE_HOME[locale]} aria-label={COMPANY.nameEn}>
+					<span class="brand-mark" aria-hidden="true">P</span>
+					<span class="brand-name">{COMPANY.shortEn}</span>
+				</a>
+
+				<nav class="controls">
+					<a class="control lang" href={switchHref} aria-label={t(locale, "switch.aria")}>
+						{t(locale, "switch.to")}
+					</a>
+					<button
+						id="theme-toggle"
+						class="control icon-btn"
+						type="button"
+						aria-label={t(locale, "theme.aria")}
+						title={t(locale, "theme.aria")}
+					>
+						<svg class="icon sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+							<circle cx="12" cy="12" r="4.2" fill="currentColor"></circle>
+							<g stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+								<line x1="12" y1="2.5" x2="12" y2="5"></line>
+								<line x1="12" y1="19" x2="12" y2="21.5"></line>
+								<line x1="2.5" y1="12" x2="5" y2="12"></line>
+								<line x1="19" y1="12" x2="21.5" y2="12"></line>
+								<line x1="5.2" y1="5.2" x2="6.9" y2="6.9"></line>
+								<line x1="17.1" y1="17.1" x2="18.8" y2="18.8"></line>
+								<line x1="18.8" y1="5.2" x2="17.1" y2="6.9"></line>
+								<line x1="6.9" y1="17.1" x2="5.2" y2="18.8"></line>
+							</g>
+						</svg>
+						<svg class="icon moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+							<path
+								fill="currentColor"
+								d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
+						</svg>
+					</button>
+				</nav>
+			</header>
+
+			<main class="hero">
+				<span class="badge">
+					<span class="dot" aria-hidden="true"></span>
+					{t(locale, "badge")}
+				</span>
+
+				<h1 class="title">{t(locale, "heading")}</h1>
+
+				<p class="company">
+					<span class="company-primary">
+						{locale === "zh-Hant" ? COMPANY.nameZh : COMPANY.nameEn}
+					</span>
+					<span class="company-secondary">
+						{locale === "zh-Hant" ? COMPANY.nameEn : COMPANY.nameZh}
+					</span>
+				</p>
+
+				<p class="subheading">{t(locale, "subheading")}</p>
+
+				<a class="cta" href={`mailto:${COMPANY.email}`}>
+					{t(locale, "contact")}
+					<span aria-hidden="true">→</span>
+				</a>
+			</main>
+
+			<footer class="site-footer">
+				© {year} {COMPANY.nameEn} · {t(locale, "rights")}
+			</footer>
+		</div>
+
+		<script is:inline>
+			(function () {
+				var btn = document.getElementById("theme-toggle");
+				if (!btn) return;
+				btn.addEventListener("click", function () {
+					var root = document.documentElement;
+					var next = root.dataset.theme === "dark" ? "light" : "dark";
+					root.dataset.theme = next;
+					try {
+						localStorage.setItem("theme", next);
+					} catch (e) {}
+				});
+			})();
+		</script>
+
+		<style>
+			.page {
+				position: relative;
+				z-index: 1;
+				min-height: 100svh;
+				max-width: 1120px;
+				margin: 0 auto;
+				padding: clamp(1.25rem, 3vw, 2.25rem);
+				display: flex;
+				flex-direction: column;
+			}
+
+			/* Background layers */
+			.glow {
+				position: fixed;
+				inset: 0;
+				z-index: 0;
+				background:
+					radial-gradient(60% 55% at 50% 0%, var(--glow-1), transparent 70%),
+					radial-gradient(45% 45% at 85% 25%, var(--glow-2), transparent 70%);
+				pointer-events: none;
+			}
+			.grid {
+				position: fixed;
+				inset: 0;
+				z-index: 0;
+				background-image:
+					linear-gradient(to right, var(--grid) 1px, transparent 1px),
+					linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+				background-size: 48px 48px;
+				mask-image: radial-gradient(70% 60% at 50% 40%, #000 40%, transparent 100%);
+				-webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000 40%, transparent 100%);
+				pointer-events: none;
+			}
+
+			/* Top bar */
+			.topbar {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 1rem;
+			}
+			.brand {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.6rem;
+				color: var(--text);
+				font-weight: 600;
+				letter-spacing: 0.01em;
+			}
+			.brand-mark {
+				display: grid;
+				place-items: center;
+				width: 34px;
+				height: 34px;
+				border-radius: 9px;
+				color: #fff;
+				font-weight: 700;
+				background: linear-gradient(135deg, var(--accent), var(--accent-2));
+				box-shadow: var(--shadow);
+			}
+			.brand-name {
+				font-size: 1.05rem;
+			}
+
+			.controls {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+			.control {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				height: 40px;
+				padding: 0 0.9rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: var(--surface);
+				color: var(--text);
+				font-size: 0.9rem;
+				font-weight: 500;
+				backdrop-filter: blur(8px);
+				cursor: pointer;
+				transition: border-color 0.2s ease, transform 0.15s ease, background 0.2s ease;
+			}
+			.control:hover {
+				border-color: var(--accent);
+				transform: translateY(-1px);
+			}
+			.icon-btn {
+				width: 40px;
+				padding: 0;
+			}
+			.icon {
+				display: block;
+			}
+			:root[data-theme="dark"] .sun {
+				display: none;
+			}
+			:root:not([data-theme="dark"]) .moon {
+				display: none;
+			}
+
+			/* Hero */
+			.hero {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+				padding: 3rem 0;
+			}
+			.badge {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				padding: 0.4rem 0.9rem;
+				border: 1px solid var(--border);
+				border-radius: 999px;
+				background: var(--surface);
+				color: var(--text-muted);
+				font-size: 0.85rem;
+				backdrop-filter: blur(8px);
+			}
+			.dot {
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				background: var(--accent);
+				box-shadow: 0 0 0 0 var(--accent);
+				animation: pulse 2s infinite;
+			}
+			@keyframes pulse {
+				0% {
+					box-shadow: 0 0 0 0 var(--glow-1);
+				}
+				70% {
+					box-shadow: 0 0 0 10px transparent;
+				}
+				100% {
+					box-shadow: 0 0 0 0 transparent;
+				}
+			}
+
+			.title {
+				margin: 1.4rem 0 0;
+				font-size: clamp(2.75rem, 9vw, 6rem);
+				line-height: 1.02;
+				letter-spacing: -0.03em;
+				font-weight: 800;
+				background: linear-gradient(180deg, var(--text), var(--text-muted));
+				-webkit-background-clip: text;
+				background-clip: text;
+				color: transparent;
+			}
+
+			.company {
+				margin: 1.6rem 0 0;
+				display: flex;
+				flex-direction: column;
+				gap: 0.25rem;
+			}
+			.company-primary {
+				font-size: clamp(1.25rem, 3.5vw, 1.9rem);
+				font-weight: 700;
+				color: var(--text);
+			}
+			.company-secondary {
+				font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+				color: var(--text-muted);
+				letter-spacing: 0.02em;
+			}
+
+			.subheading {
+				margin: 1.4rem auto 0;
+				max-width: 34rem;
+				color: var(--text-muted);
+				font-size: clamp(1rem, 2.2vw, 1.15rem);
+			}
+
+			.cta {
+				margin-top: 2.2rem;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				padding: 0.85rem 1.5rem;
+				border-radius: 12px;
+				color: #fff;
+				font-weight: 600;
+				background: linear-gradient(135deg, var(--accent), var(--accent-2));
+				box-shadow: var(--shadow);
+				transition: transform 0.15s ease, box-shadow 0.2s ease;
+			}
+			.cta:hover {
+				transform: translateY(-2px);
+			}
+			.cta span {
+				transition: transform 0.15s ease;
+			}
+			.cta:hover span {
+				transform: translateX(3px);
+			}
+
+			.site-footer {
+				text-align: center;
+				color: var(--text-muted);
+				font-size: 0.85rem;
+				padding-top: 2rem;
+			}
+
+			@media (max-width: 480px) {
+				.brand-name {
+					display: none;
+				}
+			}
+		</style>
+	</body>
+</html>
