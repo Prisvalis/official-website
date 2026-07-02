@@ -12,6 +12,12 @@ export const COMPANY = {
 	email: "admin@mail.prisvalis.com",
 } as const;
 
+// Official social profiles. Also emitted as `sameAs` in structured data.
+export const SOCIAL = {
+	instagram: "https://www.instagram.com/prisvalis.co.ltd",
+	threads: "https://www.threads.com/@prisvalis.co.ltd",
+} as const;
+
 export const DEFAULT_LOCALE = "zh-Hant";
 export const LOCALES = ["zh-Hant", "en"] as const;
 export type Locale = (typeof LOCALES)[number];

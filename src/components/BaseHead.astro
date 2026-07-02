@@ -2,7 +2,7 @@
 // Global <head>: SEO metadata, social cards, hreflang alternates,
 // structured data and a no-flash theme bootstrap. Included on every page.
 import "../styles/global.css";
-import { SITE, COMPANY, LOCALE_HOME, type Locale } from "../consts";
+import { SITE, COMPANY, SOCIAL, LOCALE_HOME, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 
 interface Props {
@@ -28,6 +28,7 @@ const jsonLd = {
 	url: SITE,
 	email: COMPANY.email,
 	logo: new URL("/favicon.svg", SITE).href,
+	sameAs: [SOCIAL.instagram, SOCIAL.threads],
 };
 ---
 
