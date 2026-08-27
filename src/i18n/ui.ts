@@ -5,7 +5,7 @@ export const ui = {
 	"zh-Hant": {
 		"meta.title": "算力有限公司 Prisvalis｜官方網站即將上線",
 		"meta.description":
-			"算力有限公司（Prisvalis Co., Ltd.）官方網站建置中，敬請期待。我們專注於算力與智慧運算解決方案。",
+			"算力有限公司（Prisvalis LTD.）官方網站建置中，敬請期待。我們專注於算力與智慧運算解決方案。",
 		"html.lang": "zh-Hant",
 		"og.locale": "zh_TW",
 		badge: "官方網站建置中",
@@ -18,9 +18,9 @@ export const ui = {
 		rights: "版權所有",
 	},
 	en: {
-		"meta.title": "Prisvalis Co., Ltd.｜Official Website Coming Soon",
+		"meta.title": "Prisvalis LTD.｜Official Website Coming Soon",
 		"meta.description":
-			"The official website of Prisvalis Co., Ltd. (算力有限公司) is under construction. We build computing power and intelligent compute solutions.",
+			"The official website of Prisvalis LTD. (算力有限公司) is under construction. We build computing power and intelligent compute solutions.",
 		"html.lang": "en",
 		"og.locale": "en_US",
 		badge: "Website under construction",

@@ -6,7 +6,7 @@ export const SITE = "https://www.prisvalis.com";
 // Company identity, shown across the site and in structured data.
 export const COMPANY = {
 	nameZh: "算力有限公司",
-	nameEn: "Prisvalis Co., Ltd.",
+	nameEn: "Prisvalis LTD.",
 	shortEn: "Prisvalis",
 	// Public contact address shown on the Coming Soon page. Update if needed.
 	email: "admin@mail.prisvalis.com",
