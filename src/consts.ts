@@ -14,8 +14,8 @@ export const COMPANY = {
 
 // Official social profiles. Also emitted as `sameAs` in structured data.
 export const SOCIAL = {
-	instagram: "https://www.instagram.com/prisvalis.co.ltd",
-	threads: "https://www.threads.com/@prisvalis.co.ltd",
+	instagram: "https://www.instagram.com/prisvalis.ltd",
+	threads: "https://www.threads.com/@prisvalis.ltd",
 } as const;
 
 export const DEFAULT_LOCALE = "zh-Hant";
