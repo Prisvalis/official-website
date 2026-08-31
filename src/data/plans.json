@@ -1,0 +1,78 @@
+{
+  "_note": "方案內容的單一事實來源是後端的 src/plans.py。這份檔案是給官網用的鏡像，由 tests/test_website_pricing.py 強制兩邊一致 —— 定價頁悄悄與實際額度脫節，是這種頁面最常見也最難發現的錯誤。",
+  "_pricing_status": "計費機制尚未上線。plans.py 的 default_plan_code() 目前讓所有新註冊拿到 pro，要開始收費時把 COMPANY_DEFAULT_PLAN 改成 free 即可。價格欄位 price_twd_monthly 為 null 代表尚未定價；填入數字後定價頁會自動顯示金額。",
+  "billing_live": false,
+  "featureLabels": {
+    "parties": "交易對象（客戶與供應商）",
+    "products": "商品與服務",
+    "quotes": "報價單",
+    "orders": "訂單",
+    "inventory": "進銷存",
+    "purchases": "進項憑證",
+    "payments": "線上收款（綠界）",
+    "einvoice": "電子發票",
+    "tax_report": "營業稅 401 申報",
+    "mail": "郵件服務（自有網域）"
+  },
+  "quotaLabels": {
+    "max_parties": "交易對象",
+    "max_products": "商品與服務",
+    "max_users": "成員人數",
+    "monthly_quotes": "每月報價單",
+    "monthly_einvoices": "每月電子發票",
+    "max_mail_domains": "郵件網域"
+  },
+  "plans": [
+    {
+      "code": "free",
+      "name": "免費方案",
+      "tagline": "先把第一張報價單開出來",
+      "price_twd_monthly": null,
+      "featured": false,
+      "bestFor": "剛開始接案、還沒有開發票需求",
+      "features": ["parties", "products", "quotes"],
+      "quotas": {
+        "max_parties": 20,
+        "max_products": 20,
+        "max_users": 1,
+        "monthly_quotes": 10,
+        "monthly_einvoices": 0,
+        "max_mail_domains": 0
+      }
+    },
+    {
+      "code": "standard",
+      "name": "標準方案",
+      "tagline": "開始開發票、要報營業稅",
+      "price_twd_monthly": null,
+      "featured": true,
+      "bestFor": "已經正式營業，需要進銷存、發票與申報",
+      "features": ["parties", "products", "quotes", "orders", "inventory", "purchases", "payments", "einvoice", "tax_report"],
+      "quotas": {
+        "max_parties": 500,
+        "max_products": 500,
+        "max_users": 3,
+        "monthly_quotes": 200,
+        "monthly_einvoices": 200,
+        "max_mail_domains": 0
+      }
+    },
+    {
+      "code": "pro",
+      "name": "專業方案",
+      "tagline": "量做起來了，還要自有網域的信箱",
+      "price_twd_monthly": null,
+      "featured": false,
+      "bestFor": "單量大、需要多位協作者與自有網域郵件",
+      "features": ["parties", "products", "quotes", "orders", "inventory", "purchases", "payments", "einvoice", "tax_report", "mail"],
+      "quotas": {
+        "max_parties": null,
+        "max_products": null,
+        "max_users": 10,
+        "monthly_quotes": null,
+        "monthly_einvoices": null,
+        "max_mail_domains": 3
+      }
+    }
+  ]
+}

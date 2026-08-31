@@ -1,0 +1,255 @@
+---
+import CoO from "../../layouts/CoO.astro";
+import type { Locale } from "../../consts";
+import {
+	coo,
+	cooUrl,
+	APP_URL,
+	PLAN_TEXT_EN,
+	FEATURE_LABELS_EN,
+	QUOTA_LABELS_EN,
+} from "../../i18n/coo";
+import data from "../../data/plans.json";
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const c = coo[locale].pricing;
+const colon = coo[locale].colon;
+
+const { plans, billing_live: billingLive } = data;
+const isEn = locale === "en";
+
+// 中文的方案名稱與標籤直接用 plans.json —— 那份是與後端 plans.py 同步的鏡像，
+// 複製一份到別的檔案只會讓兩邊慢慢長歪。英文另外放在 i18n/coo.ts。
+const featureLabels: Record<string, string> = isEn ? FEATURE_LABELS_EN : data.featureLabels;
+const quotaLabels: Record<string, string> = isEn ? QUOTA_LABELS_EN : data.quotaLabels;
+const numberLocale = isEn ? "en-US" : "zh-TW";
+
+function planText(plan: { code: string; name: string; tagline: string; bestFor: string }) {
+	return (isEn && PLAN_TEXT_EN[plan.code]) || plan;
+}
+
+/** 額度的呈現：null 代表不限，0 代表這個方案沒有這項功能。 */
+function quota(value: number | null) {
+	if (value === null) return { text: c.unlimited, sr: null };
+	// 0 代表這個方案沒有這項功能。破折號對眼睛夠用，對螢幕閱讀器不夠。
+	if (value === 0) return { text: "—", sr: c.notIncluded };
+	return { text: value.toLocaleString(numberLocale), sr: null };
+}
+
+function price(plan: { price_twd_monthly: number | null }) {
+	if (plan.price_twd_monthly === null) return null;
+	return `NT$${plan.price_twd_monthly.toLocaleString(numberLocale)}`;
+}
+
+const featureKeys = Object.keys(data.featureLabels);
+const quotaKeys = Object.keys(data.quotaLabels);
+---
+
+<CoO locale={locale} page="pricing">
+	<section class="hero" style="padding-bottom:1.5rem">
+		<div class="wrap">
+			<div class="narrow">
+				<p class="eyebrow">{c.eyebrow}</p>
+				<h1>{c.h1}</h1>
+				<p class="lead">
+					{c.leadA}<strong>{c.leadQuota}</strong>{c.leadAnd}<strong>{c.leadScope}</strong>{c.leadB}
+				</p>
+			</div>
+		</div>
+	</section>
+
+	{
+		!billingLive && (
+			<section style="padding-top:0">
+				<div class="wrap">
+					<div class="narrow">
+						<div class="note note-warn">
+							<p>
+								<strong>{c.noteHead}</strong>
+							</p>
+							<p class="small">{c.noteA}<strong>{c.noteStrong}</strong>{c.noteB}</p>
+						</div>
+					</div>
+				</div>
+			</section>
+		)
+	}
+
+	<section style="padding-top:2rem">
+		<div class="wrap">
+			<div class="plans">
+				{
+					plans.map((plan) => (
+						<div class={plan.featured ? "plan plan-featured" : "plan"}>
+							<div>
+								<div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+									<h2 class="plan-name">{planText(plan).name}</h2>
+									{plan.featured && <span class="tag">{c.featuredTag}</span>}
+								</div>
+								<p class="small muted" style="margin:.2rem 0 0">
+									{planText(plan).tagline}
+								</p>
+							</div>
+
+							<div>
+								{price(plan) ? (
+									<div class="plan-price">
+										{price(plan)}
+										<span class="per">{c.perMonth}</span>
+									</div>
+								) : (
+									<div class="plan-price" style="font-size:1.45rem">
+										{c.noPrice}
+										<span class="per">{c.freeForNow}</span>
+									</div>
+								)}
+							</div>
+
+							<p class="small muted" style="margin:0">{`${c.bestFor}${planText(plan).bestFor}`}</p>
+
+							<ul class="ticks small">
+								{plan.features.map((key) => (
+									<li>{featureLabels[key]}</li>
+								))}
+							</ul>
+
+							<ul class="ticks small" style="border-top:1px solid var(--border-soft);padding-top:.9rem">
+								<li>{`${quotaLabels.max_users}${colon}${quota(plan.quotas.max_users).text}`}</li>
+								<li>{`${quotaLabels.max_parties}${colon}${quota(plan.quotas.max_parties).text}`}</li>
+								<li>{`${quotaLabels.monthly_quotes}${colon}${quota(plan.quotas.monthly_quotes).text}`}</li>
+								{plan.quotas.monthly_einvoices !== 0 && (
+									<li>{`${quotaLabels.monthly_einvoices}${colon}${quota(plan.quotas.monthly_einvoices).text}`}</li>
+								)}
+								{plan.quotas.max_mail_domains !== 0 && (
+									<li>{`${quotaLabels.max_mail_domains}${colon}${quota(plan.quotas.max_mail_domains).text}`}</li>
+								)}
+							</ul>
+
+							<a
+								class={plan.featured ? "btn" : "btn btn-ghost"}
+								href={APP_URL}
+								style="margin-top:auto"
+							>
+								{coo[locale].start}
+							</a>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="section-soft">
+		<div class="wrap">
+			<h2>{c.compareTitle}</h2>
+			<p class="muted">{c.compareBody}</p>
+
+			<div class="table-scroll" style="margin-top:1.5rem">
+				<table>
+					<caption>{c.captionFeatures}</caption>
+					<thead>
+						<tr>
+							<th scope="col">{c.thFeature}</th>
+							{plans.map((p) => <th scope="col" class="num">{planText(p).name}</th>)}
+						</tr>
+					</thead>
+					<tbody>
+						{
+							featureKeys.map((key) => (
+								<tr>
+									<th scope="row">{featureLabels[key]}</th>
+									{plans.map((p) => (
+										<td class="num">
+											{p.features.includes(key) ? (
+												<>
+													<span class="yes" aria-hidden="true">
+														✓
+													</span>
+													<span class="sr-only">{c.included}</span>
+												</>
+											) : (
+												<>
+													<span class="no" aria-hidden="true">
+														—
+													</span>
+													<span class="sr-only">{c.excluded}</span>
+												</>
+											)}
+										</td>
+									))}
+								</tr>
+							))
+						}
+					</tbody>
+				</table>
+			</div>
+
+			<div class="table-scroll" style="margin-top:2.5rem">
+				<table>
+					<caption>{c.captionQuotas}</caption>
+					<thead>
+						<tr>
+							<th scope="col">{c.thItem}</th>
+							{plans.map((p) => <th scope="col" class="num">{planText(p).name}</th>)}
+						</tr>
+					</thead>
+					<tbody>
+						{
+							quotaKeys.map((key) => (
+								<tr>
+									<th scope="row">{quotaLabels[key]}</th>
+									{plans.map((p) => {
+										const q = quota(p.quotas[key as keyof typeof p.quotas]);
+										return (
+											<td class="num">
+												{q.sr ? <span aria-hidden="true">{q.text}</span> : q.text}
+												{q.sr && <span class="sr-only">{q.sr}</span>}
+											</td>
+										);
+									})}
+								</tr>
+							))
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="narrow">
+				<h2>{c.faqTitle}</h2>
+				<div style="margin-top:1.5rem">
+					{
+						c.faqs.map((item) => (
+							<details>
+								<summary>{item.q}</summary>
+								<div class="answer">
+									<p>{item.a}</p>
+								</div>
+							</details>
+						))
+					}
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section-soft">
+		<div class="wrap">
+			<div class="cta">
+				<h2>{c.ctaTitle}</h2>
+				<p class="muted narrow" style="margin-inline:auto">{c.ctaBody}</p>
+				<div class="hero-actions" style="justify-content:center">
+					<a class="btn btn-lg" href={APP_URL}>{coo[locale].start}</a>
+					<a class="btn btn-lg btn-ghost" href={cooUrl(locale, "/features")}>{c.ctaFeatures}</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</CoO>

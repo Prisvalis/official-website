@@ -1,0 +1,70 @@
+---
+import CoO from "../../layouts/CoO.astro";
+import type { Locale } from "../../consts";
+import { coo, cooUrl, APP_URL } from "../../i18n/coo";
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const c = coo[locale].features;
+---
+
+<CoO locale={locale} page="features">
+	<section class="hero" style="padding-bottom:1.5rem">
+		<div class="wrap">
+			<div class="narrow">
+				<p class="eyebrow">{c.eyebrow}</p>
+				<h1>{c.h1}</h1>
+				<p class="lead">{c.lead}</p>
+				<div class="note note-warn" style="margin-top:1.5rem">
+					<p class="small" style="margin:0">{c.note}</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section style="padding-top:1rem;padding-bottom:1rem">
+		<div class="wrap">
+			<nav aria-label={c.tocAria} class="card" style="display:flex;flex-wrap:wrap;gap:.5rem 1.4rem">
+				{c.sections.map((s) => <a href={`#${s.id}`}>{s.eyebrow}</a>)}
+			</nav>
+		</div>
+	</section>
+
+	{
+		c.sections.map((section, index) => (
+			<section id={section.id} class={index % 2 === 1 ? "section-soft" : undefined}>
+				<div class="wrap">
+					<div class="narrow">
+						<p class="eyebrow">{section.eyebrow}</p>
+						<h2>{section.title}</h2>
+						{section.intro && <p class="muted">{section.intro}</p>}
+					</div>
+					<div class="grid grid-2" style="margin-top:2rem">
+						{section.items.map((item) => (
+							<div class="card">
+								<h3>{item.title}</h3>
+								<p class="muted">{item.body}</p>
+							</div>
+						))}
+					</div>
+				</div>
+			</section>
+		))
+	}
+
+	<section>
+		<div class="wrap">
+			<div class="cta">
+				<h2>{c.ctaTitle}</h2>
+				<p class="muted narrow" style="margin-inline:auto">{c.ctaBody}</p>
+				<div class="hero-actions" style="justify-content:center">
+					<a class="btn btn-lg" href={cooUrl(locale, "/pricing")}>{c.ctaCompare}</a>
+					<a class="btn btn-lg btn-ghost" href={APP_URL}>{c.ctaStart}</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</CoO>

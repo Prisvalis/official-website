@@ -1,0 +1,253 @@
+---
+import CoO from "../../layouts/CoO.astro";
+import type { Locale } from "../../consts";
+import { coo, cooUrl, APP_URL } from "../../i18n/coo";
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const c = coo[locale].home;
+---
+
+<CoO locale={locale} page="home">
+	<section class="hero">
+		<div class="wrap">
+			<p class="eyebrow">{c.eyebrow}</p>
+			<h1>{c.h1}</h1>
+			<p class="lead">{c.lead}</p>
+			<div class="hero-actions">
+				<a class="btn btn-lg" href={APP_URL}>{c.ctaFree}</a>
+				<a class="btn btn-lg btn-ghost" href={cooUrl(locale, "/features")}>{c.ctaFeatures}</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section-soft">
+		<div class="wrap">
+			<div class="narrow">
+				<p class="eyebrow">{c.whyEyebrow}</p>
+				<h2>{c.whyTitle}</h2>
+				<p class="muted">{c.whyBody}</p>
+			</div>
+
+			<div class="grid grid-3" style="margin-top:2.5rem">
+				{
+					c.pillars.map((p) => (
+						<div class="card">
+							<div class="card-icon" aria-hidden="true">
+								<svg
+									width="18"
+									height="18"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<path d={p.icon} />
+								</svg>
+							</div>
+							<h3>{p.title}</h3>
+							<p class="muted">{p.body}</p>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="split">
+				<div>
+					<p class="eyebrow">{c.quote.eyebrow}</p>
+					<h2>{c.quote.title}</h2>
+					<p class="muted">{c.quote.p1}</p>
+					<p class="muted">
+						{c.quote.p2a}<strong>{c.quote.p2strong}</strong>{c.quote.p2b}
+					</p>
+					<ul class="ticks">
+						{c.quote.ticks.map((tick) => <li>{tick.a}{tick.b && <strong>{tick.b}</strong>}{tick.c}</li>)}
+					</ul>
+				</div>
+				<div class="mock" role="img" aria-label={c.quote.mockAria}>
+					<div class="mock-title">
+						<span>{c.quote.mockTitle}</span> <span class="tag">{c.quote.mockTag}</span>
+					</div>
+					{
+						c.quote.rows.map((row) => (
+							<div class="mock-row">
+								<span class="label">{row.label}</span>
+								<span class="value">{row.value}</span>
+							</div>
+						))
+					}
+					<div class="mock-row">
+						<span class="label"><strong>{c.quote.totalLabel}</strong></span>
+						<span class="value">{c.quote.totalValue}</span>
+					</div>
+					<div style="display:flex;gap:.5rem;margin-top:1rem">
+						<span class="btn" aria-hidden="true">{c.quote.accept}</span>
+						<span class="btn btn-ghost" aria-hidden="true">{c.quote.decline}</span>
+					</div>
+					<p class="small muted" style="margin:.9rem 0 0">{c.quote.mockNote}</p>
+				</div>
+			</div>
+
+			<div class="split">
+				<div class="mock" role="img" aria-label={c.cash.mockAria}>
+					<div class="mock-title">
+						<span>{c.cash.mockTitle}</span> <span class="small muted">{c.cash.mockDate}</span>
+					</div>
+					{
+						c.cash.rows.map((row) => (
+							<div class="mock-row">
+								<span class="label">{row.label}</span>
+								<span class="value" style={row.warn ? "color:var(--warn)" : undefined}>
+									{row.value}
+								</span>
+							</div>
+						))
+					}
+					<div class="mock-row">
+						<span class="label"><strong>{c.cash.totalLabel}</strong></span>
+						<span class="value">{c.cash.totalValue}</span>
+					</div>
+				</div>
+				<div>
+					<p class="eyebrow">{c.cash.eyebrow}</p>
+					<h2>{c.cash.title}</h2>
+					<p class="muted">{c.cash.body}</p>
+					<ul class="ticks">
+						{c.cash.ticks.map((tick) => <li>{tick}</li>)}
+					</ul>
+				</div>
+			</div>
+
+			<div class="split">
+				<div>
+					<p class="eyebrow">{c.tax.eyebrow}</p>
+					<h2>{c.tax.title}</h2>
+					<p class="muted">{c.tax.bodyA}<strong>{c.tax.bodyStrong}</strong>{c.tax.bodyB}</p>
+					<ul class="ticks">
+						{c.tax.ticks.map((tick) => <li>{tick}</li>)}
+					</ul>
+				</div>
+				<div class="mock" role="img" aria-label={c.tax.mockAria}>
+					<div class="mock-title">
+						<span>{c.tax.mockTitle}</span> <span class="small muted">{c.tax.mockPeriod}</span>
+					</div>
+					{
+						c.tax.rows.map((row) => (
+							<div class="mock-row">
+								<span class="label">{row.label}</span>
+								<span class="value">{row.value}</span>
+							</div>
+						))
+					}
+					<div class="mock-row">
+						<span class="label"><strong>{c.tax.totalLabel}</strong></span>
+						<span class="value">{c.tax.totalValue}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section-soft">
+		<div class="wrap">
+			<div class="narrow">
+				<p class="eyebrow">{c.trust.eyebrow}</p>
+				<h2>{c.trust.title}</h2>
+				<p class="muted">{c.trust.body}</p>
+			</div>
+
+			<div class="grid grid-3" style="margin-top:2.5rem">
+				{
+					c.trust.cards.map((card) => (
+						<div class="card">
+							<h3>{card.title}</h3>
+							<p class="muted">{card.a}{card.strong && <strong>{card.strong}</strong>}{card.b}</p>
+						</div>
+					))
+				}
+			</div>
+
+			<div class="split" style="margin-top:3rem">
+				<div>
+					<h3>{c.trust.adminTitle}</h3>
+					<p class="muted">
+						{c.trust.adminA}<strong>{c.trust.adminStrong}</strong>{c.trust.adminB}
+					</p>
+					<p class="muted">{c.trust.adminP2}</p>
+					<p><a href={cooUrl(locale, "/features#security")}>{c.trust.adminLink}</a></p>
+				</div>
+				<div class="mock" role="img" aria-label={c.trust.noticeAria}>
+					<div class="mock-title">
+						<span>{c.trust.noticeTitle}</span>
+						<span class="tag tag-warn">{c.trust.noticeTag}</span>
+					</div>
+					<p class="small" style="margin:.2rem 0 .5rem"><strong>{c.trust.noticeHead}</strong></p>
+					<p class="small muted" style="margin:0">
+						{c.trust.noticeLine1}<br />
+						{c.trust.noticeLine2}
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="narrow center" style="margin-inline:auto">
+				<p class="eyebrow">{c.overviewEyebrow}</p>
+				<h2>{c.overviewTitle}</h2>
+			</div>
+			<div class="grid grid-3" style="margin-top:2.5rem">
+				{
+					c.overview.map((item) => (
+						<div class="card">
+							<h3>{item.title}</h3>
+							<p class="muted">{item.body}</p>
+						</div>
+					))
+				}
+			</div>
+			<p class="center" style="margin-top:2rem">
+				<a href={cooUrl(locale, "/features")}>{c.overviewLink}</a>
+			</p>
+		</div>
+	</section>
+
+	<section class="section-soft">
+		<div class="wrap">
+			<div class="narrow">
+				<p class="eyebrow">{c.status.eyebrow}</p>
+				<h2>{c.status.title}</h2>
+				<div class="note note-warn">
+					<p><strong>{c.status.head}</strong></p>
+					<p class="small">
+						{c.status.bodyA}<strong>{c.status.bodyStrong}</strong>{c.status.bodyB}
+					</p>
+					<p class="small">{c.status.bodyC}</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="cta">
+				<h2>{c.finalTitle}</h2>
+				<p class="muted narrow" style="margin-inline:auto">{c.finalBody}</p>
+				<div class="hero-actions" style="justify-content:center">
+					<a class="btn btn-lg" href={APP_URL}>{coo[locale].start}</a>
+					<a class="btn btn-lg btn-ghost" href={cooUrl(locale, "/pricing")}>{c.finalCompare}</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</CoO>
