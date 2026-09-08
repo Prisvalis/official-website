@@ -178,7 +178,9 @@ a:focus-visible, button:focus-visible, .btn:focus-visible, summary:focus-visible
   color: var(--text);
   border-color: var(--border);
 }
-.btn-ghost:hover { background: var(--bg-soft); border-color: var(--muted); }
+/* color 一定要跟著寫：.btn:hover 已經把文字設成 --on-accent（淺色模式是白字），
+   ghost 的 hover 底色卻是 --bg-soft，不覆蓋回來的話白字會融進淺灰底裡看不見。 */
+.btn-ghost:hover { background: var(--bg-soft); border-color: var(--muted); color: var(--text); }
 .btn-lg { padding: 0.8rem 1.6rem; font-size: 1rem; }
 
 /* --- 版塊 --- */
