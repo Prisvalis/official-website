@@ -16,6 +16,7 @@ export const ui = {
 		"switch.aria": "Switch to English",
 		"theme.aria": "切換深色／淺色模式",
 		rights: "版權所有",
+		taxId: "統一編號",
 	},
 	en: {
 		"meta.title": "Prisvalis LTD.｜Official Website Coming Soon",
@@ -31,6 +32,7 @@ export const ui = {
 		"switch.aria": "切換為中文",
 		"theme.aria": "Toggle dark / light mode",
 		rights: "All rights reserved",
+		taxId: "Unified Business No.",
 	},
 } as const;
 

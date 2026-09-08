@@ -10,6 +10,8 @@ export const COMPANY = {
 	shortEn: "Prisvalis",
 	// Public contact address shown on the Coming Soon page. Update if needed.
 	email: "admin@mail.prisvalis.com",
+	// 統一編號（台灣的營利事業統一編號），頁尾與結構化資料共用同一個來源。
+	taxId: "62010947",
 } as const;
 
 // Official social profiles. Also emitted as `sameAs` in structured data.
