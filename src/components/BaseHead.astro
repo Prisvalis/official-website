@@ -8,12 +8,22 @@ import { t } from "../i18n/ui";
 interface Props {
 	locale: Locale;
 	image?: string;
+	// 以下三個給首頁以外的頁面覆寫；不傳就維持原本的首頁行為。
+	title?: string;
+	description?: string;
+	alternates?: Record<Locale, string>;
 }
 
-const { locale, image = "/og.svg" } = Astro.props;
+const {
+	locale,
+	image = "/og.svg",
+	title: titleProp,
+	description: descriptionProp,
+	alternates = LOCALE_HOME,
+} = Astro.props;
 
-const title = t(locale, "meta.title");
-const description = t(locale, "meta.description");
+const title = titleProp ?? t(locale, "meta.title");
+const description = descriptionProp ?? t(locale, "meta.description");
 const ogLocale = t(locale, "og.locale");
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? SITE);
@@ -45,9 +55,9 @@ const jsonLd = {
 
 <!-- Canonical + language alternates (hreflang) -->
 <link rel="canonical" href={canonicalURL} />
-<link rel="alternate" hreflang="zh-Hant" href={LOCALE_HOME["zh-Hant"]} />
-<link rel="alternate" hreflang="en" href={LOCALE_HOME["en"]} />
-<link rel="alternate" hreflang="x-default" href={LOCALE_HOME["zh-Hant"]} />
+<link rel="alternate" hreflang="zh-Hant" href={alternates["zh-Hant"]} />
+<link rel="alternate" hreflang="en" href={alternates["en"]} />
+<link rel="alternate" hreflang="x-default" href={alternates["zh-Hant"]} />
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>

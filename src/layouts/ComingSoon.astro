@@ -88,7 +88,7 @@ const year = new Date().getFullYear();
 
 				<p class="subheading">{t(locale, "subheading")}</p>
 
-				<a class="cta" href={`mailto:${COMPANY.email}`}>
+				<a class="cta" href={locale === "en" ? "/en/contact/" : "/contact/"}>
 					{t(locale, "contact")}
 					<span aria-hidden="true">→</span>
 				</a>

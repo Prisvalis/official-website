@@ -1,0 +1,467 @@
+---
+// 聯絡我們。頁面本身是靜態的（會進 sitemap、走 CDN），
+// 送出後由 /api/contact 處理，再轉址回來帶上狀態參數。
+import BaseHead from "../components/BaseHead.astro";
+import { COMPANY, CONTACT, SITE, type Locale } from "../consts";
+import { t } from "../i18n/ui";
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const otherLocale: Locale = locale === "zh-Hant" ? "en" : "zh-Hant";
+
+const PATHS: Record<Locale, string> = { "zh-Hant": "/contact/", en: "/en/contact/" };
+const alternates: Record<Locale, string> = {
+	"zh-Hant": new URL(PATHS["zh-Hant"], SITE).href,
+	en: new URL(PATHS.en, SITE).href,
+};
+
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang={t(locale, "html.lang")}>
+	<head>
+		<BaseHead
+			locale={locale}
+			title={t(locale, "contact.meta.title")}
+			description={t(locale, "contact.meta.description")}
+			alternates={alternates}
+		/>
+	</head>
+	<body>
+		<div class="glow" aria-hidden="true"></div>
+		<div class="grid" aria-hidden="true"></div>
+
+		<div class="page">
+			<header class="topbar">
+				<a class="brand" href={locale === "en" ? "/en/" : "/"}>
+					<img
+						class="brand-logo"
+						src="/logo.png"
+						alt={COMPANY.nameEn}
+						width="583"
+						height="86"
+					/>
+				</a>
+
+				<nav class="controls">
+					<a class="control" href={PATHS[otherLocale]} aria-label={t(locale, "switch.aria")}>
+						{t(locale, "switch.to")}
+					</a>
+					<button
+						id="theme-toggle"
+						class="control icon-btn"
+						type="button"
+						aria-label={t(locale, "theme.aria")}
+						title={t(locale, "theme.aria")}
+					>
+						<svg class="icon sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+							<circle cx="12" cy="12" r="4.2" fill="currentColor"></circle>
+							<g stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+								<line x1="12" y1="2.5" x2="12" y2="5"></line>
+								<line x1="12" y1="19" x2="12" y2="21.5"></line>
+								<line x1="2.5" y1="12" x2="5" y2="12"></line>
+								<line x1="19" y1="12" x2="21.5" y2="12"></line>
+								<line x1="5.2" y1="5.2" x2="6.9" y2="6.9"></line>
+								<line x1="17.1" y1="17.1" x2="18.8" y2="18.8"></line>
+								<line x1="18.8" y1="5.2" x2="17.1" y2="6.9"></line>
+								<line x1="6.9" y1="17.1" x2="5.2" y2="18.8"></line>
+							</g>
+						</svg>
+						<svg class="icon moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+							<path fill="currentColor" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
+						</svg>
+					</button>
+				</nav>
+			</header>
+
+			<main class="main">
+				<h1 class="title">{t(locale, "contact.heading")}</h1>
+				<p class="lead">{t(locale, "contact.lead")}</p>
+
+				{/* 四種狀態都先渲染好再由 script 打開對應的那個 ——
+				    比起用 JS 組字串，這樣文案仍然只有一份，也不會有版面跳動。 */}
+				<div class="banners" aria-live="polite">
+					<div class="banner banner-ok" data-status="sent" hidden>
+						<strong>{t(locale, "contact.sent.title")}</strong>
+						<span>{t(locale, "contact.sent.body")}</span>
+					</div>
+					<div class="banner banner-err" data-status="invalid" hidden>
+						<span>{t(locale, "contact.error.invalid")}</span>
+					</div>
+					<div class="banner banner-err" data-status="captcha" hidden>
+						<span>{t(locale, "contact.error.captcha")}</span>
+					</div>
+					<div class="banner banner-err" data-status="failed" hidden>
+						<span>{t(locale, "contact.error.failed")}</span>
+						<a href={`mailto:${COMPANY.email}`}>{t(locale, "contact.error.mailto")}</a>
+					</div>
+				</div>
+
+				<form class="card" method="post" action="/api/contact">
+					<input type="hidden" name="locale" value={locale} />
+
+					{/* 蜜罐。真人看不到也 tab 不到，填了就是機器人。 */}
+					<div class="hp" aria-hidden="true">
+						<label for="company">Company</label>
+						<input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
+					</div>
+
+					<div class="field">
+						<label for="name">{t(locale, "contact.name")}</label>
+						<input
+							id="name"
+							name="name"
+							type="text"
+							required
+							maxlength="100"
+							autocomplete="name"
+							placeholder={t(locale, "contact.namePlaceholder")}
+						/>
+					</div>
+
+					<div class="field">
+						<label for="email">{t(locale, "contact.email")}</label>
+						<input
+							id="email"
+							name="email"
+							type="email"
+							required
+							maxlength="254"
+							autocomplete="email"
+							aria-describedby="email-hint"
+							placeholder="you@example.com"
+						/>
+						<p id="email-hint" class="hint">{t(locale, "contact.emailHint")}</p>
+					</div>
+
+					<div class="field">
+						<label for="subject">{t(locale, "contact.subject")}</label>
+						<input
+							id="subject"
+							name="subject"
+							type="text"
+							required
+							maxlength="200"
+							placeholder={t(locale, "contact.subjectPlaceholder")}
+						/>
+					</div>
+
+					<div class="field">
+						<label for="message">{t(locale, "contact.message")}</label>
+						<textarea
+							id="message"
+							name="message"
+							required
+							minlength="10"
+							maxlength="5000"
+							rows="7"
+							placeholder={t(locale, "contact.messagePlaceholder")}></textarea>
+					</div>
+
+					<div class="cf-turnstile" data-sitekey={CONTACT.turnstileSiteKey}></div>
+
+					<button class="submit" type="submit">{t(locale, "contact.submit")}</button>
+
+					<p class="hint">{t(locale, "contact.privacy")}</p>
+				</form>
+
+				<p class="back">
+					<a href={locale === "en" ? "/en/" : "/"}>← {t(locale, "contact.back")}</a>
+				</p>
+			</main>
+
+			<footer class="site-footer">
+				<p class="copyright">© {year} {COMPANY.nameEn} · {t(locale, "rights")}</p>
+				<p class="copyright">{t(locale, "taxId")} {COMPANY.taxId}</p>
+			</footer>
+		</div>
+
+		<script
+			src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+			async
+			defer
+			is:inline></script>
+
+		<script is:inline>
+			(function () {
+				var btn = document.getElementById("theme-toggle");
+				if (btn) {
+					btn.addEventListener("click", function () {
+						var root = document.documentElement;
+						var next = root.dataset.theme === "dark" ? "light" : "dark";
+						root.dataset.theme = next;
+						try {
+							localStorage.setItem("theme", next);
+						} catch (e) {}
+					});
+				}
+
+				// /api/contact 處理完會轉址回來帶上狀態。只認固定的幾個值，
+				// 不把網址裡的字串放進畫面。
+				var params = new URLSearchParams(location.search);
+				var status = params.get("sent") === "1" ? "sent" : params.get("error");
+				var allowed = ["sent", "invalid", "captcha", "failed"];
+				if (allowed.indexOf(status) === -1) return;
+
+				var banner = document.querySelector('[data-status="' + status + '"]');
+				if (banner) banner.hidden = false;
+				if (status === "sent") {
+					var form = document.querySelector("form");
+					if (form) form.reset();
+				}
+				// 把參數從網址上抹掉，重新整理就不會又看到同一條訊息。
+				history.replaceState(null, "", location.pathname);
+			})();
+		</script>
+
+		<style>
+			.page {
+				position: relative;
+				z-index: 1;
+				min-height: 100svh;
+				max-width: 720px;
+				margin: 0 auto;
+				padding: clamp(1.25rem, 3vw, 2.25rem);
+				display: flex;
+				flex-direction: column;
+			}
+
+			/* 背景層。與首頁同一套做法，故意複製而非抽共用元件 ——
+			   抽出去就得改 ComingSoon，那是目前唯一在線上的頁面。
+			   ponytail: 之後第三個頁面也要這層背景時再抽。 */
+			.glow {
+				position: fixed;
+				inset: 0;
+				z-index: 0;
+				background:
+					radial-gradient(60% 55% at 50% 0%, var(--glow-1), transparent 70%),
+					radial-gradient(45% 45% at 85% 25%, var(--glow-2), transparent 70%);
+				pointer-events: none;
+			}
+			.grid {
+				position: fixed;
+				inset: 0;
+				z-index: 0;
+				background-image:
+					linear-gradient(to right, var(--grid) 1px, transparent 1px),
+					linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+				background-size: 48px 48px;
+				mask-image: radial-gradient(70% 60% at 50% 40%, #000 40%, transparent 100%);
+				-webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000 40%, transparent 100%);
+				pointer-events: none;
+			}
+
+			.topbar {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 1rem;
+			}
+			.brand {
+				display: inline-flex;
+				align-items: center;
+			}
+			.brand-logo {
+				display: block;
+				height: 28px;
+				width: auto;
+			}
+			.controls {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+			.control {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				height: 40px;
+				padding: 0 0.9rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: var(--surface);
+				color: var(--text);
+				font-size: 0.9rem;
+				font-weight: 500;
+				backdrop-filter: blur(8px);
+				cursor: pointer;
+				transition: border-color 0.2s ease, transform 0.15s ease;
+			}
+			.control:hover {
+				border-color: var(--accent);
+				transform: translateY(-1px);
+			}
+			.icon-btn {
+				width: 40px;
+				padding: 0;
+			}
+			.icon {
+				display: block;
+			}
+			:root[data-theme="dark"] .sun {
+				display: none;
+			}
+			:root:not([data-theme="dark"]) .moon {
+				display: none;
+			}
+
+			.main {
+				flex: 1;
+				padding: clamp(2rem, 6vw, 3.5rem) 0 2rem;
+			}
+			.title {
+				margin: 0;
+				font-size: clamp(2rem, 6vw, 3rem);
+				line-height: 1.2;
+				letter-spacing: -0.02em;
+				font-weight: 800;
+			}
+			.lead {
+				margin: 0.9rem 0 0;
+				color: var(--text-muted);
+				font-size: clamp(1rem, 2.2vw, 1.1rem);
+			}
+
+			.banners:not(:empty) {
+				display: block;
+			}
+			.banner {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.35rem 0.6rem;
+				align-items: baseline;
+				margin-top: 1.5rem;
+				padding: 0.9rem 1.1rem;
+				border: 1px solid var(--border);
+				border-left-width: 3px;
+				border-radius: 10px;
+				background: var(--surface);
+				backdrop-filter: blur(8px);
+				font-size: 0.95rem;
+			}
+			/* display:flex 的優先權高過瀏覽器內建的 [hidden]{display:none}，
+			   沒有這條的話四種狀態會同時出現在畫面上。 */
+			.banner[hidden] {
+				display: none;
+			}
+			.banner span {
+				color: var(--text-muted);
+			}
+			.banner-ok {
+				border-left-color: var(--accent);
+			}
+			/* 錯誤不能只靠顏色，所以文字本身就說明了發生什麼事 */
+			.banner-err {
+				border-left-color: #d4483b;
+			}
+
+			.card {
+				margin-top: 1.75rem;
+				padding: clamp(1.25rem, 4vw, 1.9rem);
+				border: 1px solid var(--border);
+				border-radius: 14px;
+				background: var(--surface);
+				backdrop-filter: blur(8px);
+				box-shadow: var(--shadow);
+				display: grid;
+				gap: 1.15rem;
+			}
+			.field {
+				display: grid;
+				gap: 0.4rem;
+			}
+			label {
+				font-size: 0.9rem;
+				font-weight: 600;
+			}
+			input[type="text"],
+			input[type="email"],
+			textarea {
+				width: 100%;
+				padding: 0.7rem 0.85rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: var(--bg);
+				color: var(--text);
+				font: inherit;
+				font-size: 0.95rem;
+			}
+			textarea {
+				resize: vertical;
+				min-height: 8rem;
+			}
+			input:focus-visible,
+			textarea:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 1px;
+				border-color: transparent;
+			}
+			/* 只在使用者動過之後才標紅，一進頁面就滿江紅很勸退 */
+			input:user-invalid,
+			textarea:user-invalid {
+				border-color: #d4483b;
+			}
+			.hint {
+				margin: 0;
+				color: var(--text-muted);
+				font-size: 0.82rem;
+				line-height: 1.5;
+			}
+
+			/* 蜜罐。不用 display:none —— 有些機器人會跳過被隱藏的欄位。 */
+			.hp {
+				position: absolute;
+				left: -9999px;
+				width: 1px;
+				height: 1px;
+				overflow: hidden;
+			}
+
+			.submit {
+				justify-self: start;
+				padding: 0.8rem 1.6rem;
+				border: 0;
+				border-radius: 12px;
+				color: #fff;
+				font: inherit;
+				font-weight: 600;
+				background: linear-gradient(135deg, var(--accent), var(--accent-2));
+				box-shadow: var(--shadow);
+				cursor: pointer;
+				transition: transform 0.15s ease;
+			}
+			.submit:hover {
+				transform: translateY(-2px);
+			}
+
+			.back {
+				margin: 1.5rem 0 0;
+				font-size: 0.9rem;
+			}
+
+			.site-footer {
+				text-align: center;
+				padding-top: 2rem;
+			}
+			.copyright {
+				margin: 0;
+				color: var(--text-muted);
+				font-size: 0.85rem;
+			}
+
+			@media (max-width: 480px) {
+				.brand-logo {
+					height: 24px;
+				}
+				.submit {
+					justify-self: stretch;
+					text-align: center;
+				}
+			}
+		</style>
+	</body>
+</html>

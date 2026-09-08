@@ -1,0 +1,11 @@
+# 複製成 .dev.vars 供本機開發使用（.dev.vars 已被 gitignore）。
+#
+# 下面是 Cloudflare Turnstile 官方的測試 secret：
+#   1x0000000000000000000000000000000AA  一律通過
+#   2x0000000000000000000000000000000AA  一律失敗（拿來確認擋人的那條路徑真的會擋）
+#
+# 正式環境不要用這些值，改用：
+#   npx wrangler secret put TURNSTILE_SECRET
+#
+# 註：wrangler dev 不會熱重載這個檔案，改完要重開。
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA

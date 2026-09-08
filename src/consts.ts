@@ -14,6 +14,21 @@ export const COMPANY = {
 	taxId: "62010947",
 } as const;
 
+// 網站聯絡表單。這裡只放公開值 —— Turnstile 的 secret key 走 Worker secret
+// （wrangler secret put TURNSTILE_SECRET），不進版本控制。
+export const CONTACT = {
+	// 寄件位址。網域必須已接上 Cloudflare Email Routing，否則 send() 會被拒絕。
+	from: "contact@prisvalis.com",
+	fromName: "Prisvalis 網站聯絡表單",
+	// 收件位址。必須是 Cloudflare 帳號裡「已驗證」的 destination address，
+	// 且要與 wrangler.json 的 destination_address 一致。
+	to: "admin@mail.prisvalis.com",
+	// ⚠️ 這是 Cloudflare 官方的「一律通過」測試用 site key。
+	// 在 CF 後台建好 Turnstile widget 之後，換成真正的 site key。
+	// site key 是公開值（會出現在 HTML 原始碼裡），放這裡沒有安全問題。
+	turnstileSiteKey: "1x00000000000000000000AA",
+} as const;
+
 // Official social profiles. Also emitted as `sameAs` in structured data.
 export const SOCIAL = {
 	instagram: "https://www.instagram.com/prisvalis.ltd",
