@@ -10,6 +10,11 @@ export const COMPANY = {
 	shortEn: "Prisvalis",
 	// Public contact address shown on the Coming Soon page. Update if needed.
 	email: "admin@mail.prisvalis.com",
+	// 對外聯絡電話。還沒申請，先用 "-" 佔位 —— 填入真號碼後，
+	// 聯絡頁會自動把它變成可直接撥號的 tel: 連結。
+	phone: "-",
+	// LINE 官方帳號。同樣還沒申請，先用 "-" 佔位。
+	lineId: "-",
 	// 統一編號（台灣的營利事業統一編號），頁尾與結構化資料共用同一個來源。
 	taxId: "62010947",
 } as const;
@@ -28,6 +33,12 @@ export const CONTACT = {
 	// 放這裡沒有安全問題；配對的 secret 走 Worker secret（TURNSTILE_SECRET）。
 	turnstileSiteKey: "0x4AAAAAAE7PVRW8a1YRCJkI",
 } as const;
+
+// 聯絡表單的需求類別。這個陣列同時是畫面的選項來源與後端的白名單 ——
+// 共用一份，才不會出現表單送得出去、後端卻不認得的組合。
+// 每個值都要在 i18n 有一組對應的 `contact.category.<value>` 字串。
+export const CONTACT_CATEGORIES = ["general"] as const;
+export type ContactCategory = (typeof CONTACT_CATEGORIES)[number];
 
 // Official social profiles. Also emitted as `sameAs` in structured data.
 export const SOCIAL = {
