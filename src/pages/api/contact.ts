@@ -13,6 +13,9 @@ const MIN_MESSAGE = 10;
 const MAX_BODY_BYTES = 64 * 1024;
 
 const TURNSTILE_VERIFY = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+// siteverify 回這幾個代碼代表是我們這邊設定壞了，不是訪客沒通過驗證。
+// 分開處理，否則 secret 打錯字會讓訪客看到「請重試」，而重試永遠不會成功。
+const TURNSTILE_CONFIG_ERRORS = ["missing-input-secret", "invalid-input-secret", "bad-request"];
 
 /** 會進信件標頭的欄位要先清乾淨：換行字元可以用來塞進額外的標頭。 */
 function sanitize(value: string): string {
@@ -87,8 +90,16 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
 	try {
 		const verifyRes = await fetch(TURNSTILE_VERIFY, { method: "POST", body: verifyBody });
-		const verdict = (await verifyRes.json()) as { success?: boolean };
-		if (!verdict.success) return back("error=captcha");
+		const verdict = (await verifyRes.json()) as {
+			success?: boolean;
+			"error-codes"?: string[];
+		};
+		if (!verdict.success) {
+			const codes = verdict["error-codes"] ?? [];
+			console.error("contact: turnstile rejected", codes.join(",") || "(no error codes)");
+			const misconfigured = codes.some((code) => TURNSTILE_CONFIG_ERRORS.includes(code));
+			return back(misconfigured ? "error=failed" : "error=captcha");
+		}
 	} catch (error) {
 		console.error("contact: turnstile verify failed", error);
 		return back("error=failed");
