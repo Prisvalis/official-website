@@ -10,9 +10,8 @@ export const COMPANY = {
 	shortEn: "Prisvalis",
 	// Public contact address shown on the Coming Soon page. Update if needed.
 	email: "admin@mail.prisvalis.com",
-	// 對外聯絡電話。還沒申請，先用 "-" 佔位 —— 填入真號碼後，
 	// 聯絡頁會自動把它變成可直接撥號的 tel: 連結。
-	phone: "-",
+	phone: "+886-04-2369-7788",
 	// LINE 官方帳號。同樣還沒申請，先用 "-" 佔位。
 	lineId: "-",
 	// 統一編號（台灣的營利事業統一編號），頁尾與結構化資料共用同一個來源。
