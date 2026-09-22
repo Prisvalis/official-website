@@ -11,8 +11,8 @@ export const COMPANY = {
 	// Public contact address shown on the Coming Soon page. Update if needed.
 	email: "admin@mail.prisvalis.com",
 	// 聯絡頁會自動把它變成可直接撥號的 tel: 連結。
-	phone: "+886-04-2369-7788",
-	// LINE 官方帳號。同樣還沒申請，先用 "-" 佔位。
+	phone: "+886-4-2369-7788",
+	// LINE 官方帳號。還沒申請，先用 "-" 佔位。
 	lineId: "-",
 	// 統一編號（台灣的營利事業統一編號），頁尾與結構化資料共用同一個來源。
 	taxId: "62010947",
@@ -27,7 +27,7 @@ export const CONTACT = {
 	fromName: "Prisvalis 網站聯絡表單",
 	// 收件位址。必須是 Cloudflare 帳號裡「已驗證」的 destination address，
 	// 且要與 wrangler.json 的 destination_address 一致。
-	to: "admin@mail.prisvalis.com",
+	to: "support@mail.prisvalis.com",
 	// Turnstile widget 的 site key。site key 是公開值（會出現在 HTML 原始碼裡），
 	// 放這裡沒有安全問題；配對的 secret 走 Worker secret（TURNSTILE_SECRET）。
 	turnstileSiteKey: "0x4AAAAAAE7PVRW8a1YRCJkI",
