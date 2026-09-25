@@ -2,10 +2,12 @@
 // 聯絡。頁面本身是靜態的（會進 sitemap、走 CDN），
 // 送出後由 /api/contact 處理，再轉址回來帶上狀態參數。
 //
-// 版面沿用首頁的語彙（styles/global.css）：左對齊、不對稱、只用留白與 1px 實線。
+// 華國美學版：外框由 PortalShell 提供；表單改成行政表格式的「欄名格 + 輸入格」。
+// 錯誤橫幅照舊：每一種錯誤都有文字說明，不只靠紅色。
 import BaseHead from "../components/BaseHead.astro";
-import MourningNotice from "../components/MourningNotice.astro";
-import ThemeToggle from "../components/ThemeToggle.astro";
+import PortalShell from "../components/PortalShell.astro";
+import WordArt from "../components/WordArt.astro";
+import { portal } from "../i18n/portal";
 import { COMPANY, CONTACT, CONTACT_CATEGORIES, SITE, SOCIAL, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 
@@ -32,7 +34,6 @@ const telHref = `tel:${COMPANY.phone.replace(/[^\d+]/g, "")}`;
 const instagramHandle = `@${SOCIAL.instagram.split("/").filter(Boolean).pop()}`;
 
 const homeHref = locale === "en" ? "/en/" : "/";
-const year = new Date().getFullYear();
 ---
 
 <!doctype html>
@@ -46,26 +47,17 @@ const year = new Date().getFullYear();
 		/>
 	</head>
 	<body>
-		<MourningNotice locale={locale} />
-
-		<header class="site-header">
-			<div class="wrap">
-				<a class="brand" href={homeHref}>
-					<img class="brand-logo" src="/logo.png" alt={COMPANY.nameEn} width="583" height="86" />
-				</a>
-
-				<nav class="site-nav">
-					<a href={PATHS[otherLocale]} aria-label={t(locale, "switch.aria")}>
-						{t(locale, "switch.to")}
-					</a>
-					<ThemeToggle locale={locale} />
-				</nav>
-			</div>
-		</header>
-
-		<main class="wrap">
-			<h1 class="title">{t(locale, "contact.heading")}</h1>
-			<p class="lead">{t(locale, "contact.lead")}</p>
+		<PortalShell
+			locale={locale}
+			page="contact"
+			switchHref={PATHS[otherLocale]}
+			crumbs={[{ label: portal[locale].crumbs.contact }]}
+		>
+			<div class="contact-page">
+			<section class="hero contact-hero">
+				<WordArt text={t(locale, "contact.heading")} class="title" />
+				<p class="lead">{t(locale, "contact.lead")}</p>
+			</section>
 
 			{/* 四種狀態都先渲染好再由 script 打開對應的那個。
 			    比起用 JS 組字串，這樣文案仍然只有一份，也不會有版面跳動。 */}
@@ -256,14 +248,8 @@ const year = new Date().getFullYear();
 			<p class="back">
 				<a href={homeHref}>{t(locale, "contact.back")}</a>
 			</p>
-		</main>
-
-		<footer class="site-footer">
-			<div class="wrap">
-				<p>© {year} {COMPANY.nameEn} · {t(locale, "rights")}</p>
-				<p>{t(locale, "taxId")} {COMPANY.taxId}</p>
 			</div>
-		</footer>
+		</PortalShell>
 
 		<script
 			src="https://challenges.cloudflare.com/turnstile/v0/api.js"
@@ -292,124 +278,175 @@ const year = new Date().getFullYear();
 		</script>
 
 		<style>
-			main {
-				padding-block: clamp(2rem, 6vw, 3.5rem) 2rem;
-			}
-			.title {
-				font-size: clamp(2rem, 5.4vw, 3.2rem);
-				line-height: 1.2;
+			.contact-hero {
+				margin-bottom: 0;
 			}
 			.lead {
-				margin-top: 0.9rem;
-				/* 導言不跟著版面拉到最寬，長行很難讀。
-				   用 em 而不是 ch：ch 以「0」的字寬為基準，中日韓字元約是它的兩倍，
-				   60ch 對英文剛好，對中文只放得下三十個字，句尾會被擠到第二行。
-				   44em 讓中文導言（36 字）穩定單行，英文也還在合理的行寬內。 */
-				max-width: 44em;
-				color: var(--fg-secondary);
-				font-size: clamp(1rem, 2.2vw, 1.1rem);
+				max-width: 46em;
+				margin-top: 8.6px;
+				font-size: 15.4px;
 			}
 
-			.banners:not(:empty) {
-				display: block;
-			}
+			/* 錯誤與成功都有文字說明；顏色只是輔助。 */
 			.banner {
 				display: flex;
 				flex-wrap: wrap;
-				gap: 0.35rem 0.6rem;
+				gap: 3px 8.4px;
 				align-items: baseline;
-				max-width: 44em;
-				margin-top: 1.5rem;
-				padding: 0.9rem 1.1rem;
-				border: 1px solid var(--rule);
-				border-left: 3px solid var(--fg);
-				border-radius: 2px;
+				margin-top: 10.4px;
+				padding: 7.6px 11.2px 7.2px 10.4px;
+				border: 2px solid var(--ok-border);
+				background: var(--ok-bg);
+				font-family: var(--font-ui);
 			}
 			/* display:flex 的優先權高過瀏覽器內建的 [hidden]{display:none}，
 			   沒有這條的話四種狀態會同時出現在畫面上。 */
 			.banner[hidden] {
 				display: none;
 			}
-			/* 錯誤與強調色同色，所以絕不能只靠顏色：文字本身就說明了發生什麼事。 */
+			.banner-ok::before {
+				content: "◎";
+				color: var(--ok-border);
+				font-weight: 700;
+			}
 			.banner-err {
-				border-left-color: var(--accent);
+				border-color: var(--roc-red);
+				background: var(--err-bg);
+			}
+			.banner-err::before {
+				content: "※";
+				color: var(--roc-red);
+				font-weight: 700;
+			}
+			:root[data-theme="dark"] .banner-err::before {
+				color: #ff9d9d;
 			}
 
-			/* 左資訊、右表單，左窄右寬。窄螢幕收成一欄，資訊在上（DOM 順序即閱讀順序，
-			   不用 order 去搬，免得鍵盤焦點順序跟畫面對不起來）。 */
+			/* 左：服務窗口資訊；右：線上詢問表單。窄螢幕收成一欄，DOM 順序即閱讀順序。 */
 			.layout {
 				display: grid;
-				gap: 2.5rem clamp(2rem, 6vw, 5rem);
-				margin-top: 2.5rem;
-				padding-top: 2.5rem;
-				border-top: 1px solid var(--rule);
+				gap: 10.6px 11.4px;
+				margin-top: 10.8px;
 				align-items: start;
 			}
 			@media (min-width: 56rem) {
-				/* 22rem 是讓電子郵件位址不被從中間斷行的下限。表單另外收窄，右邊留白。 */
 				.layout {
-					grid-template-columns: minmax(0, 22rem) minmax(0, 40em);
+					grid-template-columns: minmax(0, 15.5rem) minmax(0, 1fr);
 				}
 			}
+			.info,
+			.form {
+				border: 1px solid var(--border);
+				background: var(--panel);
+			}
+			.form {
+				border-color: var(--border-dark);
+			}
 			.block-title {
-				margin-bottom: 1.25rem;
-				font-family: var(--font-body);
-				font-size: 1.1rem;
-				font-weight: 700;
-				line-height: 1.5;
+				padding: 4px 9.6px 3.4px;
+				background: linear-gradient(to bottom, var(--roc-blue-3), var(--roc-blue-2) 55%, var(--roc-blue));
+				border-bottom: 2px solid var(--roc-gold);
+				color: #ffffff;
+				font-size: 17.4px;
+				text-shadow: 1px 1px 0 #000040;
+			}
+			.info .block-title {
+				background: linear-gradient(to bottom, hsl(0 80% 52%), var(--roc-red-2));
+				border-bottom-color: #500000;
+				text-shadow: 1px 1px 0 #400000;
+			}
+			.block-title::before {
+				content: "【";
+			}
+			.block-title::after {
+				content: "】";
 			}
 
 			.info-list {
 				margin: 0;
+				font-family: var(--font-ui);
+				font-size: 13.6px;
 			}
 			.info-item {
-				padding-block: 0.8rem;
-				border-top: 1px solid var(--rule);
+				display: grid;
+				grid-template-columns: 6.4em minmax(0, 1fr);
+				border-bottom: 1px solid var(--border);
 			}
-			.info-item:first-child {
-				border-top: 0;
-				padding-top: 0;
+			.info-item:last-child {
+				border-bottom: 0;
 			}
 			.info-item dt {
-				color: var(--fg-secondary);
-				font-size: 0.85rem;
+				padding: 5.2px 6.4px;
+				background: var(--roc-blue-pale);
+				border-right: 1px solid var(--border);
+				font-weight: 700;
 			}
 			.info-item dd {
-				margin: 0.1rem 0 0;
+				margin: 0;
+				padding: 5.2px 7.6px 4.8px;
 				overflow-wrap: anywhere;
 			}
-			/* 還沒開通的欄位。視覺上淡化，但螢幕閱讀器仍會唸出 .sr-only 的說明。 */
 			.empty {
-				color: var(--fg-secondary);
+				color: var(--muted);
 			}
 
+			/* 表單：行政表格式。每個欄位一列，左邊灰底欄名。 */
 			.form {
 				display: grid;
-				gap: 1.15rem;
+				gap: 0;
 			}
-			.form .block-title {
-				margin-bottom: 0;
+			.form > :not(.block-title):not(.hp),
+			.row > .field {
+				margin-inline: 10.2px 9.6px;
 			}
 			.row {
-				display: grid;
-				gap: 1.15rem;
-			}
-			@media (min-width: 34rem) {
-				.row {
-					grid-template-columns: repeat(2, minmax(0, 1fr));
-				}
+				display: contents;
 			}
 			.field {
 				display: grid;
-				gap: 0.4rem;
+				gap: 0;
 				min-width: 0;
+				margin-top: -1px;
+				border: 1px solid var(--border);
+			}
+			.field:has(#name) {
+				margin-top: 10.4px;
+			}
+			@media (min-width: 34rem) {
+				.field {
+					grid-template-columns: 9.2em minmax(0, 1fr);
+				}
+			}
+			.field > :not(label) {
+				justify-self: stretch;
+				min-width: 0;
+				margin: 5.4px 6.6px 5.8px 6px;
 			}
 			label {
-				font-size: 0.9rem;
+				display: block;
+				padding: 6.2px 8px 5.6px;
+				background: var(--roc-blue-pale);
+				font-family: var(--font-ui);
+				font-size: 13.6px;
 				font-weight: 700;
 			}
+			@media (min-width: 34rem) {
+				.field > label {
+					border-right: 1px solid var(--border);
+				}
+			}
+			label::before {
+				content: "＊";
+				color: var(--roc-red);
+			}
+			:root[data-theme="dark"] label::before {
+				color: #ff9d9d;
+			}
+			label:has(.optional)::before {
+				content: "";
+			}
 			.optional {
-				color: var(--fg-secondary);
+				color: var(--muted);
 				font-weight: 400;
 			}
 			input[type="text"],
@@ -417,138 +454,78 @@ const year = new Date().getFullYear();
 			input[type="tel"],
 			select,
 			textarea {
-				width: 100%;
-				padding: 0.7rem 0.85rem;
-				border: 1px solid var(--fg-secondary);
-				border-radius: 2px;
-				background: var(--bg);
-				color: var(--fg);
-				font: inherit;
-				font-size: 0.95rem;
+				width: auto;
+				padding: 4.4px 6.2px;
+				border: 2px inset hsl(220 10% 75%);
+				border-radius: 0;
+				background: #ffffff;
+				color: #1c1c1c;
+				font-family: var(--font-ming);
+				font-size: 15px;
 			}
-			input:hover,
-			select:hover,
-			textarea:hover {
-				border-color: var(--fg);
+			:root[data-theme="dark"] input[type="text"],
+			:root[data-theme="dark"] input[type="email"],
+			:root[data-theme="dark"] input[type="tel"],
+			:root[data-theme="dark"] select,
+			:root[data-theme="dark"] textarea {
+				border-color: hsl(228 30% 40%);
+				background: hsl(230 60% 8%);
+				color: var(--text);
+			}
+			input:focus,
+			select:focus,
+			textarea:focus {
+				background: hsl(52 100% 95%);
+			}
+			:root[data-theme="dark"] input:focus,
+			:root[data-theme="dark"] select:focus,
+			:root[data-theme="dark"] textarea:focus {
+				background: hsl(229 50% 16%);
 			}
 			input::placeholder,
 			textarea::placeholder {
-				color: var(--fg-secondary);
+				color: #6b6b6b;
 				opacity: 1;
 			}
-
-			.select-wrap {
-				position: relative;
+			:root[data-theme="dark"] input::placeholder,
+			:root[data-theme="dark"] textarea::placeholder {
+				color: #9aa2c0;
 			}
 			select {
-				appearance: none;
-				padding-right: 2.5rem;
 				cursor: pointer;
 			}
-			/* 自繪箭頭，否則各家瀏覽器的原生箭頭在深色底上會看不見。
-			   用邊框畫，不用漸層。 */
-			.select-wrap::after {
-				content: "";
-				position: absolute;
-				right: 1.1rem;
-				top: 50%;
-				width: 0.5rem;
-				height: 0.5rem;
-				border-right: 2px solid var(--fg-secondary);
-				border-bottom: 2px solid var(--fg-secondary);
-				transform: translateY(-70%) rotate(45deg);
-				pointer-events: none;
-			}
-			/* 尚未選擇時，顯示文字比照 placeholder 淡化 */
 			select:invalid {
-				color: var(--fg-secondary);
+				color: #6b6b6b;
 			}
-
-			/* 展開後的選項清單。原生 <option> 幾乎吃不到 CSS，要自訂面板只能靠
-			   customizable select（appearance: base-select）。不支援的瀏覽器會
-			   整段忽略 @supports，落回上面那組 appearance:none + 自繪箭頭。
-			   外觀樸素但完全可用，而且元素始終是真正的 <select>，鍵盤操作、
-			   表單驗證、行動裝置的原生選單都不受影響。 */
-			@supports (appearance: base-select) {
-				select,
-				select::picker(select) {
-					appearance: base-select;
-				}
-				select {
-					/* 改用 ::picker-icon 畫箭頭，收回 fallback 的自繪箭頭與右內距。 */
-					padding-right: 0.85rem;
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-					gap: 0.5rem;
-				}
-				.select-wrap::after {
-					display: none;
-				}
-				select::picker-icon {
-					color: var(--fg-secondary);
-				}
-
-				select::picker(select) {
-					border: 1px solid var(--fg);
-					border-radius: 2px;
-					/* 面板要不透明，透明的話底下的文字會透出來。 */
-					background: var(--bg);
-					padding: 0.25rem;
-					/* 類別多的時候不要把面板拉到整個視窗高。 */
-					max-height: 20rem;
-					overflow-y: auto;
-				}
-
-				option {
-					position: relative;
-					display: flex;
-					align-items: center;
-					/* 左側留出打勾的欄位，未選中的列才不會跟選中的列對不齊。 */
-					padding: 0.6rem 1rem 0.6rem 2.1rem;
-					border-radius: 2px;
-					color: var(--fg);
-					font-size: 0.95rem;
-					line-height: 1.4;
-					cursor: pointer;
-				}
-				option:hover,
-				option:focus {
-					background: var(--hover);
-				}
-				/* placeholder 雖然也是 :checked，但它不是一個「選擇」，不該被強調。 */
-				option:checked:not([value=""]) {
-					font-weight: 700;
-				}
-				/* 打勾記號不是內文字級的文字，用強調色不受內文對比度門檻限制。 */
-				option::checkmark {
-					position: absolute;
-					left: 0.75rem;
-					color: var(--accent);
-				}
-				/* placeholder 那一列比照收合狀態淡化，跟真正的選項區分開。 */
-				option[value=""] {
-					color: var(--fg-secondary);
-				}
+			.select-wrap {
+				display: block;
 			}
-
+			.select-wrap select {
+				width: 100%;
+			}
 			textarea {
 				resize: vertical;
 				min-height: 8rem;
 			}
-			/* 只在使用者動過之後才標記，一進頁面就滿版警示很勸退。
-			   強調色與錯誤同色，所以不只換顏色，邊框也加粗成 2px（內距同步減 1px 免得欄位跳動）。 */
+			/* 使用者動過之後才標記。錯誤不只換顏色：框加粗、底色改淡紅。 */
 			input:user-invalid,
 			select:user-invalid,
 			textarea:user-invalid {
-				padding: calc(0.7rem - 1px) calc(0.85rem - 1px);
-				border-width: 2px;
-				border-color: var(--accent);
+				border: 2px solid var(--roc-red);
+				background: var(--err-bg);
 			}
 			.hint {
-				color: var(--fg-secondary);
-				font-size: 0.85rem;
+				padding: 4.2px 2px 0;
+				color: var(--muted);
+				font-family: var(--font-ui);
+				font-size: 12.8px;
 				line-height: 1.6;
+			}
+			.hint::before {
+				content: "※ ";
+			}
+			#email-hint {
+				padding-bottom: 4px;
 			}
 
 			/* 蜜罐。不用 display:none，有些機器人會跳過被隱藏的欄位。 */
@@ -560,23 +537,27 @@ const year = new Date().getFullYear();
 				overflow: hidden;
 			}
 
+			.cf-turnstile {
+				margin-top: 10.2px;
+			}
 			.submit {
 				justify-self: start;
+				margin-top: 10.6px;
+			}
+			.form > .hint:last-child {
+				margin-bottom: 10px;
 			}
 
 			.back {
-				margin-top: 2.5rem;
-				font-size: 0.9rem;
+				margin-top: 11.4px;
+				font-family: var(--font-ui);
+				font-size: 13.6px;
 			}
-
-			.site-footer p {
-				margin: 0;
+			.back::before {
+				content: "← ";
 			}
 
 			@media (max-width: 30rem) {
-				.brand-logo {
-					height: 24px;
-				}
 				.submit {
 					justify-self: stretch;
 					justify-content: center;

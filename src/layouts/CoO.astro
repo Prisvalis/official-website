@@ -4,12 +4,14 @@
 // 仍然自己出 head，不用官網的 BaseHead：canonical 由路由自己算（帶不帶尾斜線
 // 會產出兩種值），而且這幾頁沒有 Organization 的結構化資料。
 // 樣式則與官網共用 global.css 的 token，coo.css 只放產品頁自己的版面。
+// 華國美學版：頁首、主選單、跑馬燈、側欄與頁尾都由 PortalShell 提供，
+// 產品頁原本的頁尾連結群組放進外框頁尾的 footer slot。
 import "../styles/global.css";
 import "../styles/coo.css";
 import Fonts from "../components/Fonts.astro";
-import MourningNotice from "../components/MourningNotice.astro";
+import PortalShell from "../components/PortalShell.astro";
 import ThemeInit from "../components/ThemeInit.astro";
-import ThemeToggle from "../components/ThemeToggle.astro";
+import { portal } from "../i18n/portal";
 import { SITE, COMPANY, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { coo, cooUrl, cooPageUrl, APP_URL, REPO_URL, COO_NAME, type CooPage } from "../i18n/coo";
@@ -32,11 +34,12 @@ const zhHref = new URL(cooPageUrl("zh-Hant", page), SITE).href;
 const enHref = new URL(cooPageUrl("en", page), SITE).href;
 const otherLocale: Locale = locale === "zh-Hant" ? "en" : "zh-Hant";
 
-const nav = [
-	{ href: cooUrl(locale, "/"), label: c.nav.home, key: "home" },
-	{ href: cooUrl(locale, "/features"), label: c.nav.features, key: "features" },
-	{ href: cooUrl(locale, "/pricing"), label: c.nav.pricing, key: "pricing" },
-];
+const p = portal[locale];
+const portalPage = page === "home" ? "coo" : page;
+const crumbs =
+	page === "home"
+		? [{ label: p.crumbs.coo }]
+		: [{ label: p.crumbs.coo, href: cooUrl(locale, "/") }, { label: p.crumbs[page] }];
 
 const footerGroups = [
 	{
@@ -71,8 +74,8 @@ const footerGroups = [
 		<meta name="description" content={meta.description} />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="google" content="notranslate" />
-		<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F4F1EA" />
-		<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1A1A1A" />
+		<meta name="theme-color" media="(prefers-color-scheme: light)" content="#000095" />
+		<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000095" />
 
 		<link rel="canonical" href={canonical} />
 		<link rel="alternate" hreflang="zh-Hant" href={zhHref} />
@@ -98,39 +101,11 @@ const footerGroups = [
 		<ThemeInit />
 	</head>
 	<body>
-		<a class="skip-link" href="#main">{c.skip}</a>
-
-		<MourningNotice locale={locale} />
-
-		<header class="site-header">
-			<div class="wrap">
-				<a class="brand" href={cooUrl(locale, "/")}>
-					<span class="brand-name">{COO_NAME}</span>
-				</a>
-				<nav class="site-nav" aria-label={c.navAria}>
-					{
-						nav.map((item) => (
-							<a href={item.href} aria-current={page === item.key ? "page" : undefined}>
-								{item.label}
-							</a>
-						))
-					}
-					<a href={cooPageUrl(otherLocale, page)} aria-label={t(locale, "switch.aria")}>
-						{t(locale, "switch.to")}
-					</a>
-					<ThemeToggle locale={locale} />
-					<a class="btn nav-cta" href={APP_URL}>{c.start}</a>
-				</nav>
-			</div>
-		</header>
-
-		<main id="main" tabindex="-1">
+		<PortalShell locale={locale} page={portalPage} switchHref={cooPageUrl(otherLocale, page)} crumbs={crumbs}>
 			<slot />
-		</main>
 
-		<footer class="site-footer">
-			<div class="wrap">
-				<p>{c.footer.blurb}</p>
+			<div class="coo-footer" slot="footer">
+				<p>{COO_NAME}{c.colon}{c.footer.blurb}</p>
 				<dl class="footer-rows">
 					{
 						footerGroups.map((group) => (
@@ -149,15 +124,8 @@ const footerGroups = [
 						))
 					}
 				</dl>
-				<div class="footer-bottom">
-					<p>{COO_NAME} · {c.footer.note}</p>
-					<p>
-						© {new Date().getFullYear()}
-						{COMPANY.nameEn} · {t(locale, "rights")} · {t(locale, "taxId")}
-						{COMPANY.taxId}
-					</p>
-				</div>
+				<p class="footer-fine">※ {c.footer.note}</p>
 			</div>
-		</footer>
+		</PortalShell>
 	</body>
 </html>
