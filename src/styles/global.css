@@ -1,36 +1,48 @@
-/* Design tokens + light/dark theming. Theme is set on <html data-theme>. */
+/* 設計 token 與全站共用的版面語彙。規範出處是 CLAUDE.md。
+ *
+ * 全站只有三個色值（--paper / --ink / --accent），層次一律用 color-mix() 由它們衍生，
+ * 不得在這個檔案以外的地方寫死色值。主題由 <html data-theme> 決定。
+ *
+ * 強調色的對比度：在紙色上 4.40、在墨色上 3.50，內文門檻 4.5 兩邊都未達。
+ * 所以它只用於色塊、線條、邊框與大字（>= 24px，或 >= 18.66px 且粗體），
+ * 不得用在內文級字級的文字上。內文連結用 --fg 加底線。
+ */
 :root {
-	--font-sans: "Inter", ui-sans-serif, system-ui, -apple-system,
-		"Segoe UI", Roboto, "Helvetica Neue", "PingFang TC", "Microsoft JhengHei",
-		"Noto Sans TC", sans-serif;
+	--paper: #F4F1EA;
+	--ink: #1A1A1A;
+	--accent: #C8411B;
 
-	--accent: #5b6cff;
-	--accent-2: #7c3aed;
+	--bg: var(--paper);
+	--fg: var(--ink);
+	/* 放在強調色色塊上的文字。追悼模式的暗色版會把強調色換成淺灰，屆時改用墨色。 */
+	--on-accent: var(--paper);
 
-	/* Light theme (default) */
-	--bg: #ffffff;
-	--bg-soft: #f5f6fb;
-	--surface: rgba(255, 255, 255, 0.7);
-	--border: rgba(17, 18, 38, 0.1);
-	--text: #12122a;
-	--text-muted: #55566f;
-	--glow-1: rgba(91, 108, 255, 0.28);
-	--glow-2: rgba(124, 58, 237, 0.2);
-	--grid: rgba(17, 18, 38, 0.05);
-	--shadow: 0 10px 40px rgba(17, 18, 38, 0.08);
+	--fg-secondary: color-mix(in srgb, var(--fg) 65%, var(--bg));
+	--rule: color-mix(in srgb, var(--fg) 18%, var(--bg));
+	--hover: color-mix(in srgb, var(--fg) 7%, var(--bg));
+
+	/* 三組都以襯線字體收尾。無襯線的 fallback 會與襯線內文的調性衝突。
+	   LXGW WenKai TC 的載入方式見 components/Fonts.astro。 */
+	--font-display: "LXGW WenKai TC", "Noto Serif TC", "Songti TC", "Source Han Serif TC",
+		"Noto Serif CJK TC", "PMingLiU", "MingLiU", Georgia, "Times New Roman", serif;
+	--font-body: "Noto Serif TC", "Songti TC", "Source Han Serif TC", "Noto Serif CJK TC",
+		"PMingLiU", "MingLiU", Georgia, "Times New Roman", serif;
+	--font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas,
+		"Liberation Mono", monospace;
+
+	/* 圓角只允許 2px 或 0。驗收用 grep 檢查 border-radius 的字面值，
+	   所以宣告處直接寫 2px，不引用這個變數。 */
+	--radius: 2px;
+
+	--page-max: 68rem;
+	--gutter: clamp(1.25rem, 5vw, 3rem);
+	color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-	--bg: #0a0a12;
-	--bg-soft: #0f0f1c;
-	--surface: rgba(255, 255, 255, 0.04);
-	--border: rgba(255, 255, 255, 0.12);
-	--text: #f4f5ff;
-	--text-muted: #a5a7c4;
-	--glow-1: rgba(91, 108, 255, 0.35);
-	--glow-2: rgba(124, 58, 237, 0.3);
-	--grid: rgba(255, 255, 255, 0.05);
-	--shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+	--bg: var(--ink);
+	--fg: var(--paper);
+	color-scheme: dark;
 }
 
 *,
@@ -46,26 +58,68 @@ html {
 body {
 	margin: 0;
 	min-height: 100svh;
-	font-family: var(--font-sans);
-	color: var(--text);
 	background: var(--bg);
-	line-height: 1.6;
+	color: var(--fg);
+	font-family: var(--font-body);
+	font-size: 1rem;
+	line-height: 1.8;
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
-	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* 標題字體只用在 h1 與 h2。LXGW WenKai TC 只載入 400 一個字重（見 Fonts.astro），
+   標題若吃瀏覽器預設的粗體就會變成假粗體，所以字重明確寫 400。
+   h3 以下改用內文字體加粗，層級靠字體與字重區分。 */
+h1,
+h2 {
+	margin: 0;
+	font-family: var(--font-display);
+	font-weight: 400;
+	line-height: 1.3;
+	/* 讓各行長度接近，避免「一人負責。」這種孤字行。不支援的瀏覽器照常斷行。 */
+	text-wrap: balance;
+}
+h3,
+h4 {
+	margin: 0;
+	font-weight: 700;
+	line-height: 1.5;
+}
+p {
+	margin: 0;
+	/* 避免段落最後一行只剩一兩個字。不支援的瀏覽器照常斷行。 */
+	text-wrap: pretty;
+}
+
+/* 內文連結不靠顏色區分：--fg 加底線。hover 只改底線的粗細與顏色。 */
 a {
-	color: var(--accent);
-	text-decoration: none;
+	color: inherit;
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.2em;
+}
+a:hover {
+	text-decoration-thickness: 2px;
+	text-decoration-color: var(--accent);
 }
 
+/* 不得移除或改成 outline: none。 */
 :focus-visible {
 	outline: 2px solid var(--accent);
-	outline-offset: 3px;
-	border-radius: 6px;
+	outline-offset: 2px;
 }
 
+strong {
+	font-weight: 700;
+}
+
+code,
+kbd {
+	font-family: var(--font-mono);
+	font-size: 0.92em;
+}
+
+/* 只給輔助技術讀的文字。用 clip 而非 display:none，後者連輔助技術也讀不到。 */
 .sr-only {
 	position: absolute !important;
 	width: 1px;
@@ -74,8 +128,24 @@ a {
 	margin: -1px;
 	overflow: hidden;
 	clip: rect(0, 0, 0, 0);
+	clip-path: inset(50%);
 	white-space: nowrap;
 	border: 0;
+}
+
+.skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	z-index: 100;
+	padding: 0.6rem 1rem;
+	background: var(--bg);
+	color: var(--fg);
+	border: 1px solid var(--fg);
+}
+.skip-link:focus {
+	left: 1rem;
+	top: 1rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -85,5 +155,6 @@ a {
 		animation-duration: 0.001ms !important;
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.001ms !important;
+		scroll-behavior: auto !important;
 	}
 }
