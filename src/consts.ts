@@ -49,8 +49,18 @@ export const DEFAULT_LOCALE = "zh-Hant";
 export const LOCALES = ["zh-Hant", "en"] as const;
 export type Locale = (typeof LOCALES)[number];
 
-// Absolute URL for each locale's home page (used for hreflang + language switch).
+// 各語系首頁的「站內路徑」。頁面上的連結一律用這組 ——
+// 相對路徑會沿用訪客當下的網域，所以綁在同一個 Worker 上的
+// prisvalis.tw / prisvalis.app 不會因為切換語言就被彈回 .com。
+export const LOCALE_HOME_PATH: Record<Locale, string> = {
+	"zh-Hant": "/",
+	en: "/en/",
+};
+
+// 各語系首頁的「絕對網址」。只給 hreflang、canonical、OG 這類要被爬蟲讀的
+// 標籤用 —— 那些必須指向單一正式網域，否則三個網域會互相重複內容，
+// 搜尋排名的訊號會被拆散。不要拿這組去做站內連結。
 export const LOCALE_HOME: Record<Locale, string> = {
-	"zh-Hant": `${SITE}/`,
-	en: `${SITE}/en/`,
+	"zh-Hant": `${SITE}${LOCALE_HOME_PATH["zh-Hant"]}`,
+	en: `${SITE}${LOCALE_HOME_PATH.en}`,
 };

@@ -1,6 +1,6 @@
 ---
 import BaseHead from "../components/BaseHead.astro";
-import { COMPANY, SOCIAL, LOCALE_HOME, type Locale } from "../consts";
+import { COMPANY, SOCIAL, LOCALE_HOME_PATH, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 
 interface Props {
@@ -10,7 +10,8 @@ interface Props {
 const { locale } = Astro.props;
 const htmlLang = t(locale, "html.lang");
 const otherLocale: Locale = locale === "zh-Hant" ? "en" : "zh-Hant";
-const switchHref = LOCALE_HOME[otherLocale];
+// 相對路徑：切換語言時留在訪客當下的網域，不要跳回 SITE。
+const switchHref = LOCALE_HOME_PATH[otherLocale];
 
 const year = new Date().getFullYear();
 ---
@@ -26,7 +27,7 @@ const year = new Date().getFullYear();
 
 		<div class="page">
 			<header class="topbar">
-				<a class="brand" href={LOCALE_HOME[locale]}>
+				<a class="brand" href={LOCALE_HOME_PATH[locale]}>
 					<img
 						class="brand-logo"
 						src="/logo.png"
