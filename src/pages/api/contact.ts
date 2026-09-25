@@ -20,7 +20,7 @@ const MIN_MESSAGE = 10;
 const MAX_BODY_BYTES = 64 * 1024;
 
 const TURNSTILE_VERIFY = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
-// siteverify 回這幾個代碼代表是我們這邊設定壞了，不是訪客沒通過驗證。
+// siteverify 回這幾個代碼代表是伺服器端的設定壞了，不是訪客沒通過驗證。
 // 分開處理，否則 secret 打錯字會讓訪客看到「請重試」，而重試永遠不會成功。
 const TURNSTILE_CONFIG_ERRORS = ["missing-input-secret", "invalid-input-secret", "bad-request"];
 
