@@ -9,7 +9,7 @@ export const COMPANY = {
 	nameEn: "Prisvalis LTD.",
 	shortEn: "Prisvalis",
 	// Public contact address shown on the Coming Soon page. Update if needed.
-	email: "admin@mail.prisvalis.com",
+	email: "support@mail.prisvalis.com",
 	// 聯絡頁會自動把它變成可直接撥號的 tel: 連結。
 	phone: "+886-4-2369-7788",
 	// LINE 官方帳號。
