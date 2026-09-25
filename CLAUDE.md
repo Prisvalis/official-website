@@ -1,27 +1,6 @@
 # CLAUDE.md
 
-給在這個儲存庫工作的 AI 編輯代理與人類開發者。
-
----
-
-## 這份文件的性質
-
-**這是一份規格書，不是現況描述。**
-
-網站目前的設計違反下面幾乎每一條規則。這份文件定義的是網站**應該**變成的樣子，改寫工作尚未進行。
-
-這個區別很重要：如果你讀完這份文件、再去看周圍的程式碼，你會看到兩套互相矛盾的訊號。**以本文件為準，不要模仿現有的視覺程式碼。** 現有程式碼的架構決策（i18n 分檔、相對路徑連結、表單驗證）仍然有效且應該延續；只有視覺層是待汰換的。
-
-改寫完成後，請刪除本節並把第一句改成「本文件描述網站的設計規範」。
-
-### 現況與規範的差距
-
-| 檔案 | 違規項目數 | 說明 |
-|---|---|---|
-| `src/layouts/Contact.astro` | 24 | 毛玻璃卡片、漸層按鈕、大圓角、裝飾性圖示 |
-| `src/layouts/Home.astro` | 23 | 漸層背景、三欄卡片、毛玻璃、發光陰影 |
-| `src/styles/coo.css` | 12 | 同上 |
-| `src/styles/global.css` | 1 | 色彩與字體 token 全數需重定義 |
+給在這個儲存庫工作的 AI 編輯代理與人類開發者。本文件描述網站的設計規範。
 
 ---
 
@@ -94,7 +73,9 @@
   2. 使用提供分片載入的 CDN；
   3. 若前兩者都不做，至少設定 `font-display: swap` 並以系統襯線字體作為 fallback。
 
-  本環境無法對外連線，無法替你驗證 CDN 位址是否有效。實作時請自行確認，不要照抄未經驗證的 URL。
+  **目前採用 2 加 3**（`src/components/Fonts.astro`）：Fontsource 發佈的分片版本，由 jsDelivr 提供，版本釘死在 5.3.0，只載入 400 一個字重，所以 h1、h2 的 `font-weight` 必須明確寫 400，否則會變成假粗體。h3 以下改用內文字體加粗。換版本或換 CDN 時要重新確認網址有效，不要照抄未經驗證的 URL。
+
+  實測（中文首頁、首次載入、未快取）：LXGW WenKai TC 約 630 KB（stylesheet 35 KB、9 個 CJK 分片 576 KB、Latin 18 KB）；Noto Serif TC 約 1.8 MB（21 個分片，兩個字重共用可變字型檔）。兩者都帶 `font-display: swap`，不擋首次繪製，但流量不小。若要再降，做法是子集化並自行託管。
 
 - 三種字體都必須有完整的 fallback 鏈，且 fallback 不得是無襯線字體（會與襯線內文的視覺調性衝突）。
 
@@ -186,7 +167,6 @@
 
 因此全站一律用單數第一人稱，兩個語系皆然。「Company of One」這個產品名擺在同一頁上，單數人稱讓整個定位自洽。
 
-現有頁面仍使用「我們」，屬待改寫項目。
 
 ### 結構
 
@@ -244,10 +224,15 @@
 
   --bg: var(--paper);
   --fg: var(--ink);
+  --on-accent: var(--paper);   /* 強調色色塊上的文字；追悼模式的暗色版改用 --ink */
 
-  --font-display: "LXGW WenKai TC", serif;
-  --font-body: "Noto Serif TC", serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --fg-secondary: color-mix(in srgb, var(--fg) 65%, var(--bg));
+  --rule: color-mix(in srgb, var(--fg) 18%, var(--bg));
+  --hover: color-mix(in srgb, var(--fg) 7%, var(--bg));
+
+  --font-display: "LXGW WenKai TC", "Noto Serif TC", "Songti TC", …, serif;
+  --font-body: "Noto Serif TC", "Songti TC", …, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, …, monospace;
 
   --radius: 2px;
 }
@@ -257,6 +242,10 @@
   --fg: var(--paper);
 }
 ```
+
+完整的 fallback 鏈以 `src/styles/global.css` 為準。三個版面（首頁、聯絡、CoO）共用這一份 token 與 `global.css` 裡的頁首、按鈕、表格、頁尾；`coo.css` 只放產品頁自己的元件，不得再定義平行的色彩變數。
+
+**`border-radius` 一律寫字面值 `2px` 或 `0`，不要寫 `var(--radius)`。** 驗收用 grep 比對字面值，引用變數會被判為違規。
 
 ### 延續現有的架構決策
 
@@ -268,18 +257,16 @@
 - **canonical、hreflang、OG、JSON-LD 維持絕對網址**指向 `SITE`。三個網域各自 self-canonical 會構成重複內容。
 - **`CONTACT.to` 與 `wrangler.json` 的 `destination_address` 必須一字不差地一致。** 不一致時寄信會拋例外，訪客只看到「系統暫時無法寄出訊息」，畫面上看不出是設定問題。
 
-### 改寫順序
+## 追悼模式
 
-0. `src/i18n/home.ts`、`src/i18n/ui.ts`、`src/i18n/coo.ts`：文案改用單數人稱，並套用「文案」一節的所有規則。文案先定，版面才知道要容納多少東西。
-1. `src/styles/global.css`：token 與字體載入。
-2. `src/layouts/Home.astro`：最複雜，先確立版面語彙。
-3. `src/layouts/Contact.astro`
-4. `src/styles/coo.css` 與 `src/layouts/CoO.astro`
-5. `src/components/coo/*.astro`
+每年五個日期（一律以台灣時間 UTC+8 判定）整站轉為黑白，並在每頁最上方顯示一行說明。
 
-每一步都要建置並實際渲染檢查，不要累積到最後。
-
----
+- 日期清單與文案在 `src/i18n/mourning.ts`，選取標準寫在該檔案的註解裡。**新增日期只改這個檔案**：判定用的內嵌腳本（`components/ThemeInit.astro`）與逐日的顯示規則（`components/MourningNotice.astro`）都從 `MOURNING_DAYS` 產生。
+- 黑白是覆寫 token，不是 `filter`：`:root[data-mourning] { --accent: … }` 把唯一的彩色換成由 ink 與 paper 混出的灰。`filter` 加在 `<html>` 上會讓它變成 fixed 子元素的 containing block。Logo 圖片與 Turnstile 嵌入不歸 token 管，另外在 `global.css` 對它們單獨套 `grayscale`。
+- 暗色模式的強調色換成淺灰後，紙色文字放在上面只有 2.46，所以 `--on-accent` 在該組合下改用墨色（6.27）。新增放在強調色色塊上的文字時，用 `var(--on-accent)`，不要寫 `var(--paper)`。
+- 判定必須用 `getUTCMonth` / `getUTCDate`：偏移已經加進時間戳，用本地方法會被訪客時區再加一次。改動這段腳本後，用假造時間戳在多個時區下驗證（在 Node 程序內設定 `process.env.TZ`；Git Bash 的 `TZ=… node` 前綴在 Windows 上不會生效，會靜默地用本機時區）。
+- 開發用覆寫：`?mourning=09-21` 強制開啟該日，`?mourning=0` 強制關閉，值不在清單內則忽略。
+- 一天多個事件寫在同一句裡。跨過午夜不會自動更新，不為此加計時器。
 
 ## 驗收
 
@@ -319,4 +306,4 @@ npx wrangler deploy --dry-run
 - Astro 5 + Cloudflare Workers，`@astrojs/cloudflare` adapter。
 - 除聯絡表單端點（`src/pages/api/contact.ts`，`prerender = false`）外全站靜態。
 - 沒有 CI。`main` 合併後需手動 `npm run build && npm run deploy`。
-- 頁面除十餘行主題切換外不使用 JavaScript。**新增 JS 前請先確認沒有純 CSS 的做法。**
+- 頁面除主題切換與追悼日判定（皆為 `<head>` 或頁尾的內嵌小腳本）、聯絡頁的橫幅狀態與 Turnstile 外，不使用 JavaScript。**新增 JS 前請先確認沒有純 CSS 的做法。**
