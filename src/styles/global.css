@@ -45,6 +45,26 @@
 	color-scheme: dark;
 }
 
+/* 追悼日（data-mourning 由 components/ThemeInit.astro 設定）。
+ * 全站唯一不是中性色的只有強調色，所以把它換成灰階就是整站黑白，
+ * 不必用 filter：filter 加在 <html> 上會讓它變成 fixed 子元素的 containing block，
+ * 而且結果值無法精確控制。灰階值由 ink 與 paper 混出，不引入新的色值。
+ *   淺色：ink 70% 混 paper，對紙色 6.04
+ *   暗色：paper 60% 混 ink，對墨色 6.27 */
+:root[data-mourning] {
+	--accent: color-mix(in srgb, var(--ink) 70%, var(--paper));
+}
+:root[data-theme="dark"][data-mourning] {
+	--accent: color-mix(in srgb, var(--paper) 60%, var(--ink));
+	/* 紙色放在這個淺灰上只有 2.46，改用墨色（6.27）。 */
+	--on-accent: var(--ink);
+}
+/* 影像與第三方嵌入的顏色不歸 token 管。 */
+:root[data-mourning] .brand-logo,
+:root[data-mourning] .cf-turnstile {
+	filter: grayscale(1);
+}
+
 *,
 *::before,
 *::after {
@@ -146,6 +166,20 @@ kbd {
 .skip-link:focus {
 	left: 1rem;
 	top: 1rem;
+}
+
+/* --- 追悼日說明（components/MourningNotice.astro）-------------------- */
+
+/* 預設隱藏；display:none 會一併從無障礙樹移除，螢幕閱讀器只會讀到當天那一行。
+   逐日的顯示規則由 MourningNotice.astro 依 MOURNING_DAYS 產生。
+   左右內距讓文字對齊 .wrap，底線則橫跨整個視窗。 */
+.mourning-notice {
+	display: none;
+	margin: 0;
+	padding: 0.75rem max(var(--gutter), calc((100% - var(--page-max)) / 2));
+	border-bottom: 1px solid var(--rule);
+	color: var(--fg);
+	line-height: 1.6;
 }
 
 @media (prefers-reduced-motion: reduce) {

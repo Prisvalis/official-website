@@ -5,6 +5,7 @@ import "../styles/global.css";
 import { SITE, COMPANY, SOCIAL, LOCALE_HOME, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import Fonts from "./Fonts.astro";
+import ThemeInit from "./ThemeInit.astro";
 
 interface Props {
 	locale: Locale;
@@ -88,17 +89,5 @@ const jsonLd = {
 
 <Fonts />
 
-<!-- No-flash theme bootstrap: runs before paint to avoid a light/dark flicker -->
-<script is:inline>
-	(function () {
-		try {
-			var stored = localStorage.getItem("theme");
-			var theme =
-				stored ||
-				(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-			document.documentElement.dataset.theme = theme;
-		} catch (e) {
-			document.documentElement.dataset.theme = "light";
-		}
-	})();
-</script>
+<!-- No-flash bootstrap: theme and mourning-day attributes are set before paint -->
+<ThemeInit />
