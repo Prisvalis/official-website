@@ -1,0 +1,44 @@
+---
+// 繪製前執行的 <head> 內嵌腳本，做兩件事，都是為了避免閃爍：
+//
+// 1. 決定主題（localStorage，否則跟系統偏好），寫進 <html data-theme>。
+// 2. 判定今天是不是追悼日，是的話把日期字串寫進 <html data-mourning>。
+//
+// 除聯絡表單端點外全站預渲染成靜態檔案，所以判定只能在瀏覽器端做，
+// 伺服器端算出來的日期會被鎖在建置當天。也不能等到 CSS 之後才設，會先閃一次彩色。
+import { MOURNING_DAYS } from "../i18n/mourning";
+---
+
+<script is:inline define:vars={{ days: MOURNING_DAYS }}>
+	(function () {
+		var root = document.documentElement;
+
+		try {
+			var stored = localStorage.getItem("theme");
+			root.dataset.theme =
+				stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+		} catch (e) {
+			root.dataset.theme = "light";
+		}
+
+		// 追悼日一律以台灣時間 UTC+8 判定。倫敦時間 9/20 23:00 在台灣已經是 9/21，
+		// 直接用 getMonth / getDate 會讓不同時區的訪客在同一個時刻看到不同結果。
+		// 台灣沒有日光節約時間，固定偏移即可，不需要 Intl 時區資料庫。
+		// 偏移已經加進時間戳，所以取值要用 getUTC*，用本地方法會被訪客時區再加一次。
+		var taipei = new Date(Date.now() + 8 * 3600 * 1000);
+		var key =
+			String(taipei.getUTCMonth() + 1).padStart(2, "0") +
+			"-" +
+			String(taipei.getUTCDate()).padStart(2, "0");
+
+		// 開發用覆寫：?mourning=09-21 強制開啟該日，?mourning=0 強制關閉。
+		// 參數值必須在清單之內才生效，不把任意字串寫進屬性。
+		try {
+			var forced = new URLSearchParams(location.search).get("mourning");
+			if (forced === "0") key = "";
+			else if (forced && days.indexOf(forced) !== -1) key = forced;
+		} catch (e) {}
+
+		if (days.indexOf(key) !== -1) root.dataset.mourning = key;
+	})();
+</script>

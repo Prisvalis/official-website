@@ -1,9 +1,11 @@
 ---
 // Global <head>: SEO metadata, social cards, hreflang alternates,
-// structured data and a no-flash theme bootstrap. Included on every page.
+// structured data, fonts and a no-flash theme bootstrap. Included on every page.
 import "../styles/global.css";
 import { SITE, COMPANY, SOCIAL, LOCALE_HOME, type Locale } from "../consts";
 import { t } from "../i18n/ui";
+import Fonts from "./Fonts.astro";
+import ThemeInit from "./ThemeInit.astro";
 
 interface Props {
 	locale: Locale;
@@ -50,8 +52,8 @@ const jsonLd = {
 <meta name="generator" content={Astro.generator} />
 <!-- Site manages its own zh/en switch; suppress the browser's auto-translate prompt -->
 <meta name="google" content="notranslate" />
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a12" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F4F1EA" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1A1A1A" />
 
 <!-- Canonical + language alternates (hreflang) -->
 <link rel="canonical" href={canonicalURL} />
@@ -85,17 +87,7 @@ const jsonLd = {
 <!-- Structured data -->
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-<!-- No-flash theme bootstrap: runs before paint to avoid a light/dark flicker -->
-<script is:inline>
-	(function () {
-		try {
-			var stored = localStorage.getItem("theme");
-			var theme =
-				stored ||
-				(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-			document.documentElement.dataset.theme = theme;
-		} catch (e) {
-			document.documentElement.dataset.theme = "light";
-		}
-	})();
-</script>
+<Fonts />
+
+<!-- No-flash bootstrap: theme and mourning-day attributes are set before paint -->
+<ThemeInit />

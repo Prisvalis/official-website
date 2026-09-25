@@ -1,7 +1,11 @@
 ---
-// 聯絡我們。頁面本身是靜態的（會進 sitemap、走 CDN），
+// 聯絡。頁面本身是靜態的（會進 sitemap、走 CDN），
 // 送出後由 /api/contact 處理，再轉址回來帶上狀態參數。
+//
+// 版面沿用首頁的語彙（styles/global.css）：左對齊、不對稱、只用留白與 1px 實線。
 import BaseHead from "../components/BaseHead.astro";
+import MourningNotice from "../components/MourningNotice.astro";
+import ThemeToggle from "../components/ThemeToggle.astro";
 import { COMPANY, CONTACT, CONTACT_CATEGORIES, SITE, SOCIAL, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 
@@ -27,6 +31,7 @@ const telHref = `tel:${COMPANY.phone.replace(/[^\d+]/g, "")}`;
 // 從個人檔案網址推回帳號，省得同一個字串在 consts 裡放兩份。
 const instagramHandle = `@${SOCIAL.instagram.split("/").filter(Boolean).pop()}`;
 
+const homeHref = locale === "en" ? "/en/" : "/";
 const year = new Date().getFullYear();
 ---
 
@@ -41,298 +46,180 @@ const year = new Date().getFullYear();
 		/>
 	</head>
 	<body>
-		<div class="glow" aria-hidden="true"></div>
-		<div class="grid" aria-hidden="true"></div>
+		<MourningNotice locale={locale} />
 
-		<div class="page">
-			<header class="topbar">
-				<a class="brand" href={locale === "en" ? "/en/" : "/"}>
-					<img
-						class="brand-logo"
-						src="/logo.png"
-						alt={COMPANY.nameEn}
-						width="583"
-						height="86"
-					/>
+		<header class="site-header">
+			<div class="wrap">
+				<a class="brand" href={homeHref}>
+					<img class="brand-logo" src="/logo.png" alt={COMPANY.nameEn} width="583" height="86" />
 				</a>
 
-				<nav class="controls">
-					<a class="control" href={PATHS[otherLocale]} aria-label={t(locale, "switch.aria")}>
+				<nav class="site-nav">
+					<a href={PATHS[otherLocale]} aria-label={t(locale, "switch.aria")}>
 						{t(locale, "switch.to")}
 					</a>
-					<button
-						id="theme-toggle"
-						class="control icon-btn"
-						type="button"
-						aria-label={t(locale, "theme.aria")}
-						title={t(locale, "theme.aria")}
-					>
-						<svg class="icon sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-							<circle cx="12" cy="12" r="4.2" fill="currentColor"></circle>
-							<g stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-								<line x1="12" y1="2.5" x2="12" y2="5"></line>
-								<line x1="12" y1="19" x2="12" y2="21.5"></line>
-								<line x1="2.5" y1="12" x2="5" y2="12"></line>
-								<line x1="19" y1="12" x2="21.5" y2="12"></line>
-								<line x1="5.2" y1="5.2" x2="6.9" y2="6.9"></line>
-								<line x1="17.1" y1="17.1" x2="18.8" y2="18.8"></line>
-								<line x1="18.8" y1="5.2" x2="17.1" y2="6.9"></line>
-								<line x1="6.9" y1="17.1" x2="5.2" y2="18.8"></line>
-							</g>
-						</svg>
-						<svg class="icon moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-							<path fill="currentColor" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
-						</svg>
-					</button>
+					<ThemeToggle locale={locale} />
 				</nav>
-			</header>
+			</div>
+		</header>
 
-			<main class="main">
-				<h1 class="title">{t(locale, "contact.heading")}</h1>
-				<p class="lead">{t(locale, "contact.lead")}</p>
+		<main class="wrap">
+			<h1 class="title">{t(locale, "contact.heading")}</h1>
+			<p class="lead">{t(locale, "contact.lead")}</p>
 
-				{/* 四種狀態都先渲染好再由 script 打開對應的那個 ——
-				    比起用 JS 組字串，這樣文案仍然只有一份，也不會有版面跳動。 */}
-				<div class="banners" aria-live="polite">
-					<div class="banner banner-ok" data-status="sent" hidden>
-						<strong>{t(locale, "contact.sent.title")}</strong>
-						<span>{t(locale, "contact.sent.body")}</span>
-					</div>
-					<div class="banner banner-err" data-status="invalid" hidden>
-						<span>{t(locale, "contact.error.invalid")}</span>
-					</div>
-					<div class="banner banner-err" data-status="captcha" hidden>
-						<span>{t(locale, "contact.error.captcha")}</span>
-					</div>
-					<div class="banner banner-err" data-status="failed" hidden>
-						<span>{t(locale, "contact.error.failed")}</span>
-						<a href={`mailto:${COMPANY.email}`}>{t(locale, "contact.error.mailto")}</a>
-					</div>
+			{/* 四種狀態都先渲染好再由 script 打開對應的那個。
+			    比起用 JS 組字串，這樣文案仍然只有一份，也不會有版面跳動。 */}
+			<div class="banners" aria-live="polite">
+				<div class="banner banner-ok" data-status="sent" hidden>
+					<strong>{t(locale, "contact.sent.title")}</strong>
+					<span>{t(locale, "contact.sent.body")}</span>
 				</div>
+				<div class="banner banner-err" data-status="invalid" hidden>
+					<span>{t(locale, "contact.error.invalid")}</span>
+				</div>
+				<div class="banner banner-err" data-status="captcha" hidden>
+					<span>{t(locale, "contact.error.captcha")}</span>
+				</div>
+				<div class="banner banner-err" data-status="failed" hidden>
+					<span>{t(locale, "contact.error.failed")}</span>
+					<a href={`mailto:${COMPANY.email}`}>{t(locale, "contact.error.mailto")}</a>
+				</div>
+			</div>
 
-				<div class="layout">
-					<aside class="card info">
-						<h2 class="card-title">{t(locale, "contact.info.title")}</h2>
+			<div class="layout">
+				<aside class="info">
+					<h2 class="block-title">{t(locale, "contact.info.title")}</h2>
 
-						<ul class="info-list">
-							<li class="info-item">
-								<span class="info-icon" aria-hidden="true">
-									<svg viewBox="0 0 24 24" width="20" height="20">
-										<path
-											fill="none"
-											stroke="currentColor"
-											stroke-width="1.8"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M6.6 3.5 8.9 8 7 10a12 12 0 0 0 7 7l2-1.9 4.5 2.3v3a1.6 1.6 0 0 1-1.8 1.6A18 18 0 0 1 3 5.3 1.6 1.6 0 0 1 4.6 3.5Z"
-										></path>
-									</svg>
-								</span>
-								<div class="info-body">
-									<span class="info-label">{t(locale, "contact.info.phone")}</span>
-									{
-										hasPhone ? (
-											<a class="info-value" href={telHref}>{COMPANY.phone}</a>
-										) : (
-											<span class="info-value info-value-empty">
-												{COMPANY.phone}
-												<span class="sr-only">{t(locale, "contact.info.pending")}</span>
-											</span>
-										)
-									}
-								</div>
-							</li>
-
-							<li class="info-item">
-								<span class="info-icon" aria-hidden="true">
-									<svg viewBox="0 0 24 24" width="20" height="20">
-										<rect
-											x="2.8"
-											y="5"
-											width="18.4"
-											height="14"
-											rx="2.4"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="1.8"></rect>
-										<path
-											fill="none"
-											stroke="currentColor"
-											stroke-width="1.8"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="m3.5 7 8.5 6 8.5-6"></path>
-									</svg>
-								</span>
-								<div class="info-body">
-									<span class="info-label">{t(locale, "contact.info.email")}</span>
-									<a class="info-value" href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a>
-								</div>
-							</li>
-
-							<li class="info-item">
-								<span class="info-icon" aria-hidden="true">
-									<svg viewBox="0 0 24 24" width="20" height="20">
-										<path
-											fill="none"
-											stroke="currentColor"
-											stroke-width="1.8"
-											stroke-linejoin="round"
-											d="M12 3.8c4.9 0 8.8 3.2 8.8 7.1 0 3.9-3.9 7.1-8.8 7.1a11 11 0 0 1-1.7-.1l-4 2.3.9-3.5c-2.4-1.3-4-3.4-4-5.8 0-3.9 3.9-7.1 8.8-7.1Z"
-										></path>
-									</svg>
-								</span>
-								<div class="info-body">
-									<span class="info-label">{t(locale, "contact.info.line")}</span>
-									{
-										hasLine ? (
-											<span class="info-value">{COMPANY.lineId}</span>
-										) : (
-											<span class="info-value info-value-empty">
-												{COMPANY.lineId}
-												<span class="sr-only">{t(locale, "contact.info.pending")}</span>
-											</span>
-										)
-									}
-								</div>
-							</li>
-
-							<li class="info-item">
-								<span class="info-icon" aria-hidden="true">
-									<svg viewBox="0 0 24 24" width="20" height="20">
-										<rect
-											x="3.2"
-											y="3.2"
-											width="17.6"
-											height="17.6"
-											rx="5"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="1.8"></rect>
-										<circle
-											cx="12"
-											cy="12"
-											r="4"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="1.8"></circle>
-										<circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"></circle>
-									</svg>
-								</span>
-								<div class="info-body">
-									<span class="info-label">{t(locale, "contact.info.instagram")}</span>
-									<a
-										class="info-value"
-										href={SOCIAL.instagram}
-										rel="me noopener"
-										target="_blank">{instagramHandle}</a
-									>
-								</div>
-							</li>
-
-							<li class="info-item">
-								<span class="info-icon" aria-hidden="true">
-									<svg viewBox="0 0 24 24" width="20" height="20">
-										<circle
-											cx="12"
-											cy="12"
-											r="8.8"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="1.8"></circle>
-										<path
-											fill="none"
-											stroke="currentColor"
-											stroke-width="1.8"
-											stroke-linecap="round"
-											d="M12 7.2V12l3.2 1.9"></path>
-									</svg>
-								</span>
-								<div class="info-body">
-									<span class="info-label">{t(locale, "contact.info.reply")}</span>
-									<span class="info-value">{t(locale, "contact.info.replyValue")}</span>
-								</div>
-							</li>
-						</ul>
-					</aside>
-
-					<form class="card form" method="post" action="/api/contact">
-						<h2 class="card-title">{t(locale, "contact.form.title")}</h2>
-
-						<input type="hidden" name="locale" value={locale} />
-
-						{/* 蜜罐。真人看不到也 tab 不到，填了就是機器人。
-						    欄位名稱刻意避開表單真正使用的名字（company 已經是公司名稱了）。 */}
-						<div class="hp" aria-hidden="true">
-							<label for="website">Website</label>
-							<input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+					<dl class="info-list">
+						<div class="info-item">
+							<dt>{t(locale, "contact.info.phone")}</dt>
+							<dd>
+								{
+									hasPhone ? (
+										<a href={telHref}>{COMPANY.phone}</a>
+									) : (
+										<span class="empty">
+											{COMPANY.phone}
+											<span class="sr-only">{t(locale, "contact.info.pending")}</span>
+										</span>
+									)
+								}
+							</dd>
 						</div>
 
-						<div class="row">
-							<div class="field">
-								<label for="name">{t(locale, "contact.name")}</label>
-								<input
-									id="name"
-									name="name"
-									type="text"
-									required
-									maxlength="100"
-									autocomplete="name"
-									placeholder={t(locale, "contact.namePlaceholder")}
-								/>
-							</div>
-
-							<div class="field">
-								<label for="email">{t(locale, "contact.email")}</label>
-								<input
-									id="email"
-									name="email"
-									type="email"
-									required
-									maxlength="254"
-									autocomplete="email"
-									aria-describedby="email-hint"
-									placeholder="you@example.com"
-								/>
-							</div>
+						<div class="info-item">
+							<dt>{t(locale, "contact.info.email")}</dt>
+							<dd><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></dd>
 						</div>
 
-						<p id="email-hint" class="hint">{t(locale, "contact.emailHint")}</p>
+						<div class="info-item">
+							<dt>{t(locale, "contact.info.line")}</dt>
+							<dd>
+								{
+									hasLine ? (
+										<span>{COMPANY.lineId}</span>
+									) : (
+										<span class="empty">
+											{COMPANY.lineId}
+											<span class="sr-only">{t(locale, "contact.info.pending")}</span>
+										</span>
+									)
+								}
+							</dd>
+						</div>
 
-						<div class="row">
-							<div class="field">
-								<label for="phone">
-									{t(locale, "contact.phone")}
-									<span class="optional">· {t(locale, "contact.optional")}</span>
-								</label>
-								<input
-									id="phone"
-									name="phone"
-									type="tel"
-									maxlength="40"
-									autocomplete="tel"
-									placeholder={t(locale, "contact.phonePlaceholder")}
-								/>
-							</div>
+						<div class="info-item">
+							<dt>{t(locale, "contact.info.instagram")}</dt>
+							<dd>
+								<a href={SOCIAL.instagram} rel="me noopener" target="_blank">{instagramHandle}</a>
+							</dd>
+						</div>
 
-							<div class="field">
-								<label for="company">
-									{t(locale, "contact.company")}
-									<span class="optional">· {t(locale, "contact.optional")}</span>
-								</label>
-								<input
-									id="company"
-									name="company"
-									type="text"
-									maxlength="120"
-									autocomplete="organization"
-									placeholder={t(locale, "contact.companyPlaceholder")}
-								/>
-							</div>
+						<div class="info-item">
+							<dt>{t(locale, "contact.info.reply")}</dt>
+							<dd>{t(locale, "contact.info.replyValue")}</dd>
+						</div>
+					</dl>
+				</aside>
+
+				<form class="form" method="post" action="/api/contact">
+					<h2 class="block-title">{t(locale, "contact.form.title")}</h2>
+
+					<input type="hidden" name="locale" value={locale} />
+
+					{/* 蜜罐。真人看不到也 tab 不到，填了就是機器人。
+					    欄位名稱刻意避開表單真正使用的名字（company 已經是公司名稱了）。 */}
+					<div class="hp" aria-hidden="true">
+						<label for="website">Website</label>
+						<input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+					</div>
+
+					<div class="row">
+						<div class="field">
+							<label for="name">{t(locale, "contact.name")}</label>
+							<input
+								id="name"
+								name="name"
+								type="text"
+								required
+								maxlength="100"
+								autocomplete="name"
+								placeholder={t(locale, "contact.namePlaceholder")}
+							/>
 						</div>
 
 						<div class="field">
-							<label for="category">{t(locale, "contact.category")}</label>
+							<label for="email">{t(locale, "contact.email")}</label>
+							<input
+								id="email"
+								name="email"
+								type="email"
+								required
+								maxlength="254"
+								autocomplete="email"
+								aria-describedby="email-hint"
+								placeholder="you@example.com"
+							/>
+						</div>
+					</div>
+
+					<p id="email-hint" class="hint">{t(locale, "contact.emailHint")}</p>
+
+					<div class="row">
+						<div class="field">
+							<label for="phone">
+								{t(locale, "contact.phone")}
+								<span class="optional">· {t(locale, "contact.optional")}</span>
+							</label>
+							<input
+								id="phone"
+								name="phone"
+								type="tel"
+								maxlength="40"
+								autocomplete="tel"
+								placeholder={t(locale, "contact.phonePlaceholder")}
+							/>
+						</div>
+
+						<div class="field">
+							<label for="company">
+								{t(locale, "contact.company")}
+								<span class="optional">· {t(locale, "contact.optional")}</span>
+							</label>
+							<input
+								id="company"
+								name="company"
+								type="text"
+								maxlength="120"
+								autocomplete="organization"
+								placeholder={t(locale, "contact.companyPlaceholder")}
+							/>
+						</div>
+					</div>
+
+					<div class="field">
+						<label for="category">{t(locale, "contact.category")}</label>
+						<div class="select-wrap">
 							<select id="category" name="category" required>
 								<option value="" disabled selected>
 									{t(locale, "contact.categoryPlaceholder")}
@@ -344,37 +231,39 @@ const year = new Date().getFullYear();
 								}
 							</select>
 						</div>
+					</div>
 
-						<div class="field">
-							<label for="message">{t(locale, "contact.message")}</label>
-							<textarea
-								id="message"
-								name="message"
-								required
-								minlength="10"
-								maxlength="5000"
-								rows="7"
-								placeholder={t(locale, "contact.messagePlaceholder")}></textarea>
-						</div>
+					<div class="field">
+						<label for="message">{t(locale, "contact.message")}</label>
+						<textarea
+							id="message"
+							name="message"
+							required
+							minlength="10"
+							maxlength="5000"
+							rows="7"
+							placeholder={t(locale, "contact.messagePlaceholder")}></textarea>
+					</div>
 
-						<div class="cf-turnstile" data-sitekey={CONTACT.turnstileSiteKey}></div>
+					<div class="cf-turnstile" data-sitekey={CONTACT.turnstileSiteKey}></div>
 
-						<button class="submit" type="submit">{t(locale, "contact.submit")}</button>
+					<button class="btn btn-primary submit" type="submit">{t(locale, "contact.submit")}</button>
 
-						<p class="hint">{t(locale, "contact.privacy")}</p>
-					</form>
-				</div>
+					<p class="hint">{t(locale, "contact.privacy")}</p>
+				</form>
+			</div>
 
-				<p class="back">
-					<a href={locale === "en" ? "/en/" : "/"}>← {t(locale, "contact.back")}</a>
-				</p>
-			</main>
+			<p class="back">
+				<a href={homeHref}>{t(locale, "contact.back")}</a>
+			</p>
+		</main>
 
-			<footer class="site-footer">
-				<p class="copyright">© {year} {COMPANY.nameEn} · {t(locale, "rights")}</p>
-				<p class="copyright">{t(locale, "taxId")} {COMPANY.taxId}</p>
-			</footer>
-		</div>
+		<footer class="site-footer">
+			<div class="wrap">
+				<p>© {year} {COMPANY.nameEn} · {t(locale, "rights")}</p>
+				<p>{t(locale, "taxId")} {COMPANY.taxId}</p>
+			</div>
+		</footer>
 
 		<script
 			src="https://challenges.cloudflare.com/turnstile/v0/api.js"
@@ -384,18 +273,6 @@ const year = new Date().getFullYear();
 
 		<script is:inline>
 			(function () {
-				var btn = document.getElementById("theme-toggle");
-				if (btn) {
-					btn.addEventListener("click", function () {
-						var root = document.documentElement;
-						var next = root.dataset.theme === "dark" ? "light" : "dark";
-						root.dataset.theme = next;
-						try {
-							localStorage.setItem("theme", next);
-						} catch (e) {}
-					});
-				}
-
 				// /api/contact 處理完會轉址回來帶上狀態。只認固定的幾個值，
 				// 不把網址裡的字串放進畫面。
 				var params = new URLSearchParams(location.search);
@@ -415,116 +292,21 @@ const year = new Date().getFullYear();
 		</script>
 
 		<style>
-			.page {
-				position: relative;
-				z-index: 1;
-				min-height: 100svh;
-				/* 兩欄版面需要的寬度。文字區塊自己另外收窄，不跟著拉長。 */
-				max-width: 1080px;
-				margin: 0 auto;
-				padding: clamp(1.25rem, 3vw, 2.25rem);
-				display: flex;
-				flex-direction: column;
-			}
-
-			/* 背景層。與首頁同一套做法，故意複製而非抽共用元件 ——
-			   抽出去就得改 ComingSoon，那是目前唯一在線上的頁面。
-			   ponytail: 之後第三個頁面也要這層背景時再抽。 */
-			.glow {
-				position: fixed;
-				inset: 0;
-				z-index: 0;
-				background:
-					radial-gradient(60% 55% at 50% 0%, var(--glow-1), transparent 70%),
-					radial-gradient(45% 45% at 85% 25%, var(--glow-2), transparent 70%);
-				pointer-events: none;
-			}
-			.grid {
-				position: fixed;
-				inset: 0;
-				z-index: 0;
-				background-image:
-					linear-gradient(to right, var(--grid) 1px, transparent 1px),
-					linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-				background-size: 48px 48px;
-				mask-image: radial-gradient(70% 60% at 50% 40%, #000 40%, transparent 100%);
-				-webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000 40%, transparent 100%);
-				pointer-events: none;
-			}
-
-			.topbar {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				gap: 1rem;
-			}
-			.brand {
-				display: inline-flex;
-				align-items: center;
-			}
-			.brand-logo {
-				display: block;
-				height: 28px;
-				width: auto;
-			}
-			.controls {
-				display: flex;
-				align-items: center;
-				gap: 0.5rem;
-			}
-			.control {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				height: 40px;
-				padding: 0 0.9rem;
-				border: 1px solid var(--border);
-				border-radius: 10px;
-				background: var(--surface);
-				color: var(--text);
-				font-size: 0.9rem;
-				font-weight: 500;
-				backdrop-filter: blur(8px);
-				cursor: pointer;
-				transition: border-color 0.2s ease, transform 0.15s ease;
-			}
-			.control:hover {
-				border-color: var(--accent);
-				transform: translateY(-1px);
-			}
-			.icon-btn {
-				width: 40px;
-				padding: 0;
-			}
-			.icon {
-				display: block;
-			}
-			:root[data-theme="dark"] .sun {
-				display: none;
-			}
-			:root:not([data-theme="dark"]) .moon {
-				display: none;
-			}
-
-			.main {
-				flex: 1;
-				padding: clamp(2rem, 6vw, 3.5rem) 0 2rem;
+			main {
+				padding-block: clamp(2rem, 6vw, 3.5rem) 2rem;
 			}
 			.title {
-				margin: 0;
-				font-size: clamp(2rem, 6vw, 3rem);
+				font-size: clamp(2rem, 5.4vw, 3.2rem);
 				line-height: 1.2;
-				letter-spacing: -0.02em;
-				font-weight: 800;
 			}
 			.lead {
-				margin: 0.9rem 0 0;
-				/* 導言不跟著兩欄版面拉到 1080px，長行很難讀。
+				margin-top: 0.9rem;
+				/* 導言不跟著版面拉到最寬，長行很難讀。
 				   用 em 而不是 ch：ch 以「0」的字寬為基準，中日韓字元約是它的兩倍，
 				   60ch 對英文剛好，對中文只放得下三十個字，句尾會被擠到第二行。
-				   44em 讓中文導言（37 字）穩定單行，英文也還在合理的行寬內。 */
+				   44em 讓中文導言（36 字）穩定單行，英文也還在合理的行寬內。 */
 				max-width: 44em;
-				color: var(--text-muted);
+				color: var(--fg-secondary);
 				font-size: clamp(1rem, 2.2vw, 1.1rem);
 			}
 
@@ -536,114 +318,86 @@ const year = new Date().getFullYear();
 				flex-wrap: wrap;
 				gap: 0.35rem 0.6rem;
 				align-items: baseline;
+				max-width: 44em;
 				margin-top: 1.5rem;
 				padding: 0.9rem 1.1rem;
-				border: 1px solid var(--border);
-				border-left-width: 3px;
-				border-radius: 10px;
-				background: var(--surface);
-				backdrop-filter: blur(8px);
-				font-size: 0.95rem;
+				border: 1px solid var(--rule);
+				border-left: 3px solid var(--fg);
+				border-radius: 2px;
 			}
 			/* display:flex 的優先權高過瀏覽器內建的 [hidden]{display:none}，
 			   沒有這條的話四種狀態會同時出現在畫面上。 */
 			.banner[hidden] {
 				display: none;
 			}
-			.banner span {
-				color: var(--text-muted);
-			}
-			.banner-ok {
+			/* 錯誤與強調色同色，所以絕不能只靠顏色：文字本身就說明了發生什麼事。 */
+			.banner-err {
 				border-left-color: var(--accent);
 			}
-			/* 錯誤不能只靠顏色，所以文字本身就說明了發生什麼事 */
-			.banner-err {
-				border-left-color: #d4483b;
-			}
 
-			/* 左資訊、右表單。窄螢幕收成一欄，資訊卡在上（DOM 順序即閱讀順序，
+			/* 左資訊、右表單，左窄右寬。窄螢幕收成一欄，資訊在上（DOM 順序即閱讀順序，
 			   不用 order 去搬，免得鍵盤焦點順序跟畫面對不起來）。 */
 			.layout {
-				margin-top: 1.75rem;
 				display: grid;
-				gap: 1.25rem;
-				/* 360px 是讓 admin@mail.prisvalis.com 不被從中間斷行的下限。 */
-				grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+				gap: 2.5rem clamp(2rem, 6vw, 5rem);
+				margin-top: 2.5rem;
+				padding-top: 2.5rem;
+				border-top: 1px solid var(--rule);
 				align-items: start;
 			}
-
-			.card {
-				padding: clamp(1.25rem, 4vw, 1.9rem);
-				border: 1px solid var(--border);
-				border-radius: 14px;
-				background: var(--surface);
-				backdrop-filter: blur(8px);
-				box-shadow: var(--shadow);
+			@media (min-width: 56rem) {
+				/* 22rem 是讓電子郵件位址不被從中間斷行的下限。表單另外收窄，右邊留白。 */
+				.layout {
+					grid-template-columns: minmax(0, 22rem) minmax(0, 40em);
+				}
 			}
-			.card-title {
-				margin: 0 0 1.25rem;
-				font-size: 1.15rem;
+			.block-title {
+				margin-bottom: 1.25rem;
+				font-family: var(--font-body);
+				font-size: 1.1rem;
 				font-weight: 700;
-				letter-spacing: -0.01em;
+				line-height: 1.5;
 			}
 
 			.info-list {
 				margin: 0;
-				padding: 0;
-				list-style: none;
-				display: grid;
-				gap: 1.1rem;
 			}
 			.info-item {
-				display: flex;
-				align-items: center;
-				gap: 0.85rem;
+				padding-block: 0.8rem;
+				border-top: 1px solid var(--rule);
 			}
-			.info-icon {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				flex: 0 0 auto;
-				width: 40px;
-				height: 40px;
-				border-radius: 10px;
-				border: 1px solid var(--border);
-				background: var(--bg);
-				color: var(--accent);
+			.info-item:first-child {
+				border-top: 0;
+				padding-top: 0;
 			}
-			.info-body {
-				display: grid;
-				gap: 0.15rem;
-				min-width: 0;
+			.info-item dt {
+				color: var(--fg-secondary);
+				font-size: 0.85rem;
 			}
-			.info-label {
-				color: var(--text-muted);
-				font-size: 0.82rem;
-			}
-			.info-value {
-				color: var(--text);
-				font-size: 0.92rem;
-				font-weight: 600;
-				text-decoration: none;
+			.info-item dd {
+				margin: 0.1rem 0 0;
 				overflow-wrap: anywhere;
 			}
-			a.info-value:hover {
-				color: var(--accent);
-				text-decoration: underline;
-			}
 			/* 還沒開通的欄位。視覺上淡化，但螢幕閱讀器仍會唸出 .sr-only 的說明。 */
-			.info-value-empty {
-				color: var(--text-muted);
+			.empty {
+				color: var(--fg-secondary);
 			}
 
 			.form {
 				display: grid;
 				gap: 1.15rem;
 			}
+			.form .block-title {
+				margin-bottom: 0;
+			}
 			.row {
 				display: grid;
 				gap: 1.15rem;
-				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+			@media (min-width: 34rem) {
+				.row {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
 			}
 			.field {
 				display: grid;
@@ -652,10 +406,10 @@ const year = new Date().getFullYear();
 			}
 			label {
 				font-size: 0.9rem;
-				font-weight: 600;
+				font-weight: 700;
 			}
 			.optional {
-				color: var(--text-muted);
+				color: var(--fg-secondary);
 				font-weight: 400;
 			}
 			input[type="text"],
@@ -665,31 +419,54 @@ const year = new Date().getFullYear();
 			textarea {
 				width: 100%;
 				padding: 0.7rem 0.85rem;
-				border: 1px solid var(--border);
-				border-radius: 10px;
+				border: 1px solid var(--fg-secondary);
+				border-radius: 2px;
 				background: var(--bg);
-				color: var(--text);
+				color: var(--fg);
 				font: inherit;
 				font-size: 0.95rem;
 			}
+			input:hover,
+			select:hover,
+			textarea:hover {
+				border-color: var(--fg);
+			}
+			input::placeholder,
+			textarea::placeholder {
+				color: var(--fg-secondary);
+				opacity: 1;
+			}
+
+			.select-wrap {
+				position: relative;
+			}
 			select {
 				appearance: none;
-				/* 自繪箭頭，否則各家瀏覽器的原生箭頭在深色底上會看不見。 */
-				background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
-					linear-gradient(135deg, currentColor 50%, transparent 50%);
-				background-position: right 1.15rem center, right 0.85rem center;
-				background-size: 6px 6px, 6px 6px;
-				background-repeat: no-repeat;
-				padding-right: 2.25rem;
+				padding-right: 2.5rem;
+				cursor: pointer;
+			}
+			/* 自繪箭頭，否則各家瀏覽器的原生箭頭在深色底上會看不見。
+			   用邊框畫，不用漸層。 */
+			.select-wrap::after {
+				content: "";
+				position: absolute;
+				right: 1.1rem;
+				top: 50%;
+				width: 0.5rem;
+				height: 0.5rem;
+				border-right: 2px solid var(--fg-secondary);
+				border-bottom: 2px solid var(--fg-secondary);
+				transform: translateY(-70%) rotate(45deg);
+				pointer-events: none;
 			}
 			/* 尚未選擇時，顯示文字比照 placeholder 淡化 */
 			select:invalid {
-				color: var(--text-muted);
+				color: var(--fg-secondary);
 			}
 
 			/* 展開後的選項清單。原生 <option> 幾乎吃不到 CSS，要自訂面板只能靠
 			   customizable select（appearance: base-select）。不支援的瀏覽器會
-			   整段忽略 @supports，落回上面那組 appearance:none + 自繪箭頭 ——
+			   整段忽略 @supports，落回上面那組 appearance:none + 自繪箭頭。
 			   外觀樸素但完全可用，而且元素始終是真正的 <select>，鍵盤操作、
 			   表單驗證、行動裝置的原生選單都不受影響。 */
 			@supports (appearance: base-select) {
@@ -698,29 +475,26 @@ const year = new Date().getFullYear();
 					appearance: base-select;
 				}
 				select {
-					/* 改用 ::picker-icon 畫箭頭，收回 fallback 的背景圖與右內距。 */
-					background-image: none;
+					/* 改用 ::picker-icon 畫箭頭，收回 fallback 的自繪箭頭與右內距。 */
 					padding-right: 0.85rem;
 					display: flex;
 					align-items: center;
 					justify-content: space-between;
 					gap: 0.5rem;
 				}
-				select::picker-icon {
-					color: var(--text-muted);
-					transition: transform 0.15s ease;
+				.select-wrap::after {
+					display: none;
 				}
-				select:open::picker-icon {
-					transform: rotate(180deg);
+				select::picker-icon {
+					color: var(--fg-secondary);
 				}
 
 				select::picker(select) {
-					border: 1px solid var(--border);
-					border-radius: 12px;
-					/* 面板要不透明 —— 用半透明的 --surface 會讓底下的文字透出來。 */
+					border: 1px solid var(--fg);
+					border-radius: 2px;
+					/* 面板要不透明，透明的話底下的文字會透出來。 */
 					background: var(--bg);
-					box-shadow: var(--shadow);
-					padding: 0.35rem;
+					padding: 0.25rem;
 					/* 類別多的時候不要把面板拉到整個視窗高。 */
 					max-height: 20rem;
 					overflow-y: auto;
@@ -732,20 +506,21 @@ const year = new Date().getFullYear();
 					align-items: center;
 					/* 左側留出打勾的欄位，未選中的列才不會跟選中的列對不齊。 */
 					padding: 0.6rem 1rem 0.6rem 2.1rem;
-					border-radius: 8px;
-					color: var(--text);
+					border-radius: 2px;
+					color: var(--fg);
 					font-size: 0.95rem;
 					line-height: 1.4;
 					cursor: pointer;
 				}
 				option:hover,
 				option:focus {
-					background: var(--surface);
+					background: var(--hover);
 				}
 				/* placeholder 雖然也是 :checked，但它不是一個「選擇」，不該被強調。 */
 				option:checked:not([value=""]) {
-					font-weight: 600;
+					font-weight: 700;
 				}
+				/* 打勾記號不是內文字級的文字，用強調色不受內文對比度門檻限制。 */
 				option::checkmark {
 					position: absolute;
 					left: 0.75rem;
@@ -753,34 +528,30 @@ const year = new Date().getFullYear();
 				}
 				/* placeholder 那一列比照收合狀態淡化，跟真正的選項區分開。 */
 				option[value=""] {
-					color: var(--text-muted);
+					color: var(--fg-secondary);
 				}
 			}
+
 			textarea {
 				resize: vertical;
 				min-height: 8rem;
 			}
-			input:focus-visible,
-			select:focus-visible,
-			textarea:focus-visible {
-				outline: 2px solid var(--accent);
-				outline-offset: 1px;
-				border-color: transparent;
-			}
-			/* 只在使用者動過之後才標紅，一進頁面就滿江紅很勸退 */
+			/* 只在使用者動過之後才標記，一進頁面就滿版警示很勸退。
+			   強調色與錯誤同色，所以不只換顏色，邊框也加粗成 2px（內距同步減 1px 免得欄位跳動）。 */
 			input:user-invalid,
 			select:user-invalid,
 			textarea:user-invalid {
-				border-color: #d4483b;
+				padding: calc(0.7rem - 1px) calc(0.85rem - 1px);
+				border-width: 2px;
+				border-color: var(--accent);
 			}
 			.hint {
-				margin: 0;
-				color: var(--text-muted);
-				font-size: 0.82rem;
-				line-height: 1.5;
+				color: var(--fg-secondary);
+				font-size: 0.85rem;
+				line-height: 1.6;
 			}
 
-			/* 蜜罐。不用 display:none —— 有些機器人會跳過被隱藏的欄位。 */
+			/* 蜜罐。不用 display:none，有些機器人會跳過被隱藏的欄位。 */
 			.hp {
 				position: absolute;
 				left: -9999px;
@@ -789,70 +560,26 @@ const year = new Date().getFullYear();
 				overflow: hidden;
 			}
 
-			/* 只給輔助技術讀的文字 */
-			.sr-only {
-				position: absolute;
-				width: 1px;
-				height: 1px;
-				margin: -1px;
-				padding: 0;
-				border: 0;
-				clip-path: inset(50%);
-				overflow: hidden;
-				white-space: nowrap;
-			}
-
 			.submit {
 				justify-self: start;
-				padding: 0.8rem 1.6rem;
-				border: 0;
-				border-radius: 12px;
-				color: #fff;
-				font: inherit;
-				font-weight: 600;
-				background: linear-gradient(135deg, var(--accent), var(--accent-2));
-				box-shadow: var(--shadow);
-				cursor: pointer;
-				transition: transform 0.15s ease;
-			}
-			.submit:hover {
-				transform: translateY(-2px);
 			}
 
 			.back {
-				margin: 1.5rem 0 0;
+				margin-top: 2.5rem;
 				font-size: 0.9rem;
 			}
 
-			.site-footer {
-				text-align: center;
-				padding-top: 2rem;
-			}
-			.copyright {
+			.site-footer p {
 				margin: 0;
-				color: var(--text-muted);
-				font-size: 0.85rem;
 			}
 
-			@media (max-width: 880px) {
-				.layout {
-					grid-template-columns: minmax(0, 1fr);
-				}
-			}
-
-			@media (max-width: 560px) {
-				.row {
-					grid-template-columns: minmax(0, 1fr);
-				}
-			}
-
-			@media (max-width: 480px) {
+			@media (max-width: 30rem) {
 				.brand-logo {
 					height: 24px;
 				}
 				.submit {
 					justify-self: stretch;
-					text-align: center;
+					justify-content: center;
 				}
 			}
 		</style>

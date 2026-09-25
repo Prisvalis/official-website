@@ -1,0 +1,25 @@
+---
+// 字體載入。三種字體，兩個來源：
+//
+// - Noto Serif TC、JetBrains Mono：Google Fonts，只載入實際用到的字重。
+// - LXGW WenKai TC：不在 Google Fonts 上，而且是中日韓字型，完整檔案數 MB。
+//   這裡用 Fontsource 發佈的分片版本（jsDelivr 提供），字型被切成 115 片，
+//   各片以 unicode-range 標明涵蓋的字元，瀏覽器只會下載頁面上實際出現的字所在的那幾片。
+//   版本釘死在 5.3.0，CDN 上的內容才不會在無人察覺時改變。
+//   只載入 400 一個字重（見 global.css 對 h1、h2 字重的說明）。
+//
+// 三個 stylesheet 都帶 font-display: swap，字型還沒到之前先用 global.css 裡
+// 襯線的 fallback 顯示，不會擋住首次繪製。
+---
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link
+	rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Noto+Serif+TC:wght@400;700&display=swap"
+/>
+<link
+	rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/@fontsource/lxgw-wenkai-tc@5.3.0/400.css"
+/>

@@ -1,13 +1,16 @@
 ---
-// 首頁。取代原本的 ComingSoon —— 公司已經在營運，官網不該還掛著「即將上線」。
+// 首頁。文案全部在 src/i18n/home.ts，這裡只負責結構與版面。
 //
-// 文案全部在 src/i18n/home.ts，這裡只負責結構與樣式。背景層、卡片與頁首頁尾
-// 沿用聯絡頁那一套視覺語彙（--surface / --border / backdrop-filter）。
+// 版面語彙（之後的聯絡頁與 CoO 沿用，共用的部分在 styles/global.css）：
+// 左對齊、左窄右寬的不對稱兩欄、區塊之間只用留白與 1px 實線、不用卡片與陰影。
+// 每個區塊刻意用不同的形式：表格、編號清單、散文、一句話加按鈕。
 import BaseHead from "../components/BaseHead.astro";
+import MourningNotice from "../components/MourningNotice.astro";
+import ThemeToggle from "../components/ThemeToggle.astro";
 import { COMPANY, SOCIAL, LOCALE_HOME_PATH, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { home } from "../i18n/home";
-import { cooUrl } from "../i18n/coo";
+import { cooUrl, APP_URL, REPO_URL, COO_NAME } from "../i18n/coo";
 
 interface Props {
 	locale: Locale;
@@ -20,6 +23,8 @@ const otherLocale: Locale = locale === "zh-Hant" ? "en" : "zh-Hant";
 const switchHref = LOCALE_HOME_PATH[otherLocale];
 const contactHref = locale === "en" ? "/en/contact/" : "/contact/";
 const cooHref = cooUrl(locale, "/");
+const statusHref = cooUrl(locale, "/#status");
+const external = t(locale, "link.external");
 
 const c = home[locale];
 const year = new Date().getFullYear();
@@ -31,159 +36,159 @@ const year = new Date().getFullYear();
 		<BaseHead locale={locale} />
 	</head>
 	<body>
-		<div class="glow" aria-hidden="true"></div>
-		<div class="grid" aria-hidden="true"></div>
+		<MourningNotice locale={locale} />
 
-		<div class="page">
-			<header class="topbar">
+		<header class="site-header">
+			<div class="wrap">
 				<a class="brand" href={LOCALE_HOME_PATH[locale]}>
-					<img
-						class="brand-logo"
-						src="/logo.png"
-						alt={COMPANY.nameEn}
-						width="583"
-						height="86"
-					/>
+					<img class="brand-logo" src="/logo.png" alt={COMPANY.nameEn} width="583" height="86" />
 				</a>
 
-				<nav class="controls">
-					<a class="control nav-link" href={cooHref}>{c.product.title}</a>
-					<a class="control nav-link" href={contactHref}>{c.closing.cta}</a>
-					<a class="control" href={switchHref} aria-label={t(locale, "switch.aria")}>
-						{t(locale, "switch.to")}
-					</a>
-					<button
-						id="theme-toggle"
-						class="control icon-btn"
-						type="button"
-						aria-label={t(locale, "theme.aria")}
-						title={t(locale, "theme.aria")}
-					>
-						<svg class="icon sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-							<circle cx="12" cy="12" r="4.2" fill="currentColor"></circle>
-							<g stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-								<line x1="12" y1="2.5" x2="12" y2="5"></line>
-								<line x1="12" y1="19" x2="12" y2="21.5"></line>
-								<line x1="2.5" y1="12" x2="5" y2="12"></line>
-								<line x1="19" y1="12" x2="21.5" y2="12"></line>
-								<line x1="5.2" y1="5.2" x2="6.9" y2="6.9"></line>
-								<line x1="17.1" y1="17.1" x2="18.8" y2="18.8"></line>
-								<line x1="18.8" y1="5.2" x2="17.1" y2="6.9"></line>
-								<line x1="6.9" y1="17.1" x2="5.2" y2="18.8"></line>
-							</g>
-						</svg>
-						<svg class="icon moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-							<path fill="currentColor" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
-						</svg>
-					</button>
+				<nav class="site-nav">
+					<a class="nav-link" href={cooHref}>{COO_NAME}</a>
+					<a class="nav-link" href={contactHref}>{t(locale, "nav.contact")}</a>
+					<a href={switchHref} aria-label={t(locale, "switch.aria")}>{t(locale, "switch.to")}</a>
+					<ThemeToggle locale={locale} />
 				</nav>
-			</header>
+			</div>
+		</header>
 
-			<main>
-				<section class="hero">
-					<p class="eyebrow">{c.hero.eyebrow}</p>
+		<main>
+			<section class="hero">
+				<div class="wrap cols">
 					<h1 class="hero-title">{c.hero.h1}</h1>
-					<p class="hero-lead">{c.hero.lead}</p>
-					<div class="hero-actions">
-						<a class="btn btn-primary" href={contactHref}>
-							{c.hero.ctaPrimary}
-							<span aria-hidden="true">→</span>
-						</a>
-						<a class="btn btn-ghost" href={cooHref}>{c.hero.ctaSecondary}</a>
+					<div class="hero-body">
+						<p class="hero-lead">{c.hero.lead}</p>
+						<div class="hero-actions">
+							<a class="btn btn-primary" href={contactHref}>{c.hero.ctaPrimary}</a>
+							<a class="btn" href={cooHref}>{c.hero.ctaSecondary}</a>
+						</div>
 					</div>
-				</section>
+				</div>
+			</section>
 
-				<section class="section">
-					<div class="section-head">
-						<p class="eyebrow">{c.approach.eyebrow}</p>
-						<h2 class="section-title">{c.approach.title}</h2>
-					</div>
-					<ul class="cards cards-3">
-						{
-							c.approach.items.map((item) => (
-								<li class="card">
-									<h3 class="card-title">{item.title}</h3>
-									<p class="card-body">{item.body}</p>
-								</li>
-							))
-						}
-					</ul>
-				</section>
+			<section class="section">
+				<div class="wrap cols">
+					<h2>{c.work.title}</h2>
+					<div>
+						<p class="prose">{c.work.lead}</p>
 
-				<section class="section">
-					<div class="section-head">
-						<p class="eyebrow">{c.services.eyebrow}</p>
-						<h2 class="section-title">{c.services.title}</h2>
-						<p class="section-lead">{c.services.lead}</p>
-					</div>
-					<ul class="cards cards-3">
-						{
-							c.services.items.map((item) => (
-								<li class="card">
-									<h3 class="card-title">{item.title}</h3>
-									{item.tag && <p class="card-tag">{item.tag}</p>}
-									<p class="card-body">{item.body}</p>
-								</li>
-							))
-						}
-					</ul>
-				</section>
+						<table class="work-table">
+							<caption>{c.work.caption}</caption>
+							<thead>
+								<tr>
+									<th scope="col">{c.work.columns.area}</th>
+									<th scope="col">{c.work.columns.approach}</th>
+									<th scope="col">{c.work.columns.reason}</th>
+								</tr>
+							</thead>
+							<tbody>
+								{
+									c.work.rows.map((row) => (
+										<tr>
+											<th scope="row">{row.area}</th>
+											<td data-label={c.work.columns.approach}>{row.approach}</td>
+											<td data-label={c.work.columns.reason}>{row.reason}</td>
+										</tr>
+									))
+								}
+							</tbody>
+						</table>
 
-				<section class="section">
-					<div class="section-head">
-						<p class="eyebrow">{c.audience.eyebrow}</p>
-						<h2 class="section-title">{c.audience.title}</h2>
-					</div>
-					<ul class="cards cards-2">
-						{
-							c.audience.items.map((item) => (
-								<li class="card">
-									<h3 class="card-title">{item.title}</h3>
-									<p class="card-body">{item.body}</p>
-								</li>
-							))
-						}
-					</ul>
-				</section>
+						<p class="limits prose">
+							{c.work.limits}
+							<a href={statusHref}>{c.work.links.status}</a>
+						</p>
 
-				<section class="section">
-					<div class="panel">
-						<p class="eyebrow">{c.compute.eyebrow}</p>
-						<h2 class="section-title">{c.compute.title}</h2>
-						{c.compute.body.map((para) => <p class="panel-body">{para}</p>)}
-					</div>
-				</section>
-
-				<section class="section">
-					<div class="panel panel-product">
-						<p class="eyebrow">{c.product.eyebrow}</p>
-						<h2 class="section-title">{c.product.title}</h2>
-						<p class="panel-body">{c.product.lead}</p>
-						<ul class="points">
-							{c.product.points.map((point) => <li>{point}</li>)}
+						<ul class="links">
+							<li><a href={cooHref}>{c.work.links.product}</a></li>
+							<li>
+								<a href={REPO_URL} target="_blank" rel="noopener noreferrer">
+									{c.work.links.repo}
+									<svg
+										class="ext"
+										viewBox="0 0 24 24"
+										width="14"
+										height="14"
+										aria-hidden="true"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg
+									>
+									<span class="sr-only">{external}</span>
+								</a>
+							</li>
+							<li>
+								<a href={APP_URL} target="_blank" rel="noopener noreferrer">
+									{c.work.links.demo}
+									<svg
+										class="ext"
+										viewBox="0 0 24 24"
+										width="14"
+										height="14"
+										aria-hidden="true"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg
+									>
+									<span class="sr-only">{external}</span>
+								</a>
+							</li>
 						</ul>
-						<p class="note">{c.product.note}</p>
-						<a class="btn btn-ghost" href={cooHref}>
-							{c.product.cta}
-							<span aria-hidden="true">→</span>
-						</a>
 					</div>
-				</section>
+				</div>
+			</section>
 
-				<section class="section closing">
-					<h2 class="section-title">{c.closing.title}</h2>
-					<p class="section-lead">{c.closing.body}</p>
-					<a class="btn btn-primary" href={contactHref}>
-						{c.closing.cta}
-						<span aria-hidden="true">→</span>
-					</a>
-				</section>
-			</main>
+			<section class="section">
+				<div class="wrap cols">
+					<h2>{c.process.title}</h2>
+					<ol class="steps">
+						{
+							c.process.steps.map((step) => (
+								<li>
+									<h3>{step.title}</h3>
+									<p>{step.body}</p>
+								</li>
+							))
+						}
+					</ol>
+				</div>
+			</section>
 
-			<footer class="site-footer">
+			<section class="section">
+				<div class="wrap cols">
+					<h2>{c.scope.title}</h2>
+					<div class="prose">
+						{c.scope.body.map((para) => <p>{para}</p>)}
+					</div>
+				</div>
+			</section>
+
+			<section class="section">
+				<div class="wrap cols">
+					<h2>{c.contact.title}</h2>
+					<div>
+						<p class="prose">{c.contact.body}</p>
+						<div class="contact-actions">
+							<a class="btn btn-primary" href={contactHref}>{c.contact.cta}</a>
+							<p>
+								{c.contact.email}
+								<a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer class="site-footer">
+			<div class="wrap">
 				<div class="social">
 					<a
-						class="social-link"
 						href={SOCIAL.instagram}
 						target="_blank"
 						rel="me noopener noreferrer"
@@ -206,7 +211,6 @@ const year = new Date().getFullYear();
 						</svg>
 					</a>
 					<a
-						class="social-link"
 						href={SOCIAL.threads}
 						target="_blank"
 						rel="me noopener noreferrer"
@@ -220,356 +224,153 @@ const year = new Date().getFullYear();
 						</svg>
 					</a>
 				</div>
-				<p class="copyright">© {year} {COMPANY.nameEn} · {t(locale, "rights")}</p>
-				<p class="copyright">{t(locale, "taxId")} {COMPANY.taxId}</p>
-			</footer>
-		</div>
-
-		<script is:inline>
-			(function () {
-				var btn = document.getElementById("theme-toggle");
-				if (!btn) return;
-				btn.addEventListener("click", function () {
-					var root = document.documentElement;
-					var next = root.dataset.theme === "dark" ? "light" : "dark";
-					root.dataset.theme = next;
-					try {
-						localStorage.setItem("theme", next);
-					} catch (e) {}
-				});
-			})();
-		</script>
+				<p>© {year} {COMPANY.nameEn} · {t(locale, "rights")}</p>
+				<p>{t(locale, "taxId")} {COMPANY.taxId}</p>
+			</div>
+		</footer>
 
 		<style>
-			.page {
-				position: relative;
-				z-index: 1;
-				min-height: 100svh;
-				max-width: 1080px;
-				margin: 0 auto;
-				padding: clamp(1.25rem, 3vw, 2.25rem);
-				display: flex;
-				flex-direction: column;
-			}
-
-			/* 背景層。與聯絡頁同一套做法，故意複製而非抽共用元件 ——
-			   兩個版面的背景若要一起改，改兩處遠比多一層抽象容易追。 */
-			.glow {
-				position: fixed;
-				inset: 0;
-				z-index: 0;
-				background:
-					radial-gradient(60% 55% at 50% 0%, var(--glow-1), transparent 70%),
-					radial-gradient(45% 45% at 85% 25%, var(--glow-2), transparent 70%);
-				pointer-events: none;
-			}
-			.grid {
-				position: fixed;
-				inset: 0;
-				z-index: 0;
-				background-image:
-					linear-gradient(to right, var(--grid) 1px, transparent 1px),
-					linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-				background-size: 48px 48px;
-				mask-image: radial-gradient(70% 60% at 50% 40%, #000 40%, transparent 100%);
-				-webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000 40%, transparent 100%);
-				pointer-events: none;
-			}
-
-			.topbar {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				gap: 1rem;
-			}
-			.brand {
-				display: inline-flex;
-				align-items: center;
-			}
-			.brand-logo {
-				display: block;
-				height: 28px;
-				width: auto;
-			}
-			.controls {
-				display: flex;
-				align-items: center;
-				gap: 0.5rem;
-				flex-wrap: wrap;
-				justify-content: flex-end;
-			}
-			.control {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				height: 40px;
-				padding: 0 0.9rem;
-				border: 1px solid var(--border);
-				border-radius: 10px;
-				background: var(--surface);
-				color: var(--text);
-				font-size: 0.9rem;
-				font-weight: 500;
-				text-decoration: none;
-				backdrop-filter: blur(8px);
-				cursor: pointer;
-				transition: border-color 0.2s ease, transform 0.15s ease;
-			}
-			.control:hover {
-				border-color: var(--accent);
-				transform: translateY(-1px);
-			}
-			.icon-btn {
-				width: 40px;
-				padding: 0;
-			}
-			.icon {
-				display: block;
-			}
-			:root[data-theme="dark"] .sun {
-				display: none;
-			}
-			:root:not([data-theme="dark"]) .moon {
-				display: none;
-			}
-
-			main {
-				flex: 1;
-			}
-
-			.eyebrow {
-				margin: 0;
-				color: var(--accent);
-				font-size: 0.82rem;
-				font-weight: 600;
-				letter-spacing: 0.08em;
-			}
-
 			.hero {
-				padding: clamp(3rem, 9vw, 6rem) 0 clamp(2.5rem, 6vw, 4rem);
+				padding-block: clamp(3rem, 9vw, 6.5rem) clamp(3rem, 7vw, 5rem);
 			}
+			/* 標題橫跨兩欄，導言與按鈕落在右欄，與下面各區塊的內容欄對齊。
+			   行寬用 em：ch 以「0」的字寬為基準，中日韓字元約是它的兩倍。 */
 			.hero-title {
-				margin: 0.9rem 0 0;
-				/* em 而非 ch：ch 以「0」的字寬為基準，中日韓字元約是它的兩倍，
-				   同一個數值在兩種文字下代表的字數會差一倍。 */
-				max-width: 18em;
-				font-size: clamp(2.1rem, 6vw, 3.4rem);
-				line-height: 1.18;
-				letter-spacing: -0.02em;
-				font-weight: 800;
+				grid-column: 1 / -1;
+				max-width: 17em;
+				font-size: clamp(2rem, 5.4vw, 3.4rem);
+				line-height: 1.25;
+			}
+			.hero-body {
+				display: grid;
+				gap: 1.75rem;
+				align-content: start;
+			}
+			@media (min-width: 56rem) {
+				.hero-body {
+					grid-column: 2;
+				}
 			}
 			.hero-lead {
-				margin: 1.2rem 0 0;
-				max-width: 40em;
-				color: var(--text-muted);
-				font-size: clamp(1rem, 2.2vw, 1.15rem);
-				line-height: 1.75;
+				max-width: 34em;
+				font-size: clamp(1.05rem, 2vw, 1.2rem);
+				line-height: 1.85;
 			}
 			.hero-actions {
 				display: flex;
 				flex-wrap: wrap;
-				gap: 0.75rem;
+				gap: 0.75rem 1rem;
+			}
+
+			.work-table {
 				margin-top: 2rem;
 			}
+			.work-table th[scope="row"] {
+				width: 22%;
+			}
+			.work-table td {
+				width: 39%;
+			}
 
-			.btn {
-				display: inline-flex;
+			/* 限制照實寫。左邊的粗線只是標記，內容本身是完整的文字。 */
+			.limits {
+				margin-top: 1.75rem;
+				padding-left: 1rem;
+				border-left: 3px solid var(--accent);
+			}
+
+			.links {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem 1.75rem;
+				margin: 1.5rem 0 0;
+				padding: 0;
+				list-style: none;
+			}
+			.ext {
+				display: inline-block;
+				margin-left: 0.2em;
+				vertical-align: -0.1em;
+			}
+
+			.steps {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				counter-reset: step;
+			}
+			.steps li {
+				counter-increment: step;
+				display: grid;
+				gap: 0.35rem 1.5rem;
+				padding-block: 1.25rem;
+				border-top: 1px solid var(--rule);
+			}
+			.steps li:first-child {
+				padding-top: 0;
+				border-top: 0;
+			}
+			.steps li::before {
+				content: counter(step, decimal-leading-zero);
+				color: var(--fg-secondary);
+				font-family: var(--font-mono);
+				font-size: 0.9rem;
+			}
+			@media (min-width: 40rem) {
+				.steps li {
+					grid-template-columns: 2.5rem minmax(9rem, 14rem) minmax(0, 1fr);
+				}
+			}
+
+			.contact-actions {
+				display: flex;
+				flex-wrap: wrap;
 				align-items: center;
-				gap: 0.5rem;
-				padding: 0.8rem 1.6rem;
-				border-radius: 12px;
-				font-weight: 600;
-				font-size: 0.95rem;
-				text-decoration: none;
-				transition: transform 0.15s ease, border-color 0.2s ease;
-			}
-			.btn:hover {
-				transform: translateY(-2px);
-			}
-			.btn-primary {
-				border: 0;
-				color: #fff;
-				background: linear-gradient(135deg, var(--accent), var(--accent-2));
-				box-shadow: var(--shadow);
-			}
-			.btn-ghost {
-				border: 1px solid var(--border);
-				background: var(--surface);
-				/* 不要用 --text-muted：hover 時前景與背景的對比會掉到看不清楚。 */
-				color: var(--text);
-				backdrop-filter: blur(8px);
-			}
-			.btn-ghost:hover {
-				border-color: var(--accent);
-			}
-
-			.section {
-				padding: clamp(2.5rem, 6vw, 4rem) 0;
-			}
-			.section-head {
-				margin-bottom: clamp(1.5rem, 4vw, 2.25rem);
-			}
-			.section-title {
-				margin: 0.7rem 0 0;
-				max-width: 26em;
-				font-size: clamp(1.5rem, 3.6vw, 2.1rem);
-				line-height: 1.3;
-				letter-spacing: -0.015em;
-				font-weight: 700;
-			}
-			.section-lead {
-				margin: 0.9rem 0 0;
-				max-width: 40em;
-				color: var(--text-muted);
-				font-size: 1rem;
-				line-height: 1.75;
-			}
-
-			.cards {
-				margin: 0;
-				padding: 0;
-				list-style: none;
-				display: grid;
-				gap: 1rem;
-			}
-			.cards-3 {
-				grid-template-columns: repeat(3, minmax(0, 1fr));
-			}
-			.cards-2 {
-				grid-template-columns: repeat(2, minmax(0, 1fr));
-			}
-
-			.card,
-			.panel {
-				padding: clamp(1.25rem, 3vw, 1.75rem);
-				border: 1px solid var(--border);
-				border-radius: 14px;
-				background: var(--surface);
-				backdrop-filter: blur(8px);
-				box-shadow: var(--shadow);
-			}
-			.card-title {
-				margin: 0;
-				font-size: 1.05rem;
-				font-weight: 700;
-				letter-spacing: -0.01em;
-			}
-			/* 服務項目的技術標籤。點名到具體產品，客戶一眼就知道在賣什麼。 */
-			.card-tag {
-				margin: 0.45rem 0 0;
-				color: var(--accent);
-				font-size: 0.8rem;
-				font-weight: 600;
-				letter-spacing: 0.02em;
-			}
-			.card-body {
-				margin: 0.7rem 0 0;
-				color: var(--text-muted);
-				font-size: 0.93rem;
-				line-height: 1.75;
-			}
-
-			.panel-body {
-				margin: 0.9rem 0 0;
-				max-width: 46em;
-				color: var(--text-muted);
-				font-size: 0.98rem;
-				line-height: 1.8;
-			}
-			.panel-product .section-title {
-				font-size: clamp(1.6rem, 4vw, 2.2rem);
-			}
-			.points {
-				margin: 1.1rem 0 0;
-				padding: 0;
-				list-style: none;
-				display: grid;
-				gap: 0.6rem;
-				max-width: 46em;
-			}
-			.points li {
-				position: relative;
-				padding-left: 1.5rem;
-				color: var(--text-muted);
-				font-size: 0.93rem;
-				line-height: 1.7;
-			}
-			.points li::before {
-				content: "";
-				position: absolute;
-				left: 0;
-				top: 0.6em;
-				width: 6px;
-				height: 6px;
-				border-radius: 50%;
-				background: var(--accent);
-			}
-			.note {
-				margin: 1.1rem 0 1.5rem;
-				color: var(--text-muted);
-				font-size: 0.82rem;
-				line-height: 1.6;
-			}
-
-			.closing {
-				text-align: center;
-				padding-bottom: clamp(3rem, 7vw, 5rem);
-			}
-			.closing .section-title,
-			.closing .section-lead {
-				margin-left: auto;
-				margin-right: auto;
-			}
-			.closing .btn {
+				gap: 1rem 1.75rem;
 				margin-top: 1.75rem;
 			}
 
-			.site-footer {
-				text-align: center;
-				padding-top: 2rem;
-				border-top: 1px solid var(--border);
-			}
-			.social {
-				display: flex;
-				justify-content: center;
-				gap: 0.75rem;
-				margin-bottom: 1rem;
-			}
-			.social-link {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				width: 40px;
-				height: 40px;
-				border: 1px solid var(--border);
-				border-radius: 10px;
-				background: var(--surface);
-				color: var(--text);
-				transition: border-color 0.2s ease, transform 0.15s ease;
-			}
-			.social-link:hover {
-				border-color: var(--accent);
-				transform: translateY(-1px);
-			}
-			.copyright {
+			.site-footer p {
 				margin: 0;
-				color: var(--text-muted);
-				font-size: 0.85rem;
 			}
 
-			@media (max-width: 900px) {
-				.cards-3 {
-					grid-template-columns: repeat(2, minmax(0, 1fr));
+			@media (max-width: 40rem) {
+				/* 窄螢幕上把表格攤成一列一組，欄位標籤由 data-label 補上。
+				   表頭視覺上隱藏，但仍留給輔助技術。 */
+				.work-table thead {
+					position: absolute;
+					width: 1px;
+					height: 1px;
+					overflow: hidden;
+					clip: rect(0, 0, 0, 0);
+				}
+				.work-table tr,
+				.work-table th,
+				.work-table td {
+					display: block;
+					width: auto !important;
+				}
+				.work-table tr {
+					padding-block: 0.9rem;
+					border-top: 1px solid var(--rule);
+				}
+				.work-table th,
+				.work-table td {
+					padding: 0.1rem 0;
+					border: 0;
+				}
+				.work-table td::before {
+					content: attr(data-label);
+					display: block;
+					margin-top: 0.4rem;
+					color: var(--fg-secondary);
+					font-size: 0.8rem;
 				}
 			}
 
-			@media (max-width: 640px) {
-				.cards-3,
-				.cards-2 {
-					grid-template-columns: minmax(0, 1fr);
-				}
-				/* 窄螢幕上四個控制項會擠成三列堆在 logo 旁邊。頁首的兩條內容連結
-				   在 hero 與結尾各有一個更明顯的 CTA 指向同一處，這裡收起不損失動線。 */
+			@media (max-width: 40rem) {
+				/* 窄螢幕上導覽與語言、主題按鈕會擠成幾列。頁首的兩條內容連結在
+				   hero 與結尾各有一個更明顯的按鈕指向同一處，這裡收起不損失動線。 */
 				.nav-link {
 					display: none;
 				}

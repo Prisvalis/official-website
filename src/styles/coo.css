@@ -1,382 +1,448 @@
-/* Company of One 產品頁（/CoO）的樣式。
+/* Company of One 產品頁（/CoO）專用的樣式。
  *
- * 只有 /CoO 底下的頁面會載入這份，不與公司官網的 global.css 同頁出現 ——
- * 兩邊都定義了 --bg / --text / --accent 等同名變數，混在一頁會互相蓋掉。
+ * 色彩、字體、頁首、按鈕、表格與焦點外框都在 global.css，這裡只放產品頁自己用到的
+ * 版面與元件。兩邊共用同一套 token，不再各自維護一組色彩：先前產品頁有一組
+ * 同名但值不同的 --bg / --text / --accent，所以才被迫不載入官網的樣式表。
  *
- * 色彩沿用產品本身的調色盤（web/src/styles.css 的 --accent: #2f6f4f），
- * 官網與登入後的畫面看起來要像同一個產品。
+ * 版面語彙與首頁一致：左對齊、左窄右寬的不對稱兩欄、區塊之間只用留白與 1px 實線，
+ * 不用卡片、陰影與底色區塊。
  */
 
-:root {
-  --bg: #ffffff;
-  --bg-soft: #f6f7f9;
-  --surface: #ffffff;
-  --border: #dfe3e8;
-  --border-soft: #eceef1;
-  --text: #1c2530;
-  --muted: #5b6673;
-  --accent: #2f6f4f;
-  /* 放在 accent 上面的文字色。深色模式的 accent 是淺綠，白字會糊掉 ——
-     兩種模式各自指定，不要寫死 #fff。 */
-  --on-accent: #ffffff;
-  --accent-soft: #eaf2ed;
-  --accent-strong: #245840;
-  --warn: #8a6d1f;
-  --warn-soft: #fdf8e8;
-  --radius: 12px;
-  --measure: 68ch;
-  color-scheme: light;
-}
-
-/* 深色模式只覆寫顏色代號，版面規則一份就好。
-   跟著公司官網的做法走：主題由 <html data-theme> 決定（BaseHead 的 inline script
-   會在繪製前依 localStorage 或系統偏好設定它），不另外用 prefers-color-scheme ——
-   否則官網的深淺色切換按鈕在這幾頁會失效。 */
-:root[data-theme="dark"] {
-  --bg: #12161b;
-  --bg-soft: #171c23;
-  --surface: #1a2029;
-  --border: #2b333e;
-  --border-soft: #232a34;
-  --text: #e8ecf1;
-  --muted: #9aa5b3;
-  --accent: #6fb894;
-  --on-accent: #0f1418;
-  --accent-soft: #1d2a24;
-  --accent-strong: #8fcfae;
-  --warn: #d9bd6a;
-  --warn-soft: #241f12;
-  color-scheme: dark;
-}
-
-* { box-sizing: border-box; }
-
 html {
-  scroll-behavior: smooth;
-  /* 頁首是 sticky 的，沒有這個的話跳到 #security 會被頁首蓋住標題 */
-  scroll-padding-top: 84px;
+	/* 頁首是 sticky 的，沒有這個的話跳到 #security 會被頁首蓋住標題 */
+	scroll-padding-top: 5.5rem;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-}
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, -apple-system, "Noto Sans TC", "PingFang TC", sans-serif;
-  font-size: 16px;
-  line-height: 1.75;
-  -webkit-text-size-adjust: 100%;
-}
-
-h1, h2, h3, h4 { line-height: 1.35; margin: 0 0 0.6rem; font-weight: 650; }
-h1 { font-size: clamp(2rem, 5vw, 3.1rem); letter-spacing: -0.02em; }
-h2 { font-size: clamp(1.5rem, 3.2vw, 2.1rem); letter-spacing: -0.01em; }
-h3 { font-size: 1.15rem; }
-p { margin: 0 0 1rem; }
-a { color: var(--accent); }
-strong { font-weight: 650; }
-
-/* 鍵盤操作看得見焦點。移除 outline 是無障礙上最常見的退步 */
-a:focus-visible, button:focus-visible, .btn:focus-visible, summary:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-/* 視覺上隱藏、但螢幕閱讀器讀得到。用 clip-path 而非 display:none —— 後者
-   會讓輔助技術也讀不到，那就失去意義了。 */
-.sr-only {
-  position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
-
-.skip-link {
-  position: absolute;
-  left: -9999px;
-  background: var(--accent);
-  color: var(--on-accent);
-  padding: 0.6rem 1rem;
-  z-index: 100;
-}
-.skip-link:focus { left: 1rem; top: 1rem; }
-
-.wrap { width: min(1120px, 100% - 2.5rem); margin-inline: auto; }
-.narrow { max-width: var(--measure); }
-.center { text-align: center; }
-.muted { color: var(--muted); }
-.small { font-size: 0.9rem; }
-
-/* --- 頁首 --- */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-soft);
-}
-.site-header .wrap {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  min-height: 64px;
-  flex-wrap: wrap;
-}
-.brand {
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  text-decoration: none;
-  font-size: 1.05rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.brand-mark {
-  width: 26px; height: 26px; flex: none;
-  border-radius: 7px;
-  background: var(--accent);
-  color: var(--on-accent);
-  display: grid; place-items: center;
-  font-size: 0.8rem; font-weight: 700;
-}
-.site-nav { display: flex; gap: 1.4rem; align-items: center; margin-left: auto; flex-wrap: wrap; }
-/* :not(.btn) 是必要的：.site-nav a 的優先權（0,1,1）高於 .btn（0,1,0），
-   沒有排除的話選單裡的行動按鈕會被塗成 muted 灰字，在綠色底上完全讀不清楚。 */
-.site-nav a:not(.btn) { color: var(--muted); text-decoration: none; font-size: 0.95rem; }
-.site-nav a:not(.btn):hover { color: var(--text); }
-/* 目前頁面不能只靠顏色 —— 深色模式下 muted 與 text 的差異太小 */
-.site-nav a:not(.btn)[aria-current="page"] {
-  color: var(--text);
-  font-weight: 650;
-  box-shadow: inset 0 -2px 0 var(--accent);
-}
-
-.btn {
-  display: inline-block;
-  background: var(--accent);
-  color: var(--on-accent);
-  padding: 0.62rem 1.15rem;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.95rem;
-  border: 1px solid var(--accent);
-}
-.btn:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--on-accent); }
-.btn-ghost {
-  background: transparent;
-  color: var(--text);
-  border-color: var(--border);
-}
-/* color 一定要跟著寫：.btn:hover 已經把文字設成 --on-accent（淺色模式是白字），
-   ghost 的 hover 底色卻是 --bg-soft，不覆蓋回來的話白字會融進淺灰底裡看不見。 */
-.btn-ghost:hover { background: var(--bg-soft); border-color: var(--muted); color: var(--text); }
-.btn-lg { padding: 0.8rem 1.6rem; font-size: 1rem; }
-
-/* --- 版塊 --- */
-section { padding: clamp(3rem, 7vw, 5.5rem) 0; }
-.section-soft { background: var(--bg-soft); }
-.eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 0.6rem;
-}
-
-.hero { padding-top: clamp(3rem, 8vw, 6rem); padding-bottom: clamp(2.5rem, 6vw, 4rem); }
-.hero p.lead {
-  font-size: clamp(1.05rem, 2.2vw, 1.28rem);
-  color: var(--muted);
-  max-width: 60ch;
-}
-.hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.6rem; }
-
-.grid { display: grid; gap: 1.25rem; }
-.grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-.grid-3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.4rem 1.5rem;
-}
-.card h3 { margin-bottom: 0.35rem; }
-.card p:last-child { margin-bottom: 0; }
-.card-icon {
-  width: 34px; height: 34px;
-  border-radius: 9px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  display: grid; place-items: center;
-  margin-bottom: 0.8rem;
-}
-
-/* 交錯的重點段落 */
-.split {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: clamp(1.5rem, 4vw, 3.5rem);
-  align-items: center;
-}
-.split + .split { margin-top: clamp(2.5rem, 6vw, 4.5rem); }
-
-/* 示意圖：純 CSS/HTML，不放圖檔 —— 圖檔會過期，這個不會 */
-.mock {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.1rem 1.2rem;
-  font-size: 0.88rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px -12px rgba(0,0,0,0.15);
-}
-.mock-title {
-  font-weight: 650;
-  padding-bottom: 0.6rem;
-  margin-bottom: 0.8rem;
-  border-bottom: 1px solid var(--border-soft);
-  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
-}
-.mock-row {
-  display: flex; justify-content: space-between; gap: 1rem;
-  padding: 0.42rem 0;
-  border-bottom: 1px solid var(--border-soft);
-}
-.mock-row:last-child { border-bottom: 0; }
-.mock-row .label { color: var(--muted); }
-.mock-row .value { font-variant-numeric: tabular-nums; font-weight: 600; }
-.tag {
-  display: inline-block;
-  font-size: 0.75rem;
-  padding: 0.1rem 0.5rem;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
-  font-weight: 600;
-}
-.tag-warn { background: var(--warn-soft); color: var(--warn); border-color: color-mix(in srgb, var(--warn) 30%, transparent); }
-
-/* 條列 */
-.ticks { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.55rem; }
-.ticks li { padding-left: 1.65rem; position: relative; }
-.ticks li::before {
-  content: "";
-  position: absolute; left: 0; top: 0.62em;
-  width: 0.7rem; height: 0.38rem;
-  border-left: 2px solid var(--accent);
-  border-bottom: 2px solid var(--accent);
-  transform: rotate(-45deg);
-}
-
-/* 提示框 */
-.note {
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  background: var(--bg-soft);
-  border-radius: 8px;
-  padding: 1rem 1.2rem;
-}
-.note-warn { border-left-color: var(--warn); background: var(--warn-soft); }
-.note p:last-child { margin-bottom: 0; }
-
-/* --- 定價 --- */
-.plans { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(268px, 1fr)); align-items: start; }
-.plan {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.6rem;
-  display: flex; flex-direction: column; gap: 1rem;
-  height: 100%;
-}
-.plan-featured { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-.plan-name { font-weight: 700; font-size: 1.1rem; margin: 0; line-height: 1.4; }
-.plan-price { font-size: 2.1rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
-.plan-price .per { font-size: 0.9rem; font-weight: 500; color: var(--muted); }
-.plan .btn { text-align: center; }
-.plan ul { margin: 0; }
-
-/* 表格 */
-.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 0.95rem; }
-caption { text-align: left; color: var(--muted); font-size: 0.9rem; padding-bottom: 0.7rem; }
-th, td { text-align: left; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--border-soft); }
-thead th { border-bottom: 1px solid var(--border); font-weight: 650; white-space: nowrap; }
-tbody th { font-weight: 500; }
-td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.yes { color: var(--accent); font-weight: 700; }
-.no { color: var(--muted); }
-
-/* FAQ */
-details {
-  border-bottom: 1px solid var(--border-soft);
-  padding: 1rem 0;
-}
-details summary {
-  cursor: pointer;
-  font-weight: 600;
-  list-style: none;
-  display: flex; justify-content: space-between; gap: 1rem; align-items: center;
-}
-details summary::-webkit-details-marker { display: none; }
-details summary::after { content: "+"; color: var(--muted); font-size: 1.3rem; line-height: 1; }
-details[open] summary::after { content: "−"; }
-details .answer { padding-top: 0.7rem; color: var(--muted); max-width: var(--measure); }
-details .answer p:last-child { margin-bottom: 0; }
-
-/* CTA */
-.cta {
-  background: var(--accent-soft);
-  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
-  border-radius: var(--radius);
-  padding: clamp(1.8rem, 5vw, 3rem);
-  text-align: center;
-}
-
-/* 頁尾 */
-.site-footer {
-  border-top: 1px solid var(--border-soft);
-  padding: 2.5rem 0 3rem;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-.footer-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
-.site-footer h3 { color: var(--text); font-size: 0.9rem; margin-bottom: 0.5rem; }
-.site-footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.35rem; }
-.site-footer a { color: var(--text); text-decoration: underline; text-underline-offset: 2px; }
-.site-footer a:hover { color: var(--accent); }
-.footer-bottom { margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--border-soft); }
 
 /* main 只是 skip link 的落點，用滑鼠點到時不該出現外框；
    鍵盤跳轉仍由瀏覽器把虛擬游標移過去。 */
-main:focus { outline: none; }
-
-/* --- 深淺色切換按鈕（跟著公司官網的做法，狀態存在 localStorage） --- */
-.theme-btn {
-  display: inline-grid;
-  place-items: center;
-  width: 34px; height: 34px;
-  padding: 0;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
+main:focus {
+	outline: none;
 }
-.theme-btn:hover { color: var(--text); border-color: var(--muted); }
-.theme-btn .icon { display: block; }
-:root[data-theme="dark"] .theme-btn .sun { display: none; }
-:root:not([data-theme="dark"]) .theme-btn .moon { display: none; }
+
+.site-header {
+	position: sticky;
+	top: 0;
+	z-index: 20;
+	background: var(--bg);
+}
+.site-nav .btn {
+	padding: 0.4rem 0.9rem;
+	font-size: 0.95rem;
+}
+
+/* --- 區塊 --- */
+
+.hero {
+	padding-block: clamp(3rem, 9vw, 6rem) clamp(2.5rem, 6vw, 4rem);
+}
+.hero h1 {
+	grid-column: 1 / -1;
+	max-width: 17em;
+	font-size: clamp(2rem, 5.2vw, 3.2rem);
+	line-height: 1.25;
+}
+.hero-body {
+	display: grid;
+	gap: 1.5rem;
+	align-content: start;
+}
+@media (min-width: 56rem) {
+	.hero-body {
+		grid-column: 2;
+	}
+}
+.hero .lead,
+.section .lead {
+	max-width: 36em;
+	color: var(--fg-secondary);
+	font-size: clamp(1.05rem, 2vw, 1.2rem);
+	line-height: 1.85;
+}
+.actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem 1rem;
+}
+
+.stack > * + * {
+	margin-top: 1em;
+}
+.stack > :not(.mock):not(.defs):not(.table-scroll):not(.actions) {
+	max-width: 38em;
+}
+.stack > .mock,
+.stack > .ticks,
+.stack > .actions,
+.stack > .defs,
+.stack > .table-scroll {
+	margin-top: 1.5rem;
+}
+.stack > h3 {
+	margin-top: 2rem;
+}
+
+/* 標題是一整句話時，窄的左欄放不下：標題橫跨兩欄，內容落在右欄。 */
+.cols-head > h2 {
+	grid-column: 1 / -1;
+	max-width: 20em;
+}
+@media (min-width: 56rem) {
+	.cols-head > :not(h2) {
+		grid-column: 2;
+	}
+}
+
+/* 沒有欄位標題的頁首區塊（功能頁、定價頁）：內容欄靠左，限制行寬。 */
+.lead-block {
+	max-width: 38em;
+}
+
+/* --- 定義列表：左欄名稱、右欄說明，列與列之間 1px 實線 --- */
+
+.defs {
+	margin: 0;
+}
+.defs > div {
+	display: grid;
+	gap: 0.25rem 2rem;
+	padding-block: 1.1rem;
+	border-top: 1px solid var(--rule);
+}
+.defs > div:first-child {
+	padding-top: 0;
+	border-top: 0;
+}
+.defs dt {
+	font-weight: 700;
+}
+.defs dd {
+	margin: 0;
+	max-width: 38em;
+}
+@media (min-width: 48rem) {
+	.defs > div {
+		grid-template-columns: minmax(9rem, 1fr) minmax(0, 3fr);
+	}
+}
+
+/* --- 示意圖：純 CSS/HTML，不放圖檔，圖檔會過期，這個不會 --- */
+
+.mock {
+	max-width: 30rem;
+	padding: 1rem 1.2rem;
+	border: 1px solid var(--fg-secondary);
+	border-radius: 2px;
+	font-size: 0.9rem;
+	line-height: 1.6;
+}
+.mock-title {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+	margin-bottom: 0.8rem;
+	padding-bottom: 0.6rem;
+	border-bottom: 1px solid var(--rule);
+	font-weight: 700;
+}
+.mock-row {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.42rem 0;
+	border-bottom: 1px solid var(--rule);
+}
+.mock-row:last-of-type {
+	border-bottom: 0;
+}
+.mock-row .label {
+	color: var(--fg-secondary);
+}
+.mock-row .value {
+	font-family: var(--font-mono);
+	font-size: 0.9em;
+	font-variant-numeric: tabular-nums;
+	font-weight: 700;
+}
+/* 逾期的那一列：左邊加一條強調色粗線。標籤文字（「90+ 天」）本身已經說明原因，
+   所以不是只靠顏色。 */
+.mock-row-warn {
+	padding-left: 0.6rem;
+	border-left: 3px solid var(--accent);
+}
+.mock-actions {
+	display: flex;
+	gap: 0.5rem;
+	margin-top: 1rem;
+}
+/* 示意圖裡的按鈕。不是真的按鈕（整塊 aria-hidden），也就不必遵守大字的強調色規則，
+   實心的那顆用 --fg 填色。 */
+.mock-btn {
+	padding: 0.3rem 0.8rem;
+	border: 1px solid var(--fg);
+	border-radius: 2px;
+	font-weight: 700;
+}
+.mock-btn-solid {
+	background: var(--fg);
+	color: var(--bg);
+}
+.mock-note {
+	margin-top: 0.9rem;
+	color: var(--fg-secondary);
+	font-size: 0.85rem;
+}
+
+.tag {
+	display: inline-block;
+	padding: 0.05rem 0.5rem;
+	border: 1px solid var(--fg-secondary);
+	border-radius: 2px;
+	font-size: 0.8rem;
+	font-weight: 400;
+	line-height: 1.6;
+	white-space: nowrap;
+}
+.tag-warn {
+	border-color: var(--accent);
+}
+
+/* --- 條列 --- */
+
+.ticks {
+	display: grid;
+	gap: 0.55rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.ticks li {
+	position: relative;
+	padding-left: 1.4rem;
+}
+/* 標記是一塊強調色的小方塊，不是圖示。 */
+.ticks li::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0.72em;
+	width: 0.5rem;
+	height: 0.5rem;
+	background: var(--accent);
+}
+
+/* --- 提示 --- */
+
+.note {
+	padding-left: 1rem;
+	border-left: 3px solid var(--accent);
+	max-width: 42em;
+}
+.note > * + * {
+	margin-top: 0.6rem;
+}
+
+/* --- 目錄（功能頁） --- */
+
+.toc {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem 1.6rem;
+	padding-block: 1rem;
+	border-top: 1px solid var(--rule);
+}
+
+/* --- 定價 --- */
+
+.plans {
+	display: grid;
+}
+.plan {
+	display: grid;
+	gap: 1.25rem 3rem;
+	padding-block: 1.75rem;
+	border-top: 1px solid var(--rule);
+}
+.plan:first-child {
+	border-top: 0;
+	padding-top: 0;
+}
+/* 主推的方案：左邊一條強調色粗線，旁邊另有文字標籤，不只靠顏色。 */
+.plan-featured {
+	/* 粗線掛在版面外側的留白裡（gutter 最小 1.25rem），文字仍與其他方案左對齊。 */
+	margin-left: -1.25rem;
+	padding-left: calc(1.25rem - 3px);
+	border-left: 3px solid var(--accent);
+}
+@media (min-width: 56rem) {
+	.plan {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
+	}
+}
+.plan-head {
+	display: grid;
+	gap: 0.5rem;
+	align-content: start;
+	justify-items: start;
+}
+.plan-name {
+	font-size: 1.6rem;
+}
+.plan-price {
+	font-family: var(--font-display);
+	font-size: 2rem;
+	line-height: 1.2;
+}
+.plan-price .per {
+	color: var(--fg-secondary);
+	font-family: var(--font-body);
+	font-size: 0.9rem;
+}
+.plan-body {
+	display: grid;
+	gap: 1rem;
+	align-content: start;
+	justify-items: start;
+}
+.plan-features {
+	/* 多欄排版對 grid 容器無效，所以這份清單要改回 block。 */
+	display: block;
+	columns: 2 15rem;
+	column-gap: 2rem;
+	width: 100%;
+}
+.plan-features li {
+	break-inside: avoid;
+	margin-bottom: 0.55rem;
+}
+.plan-quotas {
+	width: 100%;
+	padding-top: 0.9rem;
+	border-top: 1px solid var(--rule);
+}
+
+/* --- 表格（通用樣式在 global.css） --- */
+
+.table-scroll {
+	/* relative 是必要的：儲存格裡的 .sr-only 是 absolute，沒有定位祖先的話它的包含區塊
+	   在捲動容器之外，不會被 overflow 裁掉，會把整頁撐出橫向捲軸。 */
+	position: relative;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+.table-scroll table {
+	min-width: 34rem;
+}
+td.num,
+th.num {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+thead th {
+	white-space: nowrap;
+}
+tbody th {
+	font-weight: 400;
+}
+.no {
+	color: var(--fg-secondary);
+}
+.yes {
+	font-weight: 700;
+}
+
+/* --- FAQ --- */
+
+details {
+	padding: 1rem 0;
+	border-bottom: 1px solid var(--rule);
+}
+details:first-of-type {
+	border-top: 1px solid var(--rule);
+}
+details summary {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+	font-weight: 700;
+	list-style: none;
+	cursor: pointer;
+}
+details summary::-webkit-details-marker {
+	display: none;
+}
+details summary::after {
+	content: "+";
+	color: var(--fg-secondary);
+	font-size: 1.3rem;
+	line-height: 1;
+}
+details[open] summary::after {
+	content: "−";
+}
+details .answer {
+	max-width: 38em;
+	padding-top: 0.7rem;
+	color: var(--fg-secondary);
+}
+
+/* --- 頁尾 --- */
+
+.footer-rows {
+	margin: 1.5rem 0 0;
+}
+.footer-rows > div {
+	display: grid;
+	gap: 0.25rem 2rem;
+	padding-block: 0.75rem;
+	border-top: 1px solid var(--rule);
+}
+.footer-rows dt {
+	color: var(--fg);
+	font-weight: 700;
+}
+.footer-rows dd {
+	margin: 0;
+}
+.footer-rows ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem 1.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+@media (min-width: 48rem) {
+	.footer-rows > div {
+		grid-template-columns: minmax(6rem, 1fr) minmax(0, 3fr);
+	}
+}
+.footer-bottom {
+	margin-top: 1.5rem;
+	padding-top: 1.2rem;
+	border-top: 1px solid var(--rule);
+}
+.footer-bottom p {
+	margin: 0;
+}
+
+@media (max-width: 40rem) {
+	/* 窄螢幕上導覽會擠成好幾列。頁首的「開始使用」在 hero 與結尾各有一個更明顯的按鈕，
+	   這裡收起，剩下的連結才排得進兩列以內。 */
+	.site-nav .nav-cta {
+		display: none;
+	}
+	.site-header .wrap {
+		flex-wrap: wrap;
+		padding-block: 0.6rem;
+	}
+	.site-nav {
+		justify-content: flex-start;
+	}
+	.hero .actions .btn {
+		flex: 1 1 auto;
+		justify-content: center;
+	}
+}

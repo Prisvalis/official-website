@@ -1,0 +1,25 @@
+---
+// 追悼日的說明文字，放在每個頁面的最上方。
+//
+// 五行文字全部渲染進 HTML，預設 display:none，再由 <html data-mourning> 的值
+// 挑出對應的那一行。CSS 無法比對兩個屬性是否相等，所以必須逐日一條選擇器；
+// 這些選擇器在這裡由 MOURNING_DAYS 產生，清單改了它會跟著改。
+// display:none 會一併從無障礙樹移除，螢幕閱讀器不會讀到其餘四行。
+// 外觀在 styles/global.css 的 .mourning-notice。
+import type { Locale } from "../consts";
+import { MOURNING_DAYS, mourning } from "../i18n/mourning";
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const showRules =
+	MOURNING_DAYS.map(
+		(day) => `:root[data-mourning="${day}"] .mourning-notice[data-day="${day}"]`,
+	).join(",\n") + " { display: block; }";
+---
+
+<style is:inline set:html={showRules}></style>
+{MOURNING_DAYS.map((day) => <p class="mourning-notice" data-day={day}>{mourning[locale][day]}</p>)}
