@@ -12,8 +12,8 @@ export const COMPANY = {
 	email: "admin@mail.prisvalis.com",
 	// 聯絡頁會自動把它變成可直接撥號的 tel: 連結。
 	phone: "+886-4-2369-7788",
-	// LINE 官方帳號。還沒申請，先用 "-" 佔位。
-	lineId: "-",
+	// LINE 官方帳號。
+	lineId: "@prisvalis",
 	// 統一編號（台灣的營利事業統一編號），頁尾與結構化資料共用同一個來源。
 	taxId: "62010947",
 } as const;
