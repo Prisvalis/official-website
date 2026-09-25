@@ -168,6 +168,225 @@ kbd {
 	top: 1rem;
 }
 
+/* --- 版面 ------------------------------------------------------------ */
+
+.wrap {
+	width: min(var(--page-max), 100% - 2 * var(--gutter));
+	margin-inline: auto;
+}
+
+/* 區塊之間用留白與 1px 實線分隔，不用卡片、陰影或底色。 */
+.section {
+	padding-block: clamp(2.5rem, 6vw, 4.5rem);
+	border-top: 1px solid var(--rule);
+}
+
+/* 左窄右寬的不對稱兩欄：區塊標題在左，內容在右。窄螢幕收成一欄。
+   欄寬比刻意不均，右欄放不滿也沒關係，留白是設計的一部分。 */
+.cols {
+	display: grid;
+	/* 單欄時也要明確寫 minmax(0, ...)：沒寫的話欄寬會被內容的 min-width（例如
+	   橫向捲動的表格）撐開，整頁跟著橫向溢出。 */
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1.25rem clamp(2rem, 6vw, 5rem);
+}
+@media (min-width: 56rem) {
+	.cols {
+		grid-template-columns: minmax(9rem, 1fr) minmax(0, 3fr);
+	}
+}
+.cols > h2 {
+	font-size: clamp(1.5rem, 3vw, 1.85rem);
+}
+
+/* 行寬用 em 而不是 ch：ch 以「0」的字寬為基準，中日韓字元約是它的兩倍，
+   同一個數值在兩種文字下代表的字數會差一倍。 */
+.prose {
+	max-width: 38em;
+}
+.prose > * + * {
+	margin-top: 1em;
+}
+
+.secondary {
+	color: var(--fg-secondary);
+}
+.small {
+	font-size: 0.9rem;
+}
+
+/* --- 頁首 ------------------------------------------------------------ */
+
+.site-header {
+	border-bottom: 1px solid var(--rule);
+}
+.site-header .wrap {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	min-height: 4.25rem;
+}
+.brand {
+	display: inline-flex;
+	align-items: center;
+	color: var(--fg);
+	text-decoration: none;
+}
+.brand-logo {
+	display: block;
+	height: 28px;
+	width: auto;
+}
+.brand-name {
+	font-family: var(--font-display);
+	font-size: 1.35rem;
+	line-height: 1.2;
+}
+.site-nav {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 0.5rem 1.4rem;
+}
+.site-nav a:not(.btn) {
+	text-decoration: none;
+}
+.site-nav a:not(.btn):hover {
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-decoration-color: currentColor;
+}
+/* 目前頁面不只靠顏色：粗體加強調色底線。 */
+.site-nav a[aria-current="page"] {
+	font-weight: 700;
+	text-decoration: underline;
+	text-decoration-thickness: 2px;
+	text-decoration-color: var(--accent);
+}
+
+.icon-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	padding: 0;
+	border: 1px solid var(--rule);
+	border-radius: 2px;
+	background: transparent;
+	color: var(--fg);
+	cursor: pointer;
+}
+.icon-btn:hover {
+	border-color: var(--fg);
+	background: var(--hover);
+}
+.icon-btn .icon {
+	display: block;
+}
+:root[data-theme="dark"] .icon-btn .sun {
+	display: none;
+}
+:root:not([data-theme="dark"]) .icon-btn .moon {
+	display: none;
+}
+
+/* --- 按鈕 ------------------------------------------------------------ */
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.7rem 1.35rem;
+	border: 1px solid var(--fg);
+	border-radius: 2px;
+	background: transparent;
+	color: var(--fg);
+	font: inherit;
+	font-weight: 700;
+	line-height: 1.4;
+	text-decoration: none;
+	cursor: pointer;
+}
+.btn:hover {
+	background: var(--fg);
+	color: var(--bg);
+	text-decoration: none;
+}
+/* 強調色底加紙色字只有 4.40，達不到內文的 4.5，所以文字必須是大字：
+   >= 18.66px 且粗體。1.2rem 是 19.2px。 */
+.btn-primary {
+	border-color: var(--accent);
+	background: var(--accent);
+	color: var(--on-accent);
+	font-size: 1.2rem;
+}
+.btn-primary:hover {
+	border-color: var(--fg);
+	background: var(--fg);
+	color: var(--bg);
+}
+
+/* --- 頁尾 ------------------------------------------------------------ */
+
+.site-footer {
+	border-top: 1px solid var(--rule);
+	padding: 2rem 0 3rem;
+	color: var(--fg-secondary);
+	font-size: 0.9rem;
+}
+.social {
+	display: flex;
+	gap: 0.5rem;
+	margin-bottom: 1rem;
+}
+.social a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	border: 1px solid var(--rule);
+	border-radius: 2px;
+	color: var(--fg);
+	text-decoration: none;
+}
+.social a:hover {
+	border-color: var(--fg);
+	background: var(--hover);
+}
+
+/* --- 表格 ------------------------------------------------------------ */
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+caption {
+	padding-bottom: 0.75rem;
+	color: var(--fg-secondary);
+	font-size: 0.9rem;
+	text-align: left;
+}
+th,
+td {
+	padding: 0.75rem 1rem 0.75rem 0;
+	border-top: 1px solid var(--rule);
+	text-align: left;
+	vertical-align: top;
+}
+thead th {
+	border-top: 0;
+	border-bottom: 1px solid var(--fg);
+	font-size: 0.9rem;
+	font-weight: 700;
+}
+tbody th {
+	font-weight: 700;
+}
+
 /* --- 追悼日說明（components/MourningNotice.astro）-------------------- */
 
 /* 預設隱藏；display:none 會一併從無障礙樹移除，螢幕閱讀器只會讀到當天那一行。
