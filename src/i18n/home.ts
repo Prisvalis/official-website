@@ -5,8 +5,8 @@
 // 由下面的 HomeContent 介面約束，少一個 key 是型別錯誤。
 //
 // 寫這份文案時的取捨（規則出處在 CLAUDE.md「文案」一節）：
-// - 每個能力宣稱都要有可指向的佐證。目前站上唯一有公開 repo 與測試站的
-//   是 Company of One，所以它是頁面主體；AI、GPU 與雲端主機沒有可公開的
+// - 每個能力宣稱都要有可指向的佐證。目前站上唯一有可開啟的測試站的
+//   是 Company of One（原始碼 repo 為私有，不得寫成公開），所以它是頁面主體；AI、GPU 與雲端主機沒有可公開的
 //   案例，只在「承接範圍」以一句話交代，不寫經驗宣稱。
 // - 產品的限制照實寫，不得比產品站自己標註的更成熟（見 coo.ts 的 status）。
 // - 人稱一律單數。
@@ -33,7 +33,7 @@ interface HomeContent {
 		columns: WorkRow;
 		rows: WorkRow[];
 		limits: string;
-		links: { product: string; repo: string; demo: string; status: string };
+		links: { product: string; demo: string; status: string };
 	};
 	process: { title: string; steps: { title: string; body: string }[] };
 	scope: { title: string; body: string[] };
@@ -51,7 +51,7 @@ export const home: Record<Locale, HomeContent> = {
 
 		work: {
 			title: "作品",
-			lead: "Company of One 是我自己寫的一人公司後台，涵蓋報價、訂單、進銷存、電子發票與營業稅申報。原始碼公開，也有可以實際註冊的測試站。",
+			lead: "Company of One 是我自己寫的一人公司後台，涵蓋報價、訂單、進銷存、電子發票與營業稅申報，有可以實際註冊的測試站。",
 			caption: "Company of One 的幾個技術決策",
 			columns: { area: "項目", approach: "做法", reason: "原因" },
 			rows: [
@@ -79,7 +79,6 @@ export const home: Record<Locale, HomeContent> = {
 			limits: "目前是測試站。綠界金流與電子發票依公開文件實作，尚未在沙盒以真實交易驗證；稽核鏈的外部見證端點尚未接上；沒有監控與告警。",
 			links: {
 				product: "產品介紹",
-				repo: "原始碼",
 				demo: "測試站",
 				status: "完整現況",
 			},
@@ -134,7 +133,7 @@ export const home: Record<Locale, HomeContent> = {
 
 		work: {
 			title: "Work",
-			lead: "Company of One is a back office for one-person companies that I wrote myself: quotes, orders, inventory, e-invoicing and VAT filing. The source is public, and there is a test deployment you can register on.",
+			lead: "Company of One is a back office for one-person companies that I wrote myself: quotes, orders, inventory, e-invoicing and VAT filing. There is a test deployment you can register on.",
 			caption: "A few of the technical decisions in Company of One",
 			columns: { area: "Area", approach: "Approach", reason: "Reason" },
 			rows: [
@@ -162,7 +161,6 @@ export const home: Record<Locale, HomeContent> = {
 			limits: "It is a test deployment. The ECPay payment and e-invoice integrations follow the public documentation and have not been run against the sandbox with real transactions, the audit chain's external witness endpoint is not connected, and there is no monitoring or alerting.",
 			links: {
 				product: "Product overview",
-				repo: "Source code",
 				demo: "Test site",
 				status: "Full status",
 			},

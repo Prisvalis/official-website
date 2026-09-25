@@ -5,7 +5,7 @@ export const ui = {
 	"zh-Hant": {
 		"meta.title": "算力有限公司 Prisvalis｜量身訂做的系統開發與部署",
 		"meta.description":
-			"算力有限公司（Prisvalis LTD.）是一人公司，承接量身訂做的系統與後端開發、網站與部署。每個案子先確認範圍再報價，作品為原始碼公開的 Company of One。",
+			"算力有限公司（Prisvalis LTD.）是一人公司，承接量身訂做的系統與後端開發、網站與部署。每個案子先確認範圍再報價，作品為一人公司後台 Company of One。",
 		"html.lang": "zh-Hant",
 		"og.locale": "zh_TW",
 		"switch.to": "English",
@@ -58,7 +58,7 @@ export const ui = {
 	en: {
 		"meta.title": "Prisvalis LTD.｜Bespoke systems and deployment",
 		"meta.description":
-			"Prisvalis LTD. (算力有限公司) is a one-person company building bespoke backend systems, websites and deployments. Every project is scoped before it is priced. Its public work is Company of One, a back office with a public repository.",
+			"Prisvalis LTD. (算力有限公司) is a one-person company building bespoke backend systems, websites and deployments. Every project is scoped before it is priced. Its own product is Company of One, a back office for one-person companies.",
 		"html.lang": "en",
 		"og.locale": "en_US",
 		"switch.to": "中文",

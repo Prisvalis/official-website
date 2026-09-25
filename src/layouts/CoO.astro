@@ -11,7 +11,7 @@ import ThemeInit from "../components/ThemeInit.astro";
 import PortalHeader from "../components/PortalHeader.astro";
 import { SITE, COMPANY, type Locale } from "../consts";
 import { t } from "../i18n/ui";
-import { coo, cooUrl, cooPageUrl, APP_URL, REPO_URL, COO_NAME, type CooPage } from "../i18n/coo";
+import { coo, cooUrl, cooPageUrl, APP_URL, COO_NAME, type CooPage } from "../i18n/coo";
 
 interface Props {
 	locale: Locale;
@@ -44,14 +44,6 @@ const footerGroups = [
 			{ href: cooUrl(locale, "/features"), label: c.footer.featuresAll },
 			{ href: cooUrl(locale, "/pricing"), label: c.footer.pricingAll },
 			{ href: cooUrl(locale, "/features#security"), label: c.footer.security },
-		],
-	},
-	{
-		title: c.footer.resources,
-		links: [
-			{ href: REPO_URL, label: c.footer.repo },
-			{ href: `${REPO_URL}/blob/main/docs/schema.md`, label: c.footer.schema },
-			{ href: `${REPO_URL}/issues`, label: c.footer.issues },
 		],
 	},
 	{
