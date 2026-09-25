@@ -26,7 +26,10 @@ export const CONTACT = {
 	from: "contact@mail.prisvalis.com",
 	fromName: "Prisvalis 網站聯絡表單",
 	// 收件位址。必須是 Cloudflare 帳號裡「已驗證」的 destination address，
-	// 且要與 wrangler.json 的 destination_address 一致。
+	// 且要與 wrangler.json 的 destination_address 一字不差地一致 ——
+	// 那個欄位的作用是「把這個綁定鎖死在某個已驗證位址」，兩邊對不上時
+	// env.EMAIL.send() 會直接拋例外，訪客只會看到「系統暫時無法寄出訊息」，
+	// 從畫面上完全看不出是設定問題。改這一行就要同步改 wrangler.json。
 	to: "support@mail.prisvalis.com",
 	// Turnstile widget 的 site key。site key 是公開值（會出現在 HTML 原始碼裡），
 	// 放這裡沒有安全問題；配對的 secret 走 Worker secret（TURNSTILE_SECRET）。
