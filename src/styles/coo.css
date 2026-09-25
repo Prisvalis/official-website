@@ -1,324 +1,380 @@
 /* Company of One 產品頁（/CoO）專用的樣式。
  *
- * 色彩、字體、頁首、按鈕、表格與焦點外框都在 global.css，這裡只放產品頁自己用到的
- * 版面與元件。兩邊共用同一套 token，不再各自維護一組色彩：先前產品頁有一組
- * 同名但值不同的 --bg / --text / --accent，所以才被迫不載入官網的樣式表。
- *
- * 版面語彙與首頁一致：左對齊、左窄右寬的不對稱兩欄、區塊之間只用留白與 1px 實線，
- * 不用卡片、陰影與底色區塊。
+ * 色彩、字體、外框、按鈕、表格與焦點外框都在 global.css，這裡只放產品頁自己用到的元件。
+ * 華國美學版：定義列表改成行政表格、示意圖改成老 Windows 對話框、提示改成黃底公告、
+ * 方案改成並排的框格、FAQ 改成「Q／A」問答框。不要在這裡另外定義一組色彩變數。
  */
 
 html {
-	/* 頁首是 sticky 的，沒有這個的話跳到 #security 會被頁首蓋住標題 */
-	scroll-padding-top: 5.5rem;
-}
-
-/* main 只是 skip link 的落點，用滑鼠點到時不該出現外框；
-   鍵盤跳轉仍由瀏覽器把虛擬游標移過去。 */
-main:focus {
-	outline: none;
-}
-
-.site-header {
-	position: sticky;
-	top: 0;
-	z-index: 20;
-	background: var(--bg);
-}
-.site-nav .btn {
-	padding: 0.4rem 0.9rem;
-	font-size: 0.95rem;
+	scroll-padding-top: 0.6rem;
 }
 
 /* --- 區塊 --- */
 
-.hero {
-	padding-block: clamp(3rem, 9vw, 6rem) clamp(2.5rem, 6vw, 4rem);
-}
-.hero h1 {
-	grid-column: 1 / -1;
-	max-width: 17em;
-	font-size: clamp(2rem, 5.2vw, 3.2rem);
-	line-height: 1.25;
-}
-.hero-body {
-	display: grid;
-	gap: 1.5rem;
-	align-content: start;
-}
-@media (min-width: 56rem) {
-	.hero-body {
-		grid-column: 2;
-	}
-}
-.hero .lead,
-.section .lead {
-	max-width: 36em;
-	color: var(--fg-secondary);
-	font-size: clamp(1.05rem, 2vw, 1.2rem);
-	line-height: 1.85;
+.hero-body > .lead,
+.hero .lead {
+	max-width: 44em;
 }
 .actions {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.75rem 1rem;
+	gap: 7.4px 10.8px;
 }
 
 .stack > * + * {
-	margin-top: 1em;
+	margin-top: 0.8em;
 }
 .stack > :not(.mock):not(.defs):not(.table-scroll):not(.actions) {
-	max-width: 38em;
+	max-width: 46em;
 }
 .stack > .mock,
 .stack > .ticks,
 .stack > .actions,
 .stack > .defs,
 .stack > .table-scroll {
-	margin-top: 1.5rem;
+	margin-top: 10.6px;
 }
 .stack > h3 {
-	margin-top: 2rem;
+	margin-top: 14.2px;
+	padding: 2.4px 6.8px 2px 7.4px;
+	border-left: 5px solid var(--roc-red);
+	border-bottom: 1px dotted var(--border);
+	color: var(--roc-blue);
+	font-size: 15.4px;
+}
+:root[data-theme="dark"] .stack > h3 {
+	color: #fff27a;
 }
 
-/* 標題是一整句話時，窄的左欄放不下：標題橫跨兩欄，內容落在右欄。 */
-.cols-head > h2 {
-	grid-column: 1 / -1;
-	max-width: 20em;
-}
-@media (min-width: 56rem) {
-	.cols-head > :not(h2) {
-		grid-column: 2;
-	}
-}
-
-/* 沒有欄位標題的頁首區塊（功能頁、定價頁）：內容欄靠左，限制行寬。 */
 .lead-block {
-	max-width: 38em;
+	max-width: 46em;
 }
 
-/* --- 定義列表：左欄名稱、右欄說明，列與列之間 1px 實線 --- */
+/* --- 定義列表：行政表格。左欄灰底項目名稱、右欄說明，每一格都有框線。 --- */
 
 .defs {
 	margin: 0;
+	border: 1px solid var(--border);
+	font-size: 14.4px;
 }
 .defs > div {
 	display: grid;
-	gap: 0.25rem 2rem;
-	padding-block: 1.1rem;
-	border-top: 1px solid var(--rule);
+	border-top: 1px solid var(--border);
 }
 .defs > div:first-child {
-	padding-top: 0;
 	border-top: 0;
 }
+.defs > div:nth-child(even) dd {
+	background: hsl(220 40% 96.6%);
+}
+:root[data-theme="dark"] .defs > div:nth-child(even) dd {
+	background: hsl(229 50% 15%);
+}
 .defs dt {
+	padding: 5.2px 7.6px 4.6px;
+	background: var(--roc-blue-pale);
+	font-family: var(--font-ui);
 	font-weight: 700;
+}
+.defs dt::before {
+	content: "▶ ";
+	color: var(--roc-red);
+	font-size: 0.8em;
 }
 .defs dd {
 	margin: 0;
-	max-width: 38em;
+	padding: 5.6px 9.2px 5.8px 8.4px;
 }
 @media (min-width: 48rem) {
 	.defs > div {
 		grid-template-columns: minmax(9rem, 1fr) minmax(0, 3fr);
 	}
+	.defs dt {
+		border-right: 1px solid var(--border);
+	}
 }
 
-/* --- 示意圖：純 CSS/HTML，不放圖檔，圖檔會過期，這個不會 --- */
+/* --- 示意圖：老 Windows 對話框。純 CSS/HTML，不放圖檔。 --- */
 
 .mock {
 	max-width: 30rem;
-	padding: 1rem 1.2rem;
-	border: 1px solid var(--fg-secondary);
-	border-radius: 2px;
-	font-size: 0.9rem;
-	line-height: 1.6;
+	padding: 0 0 8.4px;
+	background: var(--silver-mid);
+	border: 1px solid var(--border-dark);
+	box-shadow:
+		inset 1px 1px 0 var(--silver-hi),
+		3px 3px 0 rgba(0, 0, 0, 0.22);
+	font-family: var(--font-ui);
+	font-size: 13.6px;
+	line-height: 1.55;
+}
+.mock > :not(.mock-title) {
+	margin-inline: 8.6px 9.2px;
 }
 .mock-title {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	gap: 1rem;
-	margin-bottom: 0.8rem;
-	padding-bottom: 0.6rem;
-	border-bottom: 1px solid var(--rule);
+	margin-bottom: 6.4px;
+	padding: 3.4px 6.2px 3px 7.6px;
+	background: linear-gradient(to bottom, hsl(214 90% 60%), var(--roc-blue-2) 50%, hsl(224 80% 40%));
+	color: #ffffff;
 	font-weight: 700;
+	text-shadow: 1px 1px 0 #000040;
+}
+.mock-title .secondary {
+	color: hsl(220 80% 90%);
+	font-weight: 400;
 }
 .mock-row {
 	display: flex;
 	justify-content: space-between;
 	gap: 1rem;
-	padding: 0.42rem 0;
-	border-bottom: 1px solid var(--rule);
+	padding: 3.2px 6.4px 3.6px;
+	background: var(--panel);
+	border: 1px solid var(--border);
+	border-top: 0;
 }
-.mock-row:last-of-type {
-	border-bottom: 0;
+.mock-title + .mock-row {
+	border-top: 1px solid var(--border);
 }
 .mock-row .label {
-	color: var(--fg-secondary);
+	color: var(--text);
 }
 .mock-row .value {
 	font-family: var(--font-mono);
-	font-size: 0.9em;
+	font-size: 0.92em;
 	font-variant-numeric: tabular-nums;
 	font-weight: 700;
 }
-/* 逾期的那一列：左邊加一條強調色粗線。標籤文字（「90+ 天」）本身已經說明原因，
-   所以不是只靠顏色。 */
+/* 逾期的那一列：紅字加底色加左粗線；標籤文字（「90+ 天」）本身已說明原因。 */
 .mock-row-warn {
-	padding-left: 0.6rem;
-	border-left: 3px solid var(--accent);
+	background: var(--err-bg);
+	border-left: 4px solid var(--roc-red);
+}
+.mock-row-warn .value {
+	color: var(--roc-red);
+}
+:root[data-theme="dark"] .mock-row-warn .value {
+	color: #ff9d9d;
 }
 .mock-actions {
 	display: flex;
-	gap: 0.5rem;
-	margin-top: 1rem;
+	gap: 6.2px;
+	margin-top: 9.4px;
 }
-/* 示意圖裡的按鈕。不是真的按鈕（整塊 aria-hidden），也就不必遵守大字的強調色規則，
-   實心的那顆用 --fg 填色。 */
 .mock-btn {
-	padding: 0.3rem 0.8rem;
-	border: 1px solid var(--fg);
-	border-radius: 2px;
+	padding: 3px 12.4px 3.4px 10.8px;
+	border: 1px solid var(--border-dark);
+	border-radius: 3px;
+	background: linear-gradient(to bottom, var(--silver-hi), var(--silver-lo));
+	color: var(--btn-text);
 	font-weight: 700;
 }
 .mock-btn-solid {
-	background: var(--fg);
-	color: var(--bg);
+	background: linear-gradient(to bottom, hsl(220 90% 70%), hsl(222 76% 36%) 55%, hsl(222 80% 46%));
+	color: #ffffff;
+	text-shadow: 1px 1px 0 #001040;
 }
 .mock-note {
-	margin-top: 0.9rem;
-	color: var(--fg-secondary);
-	font-size: 0.85rem;
+	margin-top: 7.8px;
+	color: var(--muted);
+	font-size: 12.6px;
+}
+.mock > p:not(.mock-note) {
+	padding: 5px 7px;
+	background: var(--panel);
+	border: 1px solid var(--border);
 }
 
 .tag {
 	display: inline-block;
-	padding: 0.05rem 0.5rem;
-	border: 1px solid var(--fg-secondary);
-	border-radius: 2px;
-	font-size: 0.8rem;
-	font-weight: 400;
+	padding: 0 6.4px 0.6px;
+	background: var(--roc-yellow);
+	border: 1px solid var(--notice-border);
+	color: var(--notice-text);
+	font-family: var(--font-ui);
+	font-size: 12px;
+	font-weight: 700;
 	line-height: 1.6;
+	text-shadow: none;
 	white-space: nowrap;
 }
 .tag-warn {
-	border-color: var(--accent);
+	background: var(--roc-red);
+	border-color: #600000;
+	color: #ffffff;
 }
 
-/* --- 條列 --- */
+/* --- 條列：◆ 符號，不是圖示。 --- */
 
 .ticks {
 	display: grid;
-	gap: 0.55rem;
+	gap: 3.4px;
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
 .ticks li {
 	position: relative;
-	padding-left: 1.4rem;
+	padding-left: 1.3em;
 }
-/* 標記是一塊強調色的小方塊，不是圖示。 */
 .ticks li::before {
-	content: "";
+	content: "◆";
 	position: absolute;
 	left: 0;
-	top: 0.72em;
-	width: 0.5rem;
-	height: 0.5rem;
-	background: var(--accent);
+	top: 0;
+	color: var(--roc-red);
+}
+:root[data-theme="dark"] .ticks li::before {
+	color: #ff9d9d;
 }
 
-/* --- 提示 --- */
+/* --- 提示：黃底公告框。黃底裡的粗體再墊一層幾乎一樣的黃（同色微差）。 --- */
 
 .note {
-	padding-left: 1rem;
-	border-left: 3px solid var(--accent);
-	max-width: 42em;
+	max-width: 46em;
+	padding: 7.6px 10.8px 8.2px 10.2px;
+	background: var(--roc-yellow);
+	border: 1px dashed var(--notice-border);
+	border-left: 5px solid var(--roc-red);
+	color: var(--notice-text);
 }
 .note > * + * {
-	margin-top: 0.6rem;
+	margin-top: 4.8px;
+}
+.note strong {
+	background: var(--roc-yellow-2);
+}
+.note > p:first-child::before {
+	content: "※ ";
+	color: var(--roc-red);
+	font-weight: 700;
+}
+:root[data-theme="dark"] .note > p:first-child::before {
+	color: #ff9d9d;
 }
 
-/* --- 目錄（功能頁） --- */
+/* --- 目錄（功能頁）：像入口網站的分類按鈕列。 --- */
 
 .toc {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.4rem 1.6rem;
-	padding-block: 1rem;
-	border-top: 1px solid var(--rule);
+	gap: 4.2px 5.6px;
+	margin-top: 10.2px;
+	padding: 6.4px 7.2px;
+	background: var(--roc-blue-pale);
+	border: 1px solid var(--border);
+	font-family: var(--font-ui);
+	font-size: 13.4px;
+}
+.toc a {
+	padding: 1.6px 8.6px 2px 7.8px;
+	background: linear-gradient(to bottom, var(--silver-hi), var(--silver-lo));
+	border: 1px solid var(--border-dark);
+	border-radius: 3px;
+	color: var(--btn-text);
+	text-decoration: none;
+}
+.toc a:hover {
+	background: var(--roc-yellow);
+	color: var(--notice-text);
+	text-decoration: underline;
 }
 
-/* --- 定價 --- */
+/* --- 定價：方案並排成框格（不是卡片，是一格一格的表）。 --- */
 
 .plans {
 	display: grid;
+	gap: 0;
+}
+@media (min-width: 56rem) {
+	.plans {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+.section:has(.plans) {
+	border: 0;
+	background: transparent;
 }
 .plan {
 	display: grid;
-	gap: 1.25rem 3rem;
-	padding-block: 1.75rem;
-	border-top: 1px solid var(--rule);
+	grid-template-rows: auto 1fr;
+	margin: -1px 0 0 -1px;
+	border: 1px solid var(--border);
+	background: var(--panel);
 }
-.plan:first-child {
-	border-top: 0;
-	padding-top: 0;
-}
-/* 主推的方案：左邊一條強調色粗線，旁邊另有文字標籤，不只靠顏色。 */
-.plan-featured {
-	/* 粗線掛在版面外側的留白裡（gutter 最小 1.25rem），文字仍與其他方案左對齊。 */
-	margin-left: -1.25rem;
-	padding-left: calc(1.25rem - 3px);
-	border-left: 3px solid var(--accent);
-}
-@media (min-width: 56rem) {
+@media (max-width: 56rem) {
 	.plan {
-		grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
+		margin-left: 0;
 	}
+}
+.plan-featured {
+	position: relative;
+	z-index: 1;
+	border: 2px solid var(--roc-red);
+	background: hsl(52 100% 97%);
+}
+:root[data-theme="dark"] .plan-featured {
+	background: hsl(229 50% 17%);
 }
 .plan-head {
 	display: grid;
-	gap: 0.5rem;
+	gap: 3.6px;
 	align-content: start;
 	justify-items: start;
+	padding: 0 0 8px;
+	border-bottom: 1px solid var(--border);
+}
+.plan-head > :not(.plan-name) {
+	margin-inline: 9.6px 8.8px;
 }
 .plan-name {
-	font-size: 1.6rem;
+	justify-self: stretch;
+	padding: 3.8px 9.4px 3.2px;
+	background: linear-gradient(to bottom, var(--roc-blue-3), var(--roc-blue));
+	color: #ffffff;
+	font-size: 20px;
+	text-shadow: 1px 1px 0 #000040;
+}
+.plan-featured .plan-name {
+	background: linear-gradient(to bottom, hsl(0 80% 52%), var(--roc-red-2));
+	text-shadow: 1px 1px 0 #400000;
 }
 .plan-price {
-	font-family: var(--font-display);
-	font-size: 2rem;
+	color: var(--roc-red-2);
+	font-family: var(--font-latin);
+	font-size: 25px;
+	font-weight: 700;
 	line-height: 1.2;
+	text-shadow: 1px 1px 0 hsl(52 100% 70%);
+}
+:root[data-theme="dark"] .plan-price {
+	color: #fff27a;
+	text-shadow: 1px 1px 0 #000;
 }
 .plan-price .per {
-	color: var(--fg-secondary);
-	font-family: var(--font-body);
-	font-size: 0.9rem;
+	color: var(--muted);
+	font-family: var(--font-ui);
+	font-size: 13px;
+	font-weight: 400;
+	text-shadow: none;
 }
 .plan-body {
 	display: grid;
-	gap: 1rem;
+	gap: 7.4px;
 	align-content: start;
 	justify-items: start;
+	padding: 8.4px 9.8px 10.6px 9.2px;
 }
 .plan-features {
-	/* 多欄排版對 grid 容器無效，所以這份清單要改回 block。 */
-	display: block;
-	columns: 2 15rem;
-	column-gap: 2rem;
 	width: 100%;
-}
-.plan-features li {
-	break-inside: avoid;
-	margin-bottom: 0.55rem;
 }
 .plan-quotas {
 	width: 100%;
-	padding-top: 0.9rem;
-	border-top: 1px solid var(--rule);
+	padding-top: 6.2px;
+	border-top: 1px dashed var(--border);
 }
 
 /* --- 表格（通用樣式在 global.css） --- */
@@ -335,7 +391,7 @@ main:focus {
 }
 td.num,
 th.num {
-	text-align: right;
+	text-align: center;
 	font-variant-numeric: tabular-nums;
 	white-space: nowrap;
 }
@@ -346,62 +402,99 @@ tbody th {
 	font-weight: 400;
 }
 .no {
-	color: var(--fg-secondary);
+	color: var(--muted);
 }
 .yes {
+	color: var(--roc-red-2);
 	font-weight: 700;
 }
+:root[data-theme="dark"] .yes {
+	color: #7fffa0;
+}
 
-/* --- FAQ --- */
+/* --- FAQ：Q／A 問答框。 --- */
 
 details {
-	padding: 1rem 0;
-	border-bottom: 1px solid var(--rule);
-}
-details:first-of-type {
-	border-top: 1px solid var(--rule);
+	border: 1px solid var(--border);
+	margin-top: -1px;
 }
 details summary {
 	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: 1rem;
+	align-items: baseline;
+	gap: 6px;
+	padding: 5.4px 9px 5px 8.2px;
+	background: var(--roc-blue-pale);
+	font-family: var(--font-ui);
 	font-weight: 700;
 	list-style: none;
 	cursor: pointer;
 }
+details summary:hover {
+	background: var(--roc-yellow);
+	color: var(--notice-text);
+}
 details summary::-webkit-details-marker {
 	display: none;
 }
+details summary::before {
+	content: "Q";
+	flex: none;
+	width: 1.4em;
+	background: var(--roc-blue);
+	color: #ffffff;
+	font-family: var(--font-latin);
+	text-align: center;
+}
 details summary::after {
-	content: "+";
-	color: var(--fg-secondary);
-	font-size: 1.3rem;
-	line-height: 1;
+	content: "▼";
+	margin-left: auto;
+	color: var(--muted);
+	font-size: 0.75em;
 }
 details[open] summary::after {
-	content: "−";
+	content: "▲";
 }
 details .answer {
-	max-width: 38em;
-	padding-top: 0.7rem;
-	color: var(--fg-secondary);
+	display: flex;
+	gap: 6px;
+	padding: 6.4px 10.2px 7.2px 8.2px;
+}
+details .answer::before {
+	content: "A";
+	flex: none;
+	width: 1.4em;
+	height: 1.5em;
+	background: var(--roc-red);
+	color: #ffffff;
+	font-family: var(--font-latin);
+	font-weight: 700;
+	text-align: center;
 }
 
-/* --- 頁尾 --- */
+/* --- 產品頁的頁尾連結群組（放在外框頁尾的 footer slot） --- */
 
+.coo-footer {
+	margin-bottom: 6px;
+	padding-bottom: 6px;
+	border-bottom: 1px solid hsl(225 70% 45%);
+}
 .footer-rows {
-	margin: 1.5rem 0 0;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 2px 18px;
+	margin: 3px 0;
 }
 .footer-rows > div {
-	display: grid;
-	gap: 0.25rem 2rem;
-	padding-block: 0.75rem;
-	border-top: 1px solid var(--rule);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0 6px;
 }
 .footer-rows dt {
-	color: var(--fg);
 	font-weight: 700;
+}
+.footer-rows dt::after {
+	content: "：";
 }
 .footer-rows dd {
 	margin: 0;
@@ -409,38 +502,17 @@ details .answer {
 .footer-rows ul {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.25rem 1.5rem;
+	gap: 0;
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
-@media (min-width: 48rem) {
-	.footer-rows > div {
-		grid-template-columns: minmax(6rem, 1fr) minmax(0, 3fr);
-	}
-}
-.footer-bottom {
-	margin-top: 1.5rem;
-	padding-top: 1.2rem;
-	border-top: 1px solid var(--rule);
-}
-.footer-bottom p {
-	margin: 0;
+.footer-rows li + li::before {
+	content: "・";
+	color: hsl(220 60% 70%);
 }
 
 @media (max-width: 40rem) {
-	/* 窄螢幕上導覽會擠成好幾列。頁首的「開始使用」在 hero 與結尾各有一個更明顯的按鈕，
-	   這裡收起，剩下的連結才排得進兩列以內。 */
-	.site-nav .nav-cta {
-		display: none;
-	}
-	.site-header .wrap {
-		flex-wrap: wrap;
-		padding-block: 0.6rem;
-	}
-	.site-nav {
-		justify-content: flex-start;
-	}
 	.hero .actions .btn {
 		flex: 1 1 auto;
 		justify-content: center;

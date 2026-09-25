@@ -1,67 +1,122 @@
-/* 設計 token 與全站共用的版面語彙。規範出處是 CLAUDE.md。
+/* 華國美學版（roc-aesthetic）的設計 token 與全站共用外框。
  *
- * 全站只有三個色值（--paper / --ink / --accent），層次一律用 color-mix() 由它們衍生，
- * 不得在這個檔案以外的地方寫死色值。主題由 <html data-theme> 決定。
+ * 這一版刻意離開 CLAUDE.md 的「紙與墨」三色規範，改依 https://github.com/maylogger/roc-aesthetic
+ * 的規則：資訊密集、表格先於卡片、中華民國藍 / 飽和紅 / 警示黃 / 銀灰漸層 / 亮青連結、
+ * 老系統字體、WordArt 標題、亮面浮雕按鈕，以及 0.1px 到 1px 的微誤差。
+ * 小數點的 padding、translate 與各區塊不一致的邊框是刻意的，不要「順手修正」。
  *
- * 強調色的對比度：在紙色上 4.40、在墨色上 3.50，內文門檻 4.5 兩邊都未達。
- * 所以它只用於色塊、線條、邊框與大字（>= 24px，或 >= 18.66px 且粗體），
- * 不得用在內文級字級的文字上。內文連結用 --fg 加底線。
+ * 仍然保留的底線：
+ * - 內文對比度 >= 4.5（深淺兩種模式都算過），連結一律加底線，不只靠顏色。
+ * - :focus-visible 外框不得移除。
+ * - prefers-reduced-motion 時跑馬燈停止並攤開成清單。
+ * - 錯誤狀態一定有文字說明，不只靠紅色。
+ * - 追悼日整站黑白（見檔案後段）。
+ *
+ * 色值集中在 :root，元件引用變數，不各自寫死。
  */
 :root {
-	--paper: #F4F1EA;
-	--ink: #1A1A1A;
-	--accent: #C8411B;
+	/* 中華民國藍與它的同色微差（colors 規則的 same-color drift）。 */
+	--roc-blue: #000095;
+	--roc-blue-2: hsl(226 72% 38%);
+	--roc-blue-3: hsl(224 70% 52%);
+	--roc-blue-pale: hsl(220 70% 92%);
+	--roc-blue-pale-2: hsl(221 66% 89%);
+	--roc-red: #cc0000;
+	--roc-red-2: hsl(0 100% 32%);
+	--roc-yellow: hsl(52 94% 78%);
+	--roc-yellow-2: hsl(52 96% 73%);
+	--roc-gold: #b8860b;
+	--roc-cyan: #00e5ff;
 
-	--bg: var(--paper);
-	--fg: var(--ink);
-	/* 放在強調色色塊上的文字。追悼模式的暗色版會把強調色換成淺灰，屆時改用墨色。 */
-	--on-accent: var(--paper);
+	--page-bg: hsl(219 30% 84%);
+	--page-stripe: hsl(219 30% 81%);
+	--panel: #ffffff;
+	--panel-2: hsl(220 40% 97%);
+	--text: #1c1c1c;
+	--muted: #4d4d4d;
+	--border: #7f9db9;
+	--border-dark: #003c74;
+	--link: #0000cc;
+	--link-visited: #551a8b;
+	--link-hover: #cc0000;
 
-	--fg-secondary: color-mix(in srgb, var(--fg) 65%, var(--bg));
-	--rule: color-mix(in srgb, var(--fg) 18%, var(--bg));
-	--hover: color-mix(in srgb, var(--fg) 7%, var(--bg));
+	/* XP 風按鈕與銀灰漸層。 */
+	--silver-hi: #ffffff;
+	--silver-mid: #ecebe6;
+	--silver-lo: #cfcac0;
+	--btn-text: #000000;
 
-	/* 三組都以襯線字體收尾。無襯線的 fallback 會與襯線內文的調性衝突。
-	   LXGW WenKai TC 的載入方式見 components/Fonts.astro。 */
-	--font-display: "LXGW WenKai TC", "Noto Serif TC", "Songti TC", "Source Han Serif TC",
-		"Noto Serif CJK TC", "PMingLiU", "MingLiU", Georgia, "Times New Roman", serif;
-	--font-body: "Noto Serif TC", "Songti TC", "Source Han Serif TC", "Noto Serif CJK TC",
-		"PMingLiU", "MingLiU", Georgia, "Times New Roman", serif;
-	--font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas,
-		"Liberation Mono", monospace;
+	/* 公告黃底上的字色（黑字在黃底上對比 > 14）。 */
+	--notice-text: #1c1c1c;
+	--notice-border: #c9a227;
 
-	/* 圓角只允許 2px 或 0。驗收用 grep 檢查 border-radius 的字面值，
-	   所以宣告處直接寫 2px，不引用這個變數。 */
-	--radius: 2px;
+	/* 錯誤：紅框加淡紅底加文字說明。 */
+	--err-bg: hsl(0 100% 95%);
+	--ok-bg: hsl(120 45% 92%);
+	--ok-border: hsl(120 55% 30%);
 
-	--page-max: 68rem;
-	--gutter: clamp(1.25rem, 5vw, 3rem);
+	/* 字體：老系統字體優先，後面接網路字型當作非 Windows 環境的替身
+	 * （LXGW WenKai TC 代替標楷體、Noto Serif TC 代替新細明體，載入方式見 Fonts.astro）。 */
+	--font-kai: "DFKai-SB", "標楷體", "BiauKai", "Kaiti TC", "LXGW WenKai TC", "KaiTi", "Noto Serif TC", serif;
+	--font-ming: "PMingLiU", "新細明體", "MingLiU", "細明體", "LiSong Pro", "Noto Serif TC", "Songti TC", serif;
+	--font-ui: "Microsoft JhengHei", "微軟正黑體", Tahoma, Arial, "PingFang TC", "Noto Sans TC", sans-serif;
+	--font-latin: Tahoma, Arial, "Microsoft JhengHei", "微軟正黑體", sans-serif;
+	--font-mono: "JetBrains Mono", "MingLiU", "Courier New", ui-monospace, monospace;
+	/* 舊變數名保留給還在引用的地方。 */
+	--font-display: var(--font-kai);
+	--font-body: var(--font-ming);
+
+	--page-max: 1000px;
 	color-scheme: light;
 }
 
+/* 「夜間模式」。老入口網站沒有這個，但主題切換鈕保留，所以給一組深藍底的版本。
+ * 對比：#E6E6E6 on #0E1433 約 14，#7FEFFF on #0E1433 約 13。 */
 :root[data-theme="dark"] {
-	--bg: var(--ink);
-	--fg: var(--paper);
+	--roc-blue-pale: hsl(226 45% 20%);
+	--roc-blue-pale-2: hsl(227 43% 23%);
+	--roc-yellow: hsl(52 70% 22%);
+	--roc-yellow-2: hsl(52 72% 26%);
+
+	--page-bg: hsl(230 60% 6%);
+	--page-stripe: hsl(230 55% 8%);
+	--panel: hsl(229 57% 13%);
+	--panel-2: hsl(229 50% 16%);
+	--text: #e6e6e6;
+	--muted: #b3b9d1;
+	--border: #4a5e9a;
+	--border-dark: #8ea2df;
+	--link: #7fefff;
+	--link-visited: #d9a6ff;
+	--link-hover: #ffe45c;
+
+	--silver-hi: hsl(228 30% 40%);
+	--silver-mid: hsl(228 34% 28%);
+	--silver-lo: hsl(229 40% 18%);
+	--btn-text: #ffffff;
+
+	--notice-text: #fff6b0;
+	--notice-border: #b8860b;
+
+	--err-bg: hsl(0 60% 18%);
+	--ok-bg: hsl(120 35% 15%);
+	--ok-border: hsl(120 45% 55%);
 	color-scheme: dark;
 }
 
 /* 追悼日（data-mourning 由 components/ThemeInit.astro 設定）。
- * 全站唯一不是中性色的只有強調色，所以把它換成灰階就是整站黑白，
- * 不必用 filter：filter 加在 <html> 上會讓它變成 fixed 子元素的 containing block，
- * 而且結果值無法精確控制。灰階值由 ink 與 paper 混出，不引入新的色值。
- *   淺色：ink 70% 混 paper，對紙色 6.04
- *   暗色：paper 60% 混 ink，對墨色 6.27 */
+ * 這一版的顏色太多，逐一覆寫 token 不實際，改對 .portal 整塊套 grayscale。
+ * 不加在 <html> 或 <body> 上：filter 會讓元素成為 fixed 子元素的 containing block，
+ * .portal 裡沒有 fixed 元素，所以加在這裡沒有副作用。外框之外的頁面底色另外換成灰。 */
 :root[data-mourning] {
-	--accent: color-mix(in srgb, var(--ink) 70%, var(--paper));
+	--page-bg: hsl(0 0% 84%);
+	--page-stripe: hsl(0 0% 81%);
 }
 :root[data-theme="dark"][data-mourning] {
-	--accent: color-mix(in srgb, var(--paper) 60%, var(--ink));
-	/* 紙色放在這個淺灰上只有 2.46，改用墨色（6.27）。 */
-	--on-accent: var(--ink);
+	--page-bg: hsl(0 0% 6%);
+	--page-stripe: hsl(0 0% 8%);
 }
-/* 影像與第三方嵌入的顏色不歸 token 管。 */
-:root[data-mourning] .brand-logo,
-:root[data-mourning] .cf-turnstile {
+:root[data-mourning] .portal {
 	filter: grayscale(1);
 }
 
@@ -75,62 +130,73 @@ html {
 	-webkit-text-size-adjust: 100%;
 }
 
+/* 背景是老入口網站常見的細斜紋。 */
 body {
 	margin: 0;
 	min-height: 100svh;
-	background: var(--bg);
-	color: var(--fg);
-	font-family: var(--font-body);
-	font-size: 1rem;
-	line-height: 1.8;
-	-webkit-font-smoothing: antialiased;
-	text-rendering: optimizeLegibility;
+	background-color: var(--page-bg);
+	background-image: repeating-linear-gradient(
+		45deg,
+		var(--page-bg) 0 3px,
+		var(--page-stripe) 3px 4px
+	);
+	color: var(--text);
+	font-family: var(--font-ming);
+	font-size: 15px;
+	line-height: 1.65;
+	/* typography 規則：較硬的字體渲染。 */
+	-webkit-font-smoothing: none;
+	text-rendering: geometricPrecision;
 }
 
-/* 標題字體只用在 h1 與 h2。LXGW WenKai TC 只載入 400 一個字重（見 Fonts.astro），
-   標題若吃瀏覽器預設的粗體就會變成假粗體，所以字重明確寫 400。
-   h3 以下改用內文字體加粗，層級靠字體與字重區分。 */
 h1,
-h2 {
-	margin: 0;
-	font-family: var(--font-display);
-	font-weight: 400;
-	line-height: 1.3;
-	/* 讓各行長度接近，避免「一人負責。」這種孤字行。不支援的瀏覽器照常斷行。 */
-	text-wrap: balance;
-}
+h2,
 h3,
 h4 {
 	margin: 0;
+	line-height: 1.35;
+}
+/* LXGW WenKai TC 只載入 400（見 Fonts.astro），楷體標題不吃粗體，避免假粗體。 */
+h1,
+h2 {
+	font-family: var(--font-kai);
+	font-weight: 400;
+}
+h3,
+h4 {
+	font-family: var(--font-ui);
 	font-weight: 700;
-	line-height: 1.5;
 }
 p {
 	margin: 0;
-	/* 避免段落最後一行只剩一兩個字。不支援的瀏覽器照常斷行。 */
-	text-wrap: pretty;
 }
 
-/* 內文連結不靠顏色區分：--fg 加底線。hover 只改底線的粗細與顏色。 */
 a {
-	color: inherit;
+	color: var(--link);
 	text-decoration: underline;
-	text-decoration-thickness: 1px;
-	text-underline-offset: 0.2em;
+	text-underline-offset: 0.12em;
+}
+a:visited {
+	color: var(--link-visited);
 }
 a:hover {
+	color: var(--link-hover);
 	text-decoration-thickness: 2px;
-	text-decoration-color: var(--accent);
 }
 
-/* 不得移除或改成 outline: none。 */
 :focus-visible {
-	outline: 2px solid var(--accent);
+	outline: 2px solid var(--roc-red);
 	outline-offset: 2px;
+}
+:root[data-theme="dark"] :focus-visible {
+	outline-color: var(--link-hover);
 }
 
 strong {
 	font-weight: 700;
+}
+em {
+	font-style: italic;
 }
 
 code,
@@ -139,7 +205,6 @@ kbd {
 	font-size: 0.92em;
 }
 
-/* 只給輔助技術讀的文字。用 clip 而非 display:none，後者連輔助技術也讀不到。 */
 .sr-only {
 	position: absolute !important;
 	width: 1px;
@@ -158,133 +223,91 @@ kbd {
 	left: -9999px;
 	top: 0;
 	z-index: 100;
-	padding: 0.6rem 1rem;
-	background: var(--bg);
-	color: var(--fg);
-	border: 1px solid var(--fg);
+	padding: 0.5rem 0.9rem;
+	background: var(--roc-yellow);
+	color: var(--notice-text);
+	border: 2px solid var(--roc-red);
 }
 .skip-link:focus {
 	left: 1rem;
 	top: 1rem;
 }
 
-/* --- 版面 ------------------------------------------------------------ */
-
-.wrap {
-	width: min(var(--page-max), 100% - 2 * var(--gutter));
-	margin-inline: auto;
-}
-
-/* 區塊之間用留白與 1px 實線分隔，不用卡片、陰影或底色。 */
-.section {
-	padding-block: clamp(2.5rem, 6vw, 4.5rem);
-	border-top: 1px solid var(--rule);
-}
-
-/* 左窄右寬的不對稱兩欄：區塊標題在左，內容在右。窄螢幕收成一欄。
-   欄寬比刻意不均，右欄放不滿也沒關係，留白是設計的一部分。 */
-.cols {
-	display: grid;
-	/* 單欄時也要明確寫 minmax(0, ...)：沒寫的話欄寬會被內容的 min-width（例如
-	   橫向捲動的表格）撐開，整頁跟著橫向溢出。 */
-	grid-template-columns: minmax(0, 1fr);
-	gap: 1.25rem clamp(2rem, 6vw, 5rem);
-}
-@media (min-width: 56rem) {
-	.cols {
-		grid-template-columns: minmax(9rem, 1fr) minmax(0, 3fr);
-	}
-}
-.cols > h2 {
-	font-size: clamp(1.5rem, 3vw, 1.85rem);
-}
-
-/* 行寬用 em 而不是 ch：ch 以「0」的字寬為基準，中日韓字元約是它的兩倍，
-   同一個數值在兩種文字下代表的字數會差一倍。 */
-.prose {
-	max-width: 38em;
-}
-.prose > * + * {
-	margin-top: 1em;
-}
-
 .secondary {
-	color: var(--fg-secondary);
+	color: var(--muted);
 }
 .small {
-	font-size: 0.9rem;
+	font-size: 0.87rem;
 }
 
-/* --- 頁首 ------------------------------------------------------------ */
+/* --- 入口網站外框（components/PortalShell.astro）------------------------ */
 
-.site-header {
-	border-bottom: 1px solid var(--rule);
+.portal {
+	width: min(var(--page-max), 100%);
+	margin: 0 auto;
+	background: var(--panel);
+	border-inline: 1px solid var(--border-dark);
+	border-bottom: 1px solid var(--border-dark);
 }
-.site-header .wrap {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 1rem;
-	min-height: 4.25rem;
-}
-.brand {
-	display: inline-flex;
-	align-items: center;
-	color: var(--fg);
-	text-decoration: none;
-}
-.brand-logo {
-	display: block;
-	height: 28px;
+/* 頁面沿用舊版的 .wrap，外框裡已經有寬度，這裡讓它不再另外縮。 */
+.portal .wrap {
 	width: auto;
+	margin: 0;
 }
-.brand-name {
-	font-family: var(--font-display);
-	font-size: 1.35rem;
-	line-height: 1.2;
-}
-.site-nav {
+
+/* 快速連結列 */
+.topbar {
 	display: flex;
-	align-items: center;
 	flex-wrap: wrap;
+	align-items: center;
 	justify-content: flex-end;
-	gap: 0.5rem 1.4rem;
+	gap: 2px 5.4px;
+	padding: 3.2px 9.6px 3.6px 8.8px;
+	background: linear-gradient(to bottom, var(--silver-hi), var(--silver-lo));
+	border-bottom: 1px solid var(--border);
+	font-family: var(--font-ui);
+	font-size: 12.5px;
 }
-.site-nav a:not(.btn) {
+.topbar-mark {
+	margin-right: auto;
+	color: var(--muted);
+	font-family: var(--font-latin);
+	letter-spacing: 1px;
+}
+.topbar a {
+	color: var(--text);
 	text-decoration: none;
 }
-.site-nav a:not(.btn):hover {
+.topbar a:hover {
+	color: var(--link-hover);
 	text-decoration: underline;
-	text-decoration-thickness: 1px;
-	text-decoration-color: currentColor;
 }
-/* 目前頁面不只靠顏色：粗體加強調色底線。 */
-.site-nav a[aria-current="page"] {
-	font-weight: 700;
-	text-decoration: underline;
-	text-decoration-thickness: 2px;
-	text-decoration-color: var(--accent);
+.topbar .sep {
+	color: var(--muted);
 }
 
 .icon-btn {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 2.5rem;
-	height: 2.5rem;
+	width: 26px;
+	height: 24px;
+	margin-left: 4.6px;
 	padding: 0;
-	border: 1px solid var(--rule);
-	border-radius: 2px;
-	background: transparent;
-	color: var(--fg);
+	border: 1px solid var(--border-dark);
+	border-radius: 3px;
+	background: linear-gradient(to bottom, var(--silver-hi), var(--silver-mid) 50%, var(--silver-lo));
+	box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.8), inset -1px -1px 0 rgba(0, 0, 0, 0.12);
+	color: var(--btn-text);
 	cursor: pointer;
 }
 .icon-btn:hover {
-	border-color: var(--fg);
-	background: var(--hover);
+	filter: brightness(1.08);
 }
 .icon-btn .icon {
 	display: block;
+	width: 16px;
+	height: 16px;
 }
 :root[data-theme="dark"] .icon-btn .sun {
 	display: none;
@@ -293,114 +316,793 @@ kbd {
 	display: none;
 }
 
-/* --- 按鈕 ------------------------------------------------------------ */
+/* 頁首：Logo、站名、標語。 */
+.masthead {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-template-areas:
+		"logo title"
+		"slogan slogan";
+	align-items: center;
+	gap: 6.2px 14.6px;
+	padding: 13.4px 15.2px 9.8px 13.6px;
+	background:
+		linear-gradient(100deg, transparent 55%, hsl(52 100% 60% / 0.35) 55.2% 58%, transparent 58.2%),
+		linear-gradient(to bottom, #ffffff 0%, hsl(215 100% 93%) 60%, hsl(214 90% 86%) 100%);
+	border-bottom: 3px double var(--roc-blue);
+}
+:root[data-theme="dark"] .masthead {
+	background:
+		linear-gradient(100deg, transparent 55%, hsl(52 100% 50% / 0.18) 55.2% 58%, transparent 58.2%),
+		linear-gradient(to bottom, hsl(228 50% 20%) 0%, hsl(229 60% 12%) 100%);
+}
+.brand {
+	grid-area: logo;
+	display: inline-flex;
+	padding: 3.6px 5px 3px;
+	background: #ffffff;
+	border: 1px solid var(--border);
+	box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.18);
+}
+.brand-logo {
+	display: block;
+	height: 30px;
+	width: auto;
+}
+.masthead-title {
+	grid-area: title;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0 9.4px;
+	transform: translateY(-0.7px);
+}
+.mh-name {
+	color: var(--roc-blue);
+	font-family: var(--font-kai);
+	font-size: clamp(22px, 4vw, 30px);
+	letter-spacing: 2px;
+	text-shadow: 1px 1px 0 #ffffff, 2px 2px 0 hsl(52 100% 55%), 3px 3px 1px rgba(0, 0, 0, 0.35);
+}
+.mh-sub {
+	color: var(--roc-red);
+	font-family: var(--font-ui);
+	font-size: clamp(14px, 2.2vw, 18px);
+	font-weight: 700;
+	font-style: italic;
+	transform: skewX(-6deg) scaleY(1.08);
+	display: inline-block;
+}
+:root[data-theme="dark"] .mh-name {
+	color: #ffffff;
+	text-shadow: 1px 1px 0 var(--roc-blue), 2px 2px 0 hsl(52 100% 45%), 3px 3px 2px rgba(0, 0, 0, 0.6);
+}
+:root[data-theme="dark"] .mh-sub {
+	color: #ff8a8a;
+}
+.masthead-slogan {
+	grid-area: slogan;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0 12.8px;
+	color: var(--roc-red-2);
+	font-family: var(--font-ui);
+	font-size: 13.4px;
+	font-weight: 700;
+}
+.masthead-slogan > span:nth-child(2) {
+	color: var(--roc-blue);
+}
+:root[data-theme="dark"] .masthead-slogan {
+	color: #ff9d9d;
+}
+:root[data-theme="dark"] .masthead-slogan > span:nth-child(2) {
+	color: #9fc2ff;
+}
+.masthead-slogan span[aria-hidden] {
+	color: var(--roc-gold);
+}
+@media (min-width: 760px) {
+	.masthead {
+		grid-template-columns: auto auto 1fr;
+		grid-template-areas: "logo title slogan";
+	}
+	.masthead-slogan {
+		justify-content: flex-end;
+		text-align: right;
+		flex-direction: column;
+		gap: 0;
+		line-height: 1.45;
+	}
+}
+
+/* 主選單：藍色亮面長條。 */
+.mainnav {
+	background: linear-gradient(
+		to bottom,
+		var(--roc-blue-3) 0%,
+		var(--roc-blue-2) 48%,
+		var(--roc-blue) 52%,
+		hsl(236 100% 24%) 100%
+	);
+	border-top: 1px solid hsl(220 100% 75%);
+	border-bottom: 2px solid var(--roc-gold);
+}
+.mainnav ul {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0;
+	padding: 0 4.2px;
+	list-style: none;
+}
+.mainnav li + li {
+	border-left: 1px solid hsl(225 60% 20%);
+	box-shadow: inset 1px 0 0 hsl(220 100% 70% / 0.6);
+}
+.mainnav a {
+	display: block;
+	padding: 7.6px 13.2px 6.8px 12.4px;
+	color: #ffffff;
+	font-family: var(--font-ui);
+	font-size: 14.2px;
+	font-weight: 700;
+	text-decoration: none;
+	text-shadow: 1px 1px 0 #000040;
+}
+.mainnav a:visited {
+	color: #ffffff;
+}
+.mainnav a:hover {
+	background: hsl(220 100% 60% / 0.35);
+	color: #fff27a;
+	text-decoration: underline;
+}
+/* 目前頁面：黃底藍字，不只靠顏色，另加底線與粗框。 */
+.mainnav a[aria-current="page"] {
+	background: linear-gradient(to bottom, hsl(52 100% 80%), hsl(48 100% 62%));
+	color: var(--roc-blue);
+	text-shadow: none;
+	text-decoration: underline;
+	outline: 1px solid var(--roc-gold);
+	outline-offset: -1px;
+}
+.mainnav a[aria-current="page"]:focus-visible {
+	outline: 2px solid var(--roc-red);
+}
+@media (max-width: 600px) {
+	.mainnav ul {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		padding: 0;
+	}
+	.mainnav li + li {
+		border-left: 0;
+		box-shadow: none;
+	}
+	.mainnav li {
+		border-top: 1px solid hsl(225 60% 20%);
+	}
+	.mainnav li:nth-child(odd) {
+		border-right: 1px solid hsl(225 60% 20%);
+	}
+	.mainnav li:first-child {
+		grid-column: 1 / -1;
+		border-right: 0;
+	}
+	.mainnav a {
+		padding: 6.4px 8.6px;
+		font-size: 13.6px;
+	}
+}
+
+/* 最新公告跑馬燈 */
+.ticker {
+	display: flex;
+	align-items: stretch;
+	background: var(--roc-yellow);
+	border-bottom: 1px solid var(--notice-border);
+	color: var(--notice-text);
+	font-family: var(--font-ui);
+	font-size: 13.4px;
+}
+.ticker-label {
+	flex: none;
+	display: flex;
+	align-items: center;
+	padding: 3.4px 8.2px;
+	background: var(--roc-red);
+	color: #ffffff;
+	font-weight: 700;
+	text-shadow: 1px 1px 0 #600000;
+}
+.ticker-viewport {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+}
+.ticker-track {
+	display: inline-flex;
+	gap: 0 42px;
+	margin: 0;
+	padding: 3.8px 0 3.2px 100%;
+	list-style: none;
+	white-space: nowrap;
+	animation: roc-marquee 70s linear infinite;
+}
+.ticker-track li span[aria-hidden] {
+	color: var(--roc-red);
+}
+:root[data-theme="dark"] .ticker-track li span[aria-hidden] {
+	color: #ff9d9d;
+}
+.ticker:hover .ticker-track,
+.ticker:focus-within .ticker-track,
+.ticker:has(.ticker-toggle:checked) .ticker-track {
+	animation-play-state: paused;
+}
+@keyframes roc-marquee {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-100%);
+	}
+}
+.ticker-pause {
+	flex: none;
+	display: flex;
+	align-items: center;
+	gap: 3px;
+	padding: 0 7.4px 0 6px;
+	border-left: 1px dotted var(--notice-border);
+	font-size: 12px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+.ticker-pause input {
+	margin: 0;
+}
+@media (max-width: 600px) {
+	.ticker {
+		flex-wrap: wrap;
+	}
+	.ticker-label {
+		order: 0;
+	}
+	.ticker-pause {
+		order: 1;
+		margin-left: auto;
+	}
+	.ticker-viewport {
+		order: 2;
+		flex-basis: 100%;
+		border-top: 1px dotted var(--notice-border);
+	}
+}
+
+/* 導覽路徑 */
+.crumbs {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	padding: 4.4px 12.2px 4px 11.4px;
+	background: var(--panel-2);
+	border-bottom: 1px dashed var(--border);
+	font-family: var(--font-ui);
+	font-size: 12.8px;
+}
+.crumbs-lead {
+	color: var(--muted);
+}
+.crumbs ol {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.crumb-sep {
+	margin: 0 4.6px;
+	color: var(--muted);
+}
+.crumbs [aria-current="page"] {
+	font-weight: 700;
+}
+
+/* 主欄與右側欄 */
+.portal-body {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 11.6px;
+	padding: 10.2px 9.4px 12.6px 10.8px;
+}
+@media (min-width: 880px) {
+	.portal-body {
+		grid-template-columns: minmax(0, 1fr) 232px;
+		gap: 0 12.4px;
+	}
+}
+.portal-main {
+	min-width: 0;
+}
+.portal-main:focus {
+	outline: none;
+}
+
+.portal-side {
+	display: grid;
+	gap: 9.6px;
+	align-content: start;
+	font-family: var(--font-ui);
+	font-size: 13.2px;
+	line-height: 1.55;
+	/* sidebar 與主欄位的上緣對不齊（spacing 規則）。 */
+	transform: translateY(1.4px);
+}
+.side-box {
+	border: 1px solid var(--border);
+	background: var(--panel-2);
+}
+.side-title {
+	padding: 3.6px 8.4px 3px;
+	background: linear-gradient(to bottom, hsl(214 80% 62%), var(--roc-blue-2));
+	border-bottom: 1px solid var(--border-dark);
+	color: #ffffff;
+	font-family: var(--font-ui);
+	font-size: 14px;
+	font-weight: 700;
+	text-shadow: 1px 1px 0 #000050;
+}
+.side-window .side-title {
+	background: linear-gradient(to bottom, hsl(0 85% 55%), var(--roc-red-2));
+	text-shadow: 1px 1px 0 #500000;
+}
+.side-notice {
+	background: var(--roc-yellow);
+	border-color: var(--notice-border);
+	color: var(--notice-text);
+}
+.side-notice .side-title {
+	background: linear-gradient(to bottom, hsl(48 100% 60%), hsl(44 100% 46%));
+	border-bottom-color: var(--notice-border);
+	color: #1c1c1c;
+	text-shadow: 1px 1px 0 hsl(52 100% 85%);
+}
+.side-notice ol {
+	margin: 0;
+	padding: 6.2px 8.4px 7.8px 26px;
+}
+.side-notice li + li {
+	margin-top: 4.2px;
+}
+/* 同色微差：黃底裡的粗體再墊一層幾乎一樣的黃。 */
+.side-notice strong {
+	background: var(--roc-yellow-2);
+	color: var(--roc-red-2);
+}
+:root[data-theme="dark"] .side-notice strong {
+	color: #ffd0d0;
+}
+.side-links {
+	margin: 0;
+	padding: 5.6px 7.8px 6.4px 8.2px;
+	list-style: none;
+}
+.side-links li {
+	padding: 2.4px 0 2.8px;
+	border-bottom: 1px dotted var(--border);
+}
+.side-links li:last-child {
+	border-bottom: 0;
+}
+.side-links li::before {
+	content: "◎ ";
+	color: var(--roc-blue-3);
+}
+.side-links a:hover {
+	background: var(--roc-yellow);
+}
+.ext {
+	display: inline-block;
+	margin-left: 0.2em;
+	vertical-align: -0.05em;
+}
+.side-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 12.6px;
+}
+.side-table th,
+.side-table td {
+	padding: 3.4px 5.2px 3px;
+	border: 1px solid var(--border);
+	vertical-align: top;
+	overflow-wrap: anywhere;
+}
+.side-table th {
+	width: 30%;
+	background: var(--roc-blue-pale);
+	font-weight: 700;
+	white-space: nowrap;
+}
+.side-table td {
+	background: var(--panel);
+}
+.social {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px 6.4px;
+	padding: 6.8px 7.2px 7.4px;
+}
+.social a {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 2.6px 7.4px 3px 5.6px;
+	border: 1px solid var(--border-dark);
+	border-radius: 3px;
+	background: linear-gradient(to bottom, var(--silver-hi), var(--silver-lo));
+	color: var(--btn-text);
+	font-size: 12.4px;
+	text-decoration: none;
+}
+.social a:hover {
+	filter: brightness(1.1) saturate(1.2);
+	text-decoration: underline;
+}
+.social svg {
+	width: 16px;
+	height: 16px;
+}
+
+/* 頁尾：貼太近、塞滿版權與信箱（spacing 規則）。 */
+.portal-footer {
+	padding: 7.4px 12.6px 11px;
+	background: linear-gradient(to bottom, var(--roc-blue-2), var(--roc-blue) 40%, hsl(236 100% 20%));
+	border-top: 3px solid var(--roc-gold);
+	color: #ffffff;
+	font-family: var(--font-ui);
+	font-size: 12.8px;
+	line-height: 1.7;
+	text-align: center;
+}
+.portal-footer a,
+.portal-footer a:visited {
+	color: var(--roc-cyan);
+}
+.portal-footer a:hover {
+	color: #fff27a;
+}
+.portal-footer p {
+	margin: 0;
+}
+.portal-footer .sep {
+	margin: 0 3px;
+	color: hsl(220 60% 70%);
+}
+.footer-fine {
+	color: hsl(220 60% 88%);
+	font-size: 12px;
+}
+.footer-nav {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0;
+	margin: 0 0 5.4px;
+	padding: 0 0 5px;
+	border-bottom: 1px solid hsl(225 70% 45%);
+	list-style: none;
+}
+.footer-nav li + li::before {
+	content: "｜";
+	color: hsl(220 60% 70%);
+}
+
+/* --- WordArt 標題（components/WordArt.astro）--------------------------- */
+
+.wordart {
+	position: relative;
+	isolation: isolate;
+	font-family: var(--font-kai);
+	font-weight: 400;
+	line-height: 1.45;
+	letter-spacing: 1px;
+}
+.wa-chunk {
+	display: inline-block;
+	/* 變形從左邊算起，放大時才不會往左凸出標題框。 */
+	transform-origin: left center;
+	color: var(--roc-blue);
+	background: linear-gradient(180deg, #ff2a2a 0%, #b00000 45%, #1a1aa8 55%, #000070 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	filter: drop-shadow(1px 1px 0 #ffffff) drop-shadow(1.6px 1.6px 0 hsl(52 100% 45%));
+}
+.wa-chunk[data-n="1"] {
+	transform: skewX(-8deg) scaleY(1.12);
+}
+.wa-chunk[data-n="2"] {
+	background-image: linear-gradient(170deg, #0000b0 0%, #6a00c8 40%, #c80060 70%, #cc0000 100%);
+	transform: scaleX(1.06) translateY(1px);
+	letter-spacing: 2px;
+}
+.wa-chunk[data-n="3"] {
+	background-image: linear-gradient(190deg, #007a3d 0%, #0050a0 50%, #1a007a 100%);
+	transform: skewX(6deg) scaleY(1.06) translateY(-0.6px);
+}
+.wa-chunk[data-n="4"] {
+	background-image: linear-gradient(180deg, #a06a00 0%, #cc0000 55%, #6a0000 100%);
+	transform: scaleY(1.14) translateX(0.5px);
+}
+:root[data-theme="dark"] .wa-chunk {
+	background-image: linear-gradient(180deg, #ffffff 0%, #fff27a 45%, #ffb000 55%, #ff6a3d 100%);
+	filter: drop-shadow(1px 1px 0 #000040) drop-shadow(2px 2px 0 var(--roc-blue));
+}
+:root[data-theme="dark"] .wa-chunk[data-n="2"] {
+	background-image: linear-gradient(170deg, #7fefff 0%, #ffffff 45%, #b7c8ff 100%);
+}
+:root[data-theme="dark"] .wa-chunk[data-n="3"] {
+	background-image: linear-gradient(190deg, #b8ffb0 0%, #7fefff 50%, #ffffff 100%);
+}
+/* 不支援文字裁切漸層的瀏覽器：退回實色，不能變成透明字。 */
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+	.wa-chunk {
+		-webkit-text-fill-color: currentColor;
+		background: none;
+	}
+}
+.wa-shadow {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	color: var(--roc-blue);
+	opacity: 0.1;
+	white-space: nowrap;
+	transform: translate(6px, 9px) skewX(-18deg) scaleY(1.3);
+	transform-origin: left top;
+	pointer-events: none;
+	user-select: none;
+}
+:root[data-theme="dark"] .wa-shadow {
+	color: #7fefff;
+	opacity: 0.12;
+}
+
+/* --- 頁面內的區塊 -------------------------------------------------------- */
+
+/* hero：簡報封面感的大框。 */
+.hero {
+	/* WordArt 的變形與影子不得把頁面撐出橫向捲軸。 */
+	overflow: hidden;
+	margin-bottom: 10.6px;
+	padding: 14.8px 15.6px 15.2px 14.4px;
+	background:
+		linear-gradient(to bottom, hsl(52 100% 92%), hsl(52 100% 97%) 60%, var(--panel)),
+		var(--panel);
+	border: 2px solid var(--roc-blue);
+	outline: 1px solid var(--roc-gold);
+	outline-offset: -5px;
+}
+:root[data-theme="dark"] .hero {
+	background: linear-gradient(to bottom, hsl(229 55% 20%), var(--panel));
+}
+.hero h1 {
+	max-width: 22em;
+	font-size: clamp(24px, 4.2vw, 36px);
+}
+.hero-body {
+	display: grid;
+	gap: 11.4px;
+	margin-top: 10.2px;
+}
+.hero .lead,
+.hero-lead {
+	max-width: 44em;
+	font-size: 15.6px;
+	line-height: 1.8;
+}
+
+/* 一般區塊：藍色標題列加外框。不同區塊的標題列刻意不同款（像不同年份的承包商補上的）。 */
+.section {
+	margin-top: 10.4px;
+	border: 1px solid var(--border);
+	background: var(--panel);
+}
+.section:nth-of-type(3n + 1) {
+	margin-top: 12px;
+	border-color: var(--border-dark);
+}
+.section > .wrap > h2,
+.section > .wrap.cols > h2,
+.section h2.section-title {
+	padding: 4.2px 10.4px 3.6px 9.6px;
+	background: linear-gradient(to bottom, var(--roc-blue-3), var(--roc-blue-2) 55%, var(--roc-blue));
+	border-bottom: 2px solid var(--roc-gold);
+	color: #ffffff;
+	font-size: 19px;
+	letter-spacing: 1px;
+	text-shadow: 1px 1px 0 #000040, 2px 2px 1px rgba(0, 0, 0, 0.4);
+}
+.section > .wrap > h2::before,
+.section > .wrap.cols > h2::before {
+	content: "【";
+}
+.section > .wrap > h2::after,
+.section > .wrap.cols > h2::after {
+	content: "】";
+}
+.section:nth-of-type(3n + 2) > .wrap > h2 {
+	background: linear-gradient(to bottom, hsl(0 80% 52%), var(--roc-red-2));
+	border-bottom: 1px solid #500000;
+	padding: 4.6px 9.8px 3.2px;
+	text-shadow: 1px 1px 0 #400000;
+}
+.section:nth-of-type(3n) > .wrap > h2 {
+	background: linear-gradient(to bottom, #ffffff, #e4e2dc 50%, #c9c4b8);
+	border-bottom: 1px solid #8a8577;
+	color: var(--roc-blue);
+	text-shadow: 1px 1px 0 #ffffff;
+	font-size: 18.4px;
+}
+:root[data-theme="dark"] .section:nth-of-type(3n) > .wrap > h2 {
+	background: linear-gradient(to bottom, hsl(228 30% 42%), hsl(229 40% 22%));
+	color: #fff27a;
+	text-shadow: 1px 1px 0 #000;
+}
+.section .cols > :not(h2) {
+	padding: 9.8px 12.2px 11.4px 11.6px;
+}
+.section .cols > :not(h2) + :not(h2) {
+	padding-top: 0;
+}
+
+.prose {
+	max-width: 46em;
+}
+.prose > * + * {
+	margin-top: 0.8em;
+}
+
+/* --- 按鈕：XP 式亮面浮雕。各按鈕不必一致（buttons 規則），文字也不必正中央。 --- */
 
 .btn {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
-	padding: 0.7rem 1.35rem;
-	border: 1px solid var(--fg);
-	border-radius: 2px;
-	background: transparent;
-	color: var(--fg);
-	font: inherit;
+	gap: 0.4rem;
+	padding: 5.8px 15.4px 6.6px 13.8px;
+	border: 1px solid var(--border-dark);
+	border-radius: 3px;
+	background: linear-gradient(to bottom, var(--silver-hi) 0%, var(--silver-mid) 48%, var(--silver-lo) 100%);
+	box-shadow:
+		inset 1px 1px 0 rgba(255, 255, 255, 0.9),
+		inset -1px -2px 0 rgba(0, 0, 0, 0.1);
+	color: var(--btn-text);
+	font-family: var(--font-ui);
+	font-size: 14.2px;
 	font-weight: 700;
 	line-height: 1.4;
 	text-decoration: none;
 	cursor: pointer;
 }
-.btn:hover {
-	background: var(--fg);
-	color: var(--bg);
-	text-decoration: none;
+.btn:visited {
+	color: var(--btn-text);
 }
-/* 強調色底加紙色字只有 4.40，達不到內文的 4.5，所以文字必須是大字：
-   >= 18.66px 且粗體。1.2rem 是 19.2px。 */
-.btn-primary {
-	border-color: var(--accent);
-	background: var(--accent);
-	color: var(--on-accent);
-	font-size: 1.2rem;
+.btn:hover {
+	color: var(--btn-text);
+	box-shadow:
+		inset 0 0 0 2px hsl(38 95% 58%),
+		inset -1px -2px 0 rgba(0, 0, 0, 0.1);
+	text-decoration: underline;
+}
+.btn:active {
+	box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.35);
+	transform: translateY(0.6px);
+}
+/* 主要按鈕：藍色亮面。白字對 hsl(222 76% 36%) 約 8.6。 */
+.btn-primary,
+.btn-primary:visited {
+	border-color: #001a66;
+	background: linear-gradient(
+		to bottom,
+		hsl(220 90% 70%) 0%,
+		hsl(222 80% 48%) 46%,
+		hsl(222 76% 36%) 54%,
+		hsl(222 80% 46%) 100%
+	);
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.55),
+		0 0 0 1px hsl(52 100% 60% / 0.6),
+		0 0 6px hsl(200 100% 60% / 0.55);
+	color: #ffffff;
+	font-size: 15.4px;
+	text-shadow: 1px 1px 0 #001040;
+	padding: 6.4px 18.2px 6.2px 16px;
 }
 .btn-primary:hover {
-	border-color: var(--fg);
-	background: var(--fg);
-	color: var(--bg);
+	color: #fff27a;
+	filter: brightness(1.12);
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.55),
+		0 0 0 2px hsl(38 95% 58%),
+		0 0 8px hsl(200 100% 60% / 0.7);
 }
 
-/* --- 頁尾 ------------------------------------------------------------ */
-
-.site-footer {
-	border-top: 1px solid var(--rule);
-	padding: 2rem 0 3rem;
-	color: var(--fg-secondary);
-	font-size: 0.9rem;
-}
-.social {
-	display: flex;
-	gap: 0.5rem;
-	margin-bottom: 1rem;
-}
-.social a {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 2.5rem;
-	height: 2.5rem;
-	border: 1px solid var(--rule);
-	border-radius: 2px;
-	color: var(--fg);
-	text-decoration: none;
-}
-.social a:hover {
-	border-color: var(--fg);
-	background: var(--hover);
-}
-
-/* --- 表格 ------------------------------------------------------------ */
+/* --- 表格：行政表格，實線、灰底表頭、斑馬列。 --- */
 
 table {
 	border-collapse: collapse;
 	width: 100%;
+	font-size: 14px;
 }
 caption {
-	padding-bottom: 0.75rem;
-	color: var(--fg-secondary);
-	font-size: 0.9rem;
+	padding: 3.4px 6px 3px;
+	background: var(--roc-blue-pale-2);
+	border: 1px solid var(--border);
+	border-bottom: 0;
+	color: var(--text);
+	font-family: var(--font-ui);
+	font-size: 13px;
+	font-weight: 700;
 	text-align: left;
+}
+caption::before {
+	content: "◆ ";
+	color: var(--roc-red);
 }
 th,
 td {
-	padding: 0.75rem 1rem 0.75rem 0;
-	border-top: 1px solid var(--rule);
+	padding: 4.6px 7.2px 4.2px 7.6px;
+	border: 1px solid var(--border);
 	text-align: left;
 	vertical-align: top;
 }
 thead th {
-	border-top: 0;
-	border-bottom: 1px solid var(--fg);
-	font-size: 0.9rem;
+	background: linear-gradient(to bottom, var(--roc-blue-pale), var(--roc-blue-pale-2));
+	font-family: var(--font-ui);
+	font-size: 13.2px;
 	font-weight: 700;
 }
 tbody th {
+	background: var(--panel-2);
+	font-family: var(--font-ui);
 	font-weight: 700;
+}
+tbody tr:nth-child(even) td {
+	background: hsl(220 40% 96.4%);
+}
+:root[data-theme="dark"] tbody tr:nth-child(even) td {
+	background: hsl(229 50% 15%);
+}
+tbody tr:hover td {
+	background: var(--roc-yellow);
 }
 
 /* --- 追悼日說明（components/MourningNotice.astro）-------------------- */
 
-/* 預設隱藏；display:none 會一併從無障礙樹移除，螢幕閱讀器只會讀到當天那一行。
-   逐日的顯示規則由 MourningNotice.astro 依 MOURNING_DAYS 產生。
-   左右內距讓文字對齊 .wrap，底線則橫跨整個視窗。 */
 .mourning-notice {
 	display: none;
-	margin: 0;
-	padding: 0.75rem max(var(--gutter), calc((100% - var(--page-max)) / 2));
-	border-bottom: 1px solid var(--rule);
-	color: var(--fg);
+	width: min(var(--page-max), 100%);
+	margin: 0 auto;
+	padding: 6.4px 12px;
+	background: #ffffff;
+	border: 1px solid #333333;
+	color: #1c1c1c;
+	font-family: var(--font-ui);
+	font-size: 14px;
 	line-height: 1.6;
+	text-align: left;
+}
+:root[data-theme="dark"] .mourning-notice {
+	background: #111111;
+	border-color: #999999;
+	color: #eeeeee;
 }
 
+/* 跑馬燈與動態：尊重 prefers-reduced-motion。跑馬燈不捲動，攤成清單。 */
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
@@ -409,5 +1111,28 @@ tbody th {
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.001ms !important;
 		scroll-behavior: auto !important;
+	}
+	.ticker-track {
+		animation: none;
+		display: block;
+		padding: 3.8px 8px;
+		white-space: normal;
+	}
+	.ticker-pause {
+		display: none;
+	}
+}
+
+/* 窄螢幕：Logo 縮小，站名才不會斷成「算力有限公／司」。 */
+@media (max-width: 600px) {
+	.brand-logo {
+		height: 20px;
+	}
+	.mh-name {
+		font-size: 20px;
+		letter-spacing: 0.5px;
+	}
+	.mh-sub {
+		font-size: 13px;
 	}
 }

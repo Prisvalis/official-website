@@ -2,6 +2,12 @@
 
 給在這個儲存庫工作的 AI 編輯代理與人類開發者。本文件描述網站的設計規範。
 
+> **華國美學版分支（`claude/roc-aesthetic-website-0q2z6q`）的例外**
+>
+> 這個分支依站方要求，視覺層改用 [roc-aesthetic](https://github.com/maylogger/roc-aesthetic) 的規則，刻意離開下面「色彩」「字體」「形狀與效果」「版面」各節：多色（中華民國藍、飽和紅、警示黃、銀灰漸層）、漸層與浮雕按鈕、WordArt 標題、跑馬燈、密集的入口網站外框、0.1px 到 1px 的微誤差。因此「驗收」一節前四條視覺 grep 在此分支會有輸出，屬預期。
+>
+> 仍然適用、不得放寬的：內文對比度 ≥ 4.5、連結加底線、`:focus-visible` 外框、錯誤一定有文字說明、`prefers-reduced-motion`（跑馬燈停止並攤開）、追悼模式、i18n 分檔與型別約束、站內相對路徑、`CONTACT.to` 一致性，以及「宣稱與證據」與「禁用詞彙」。外框文案在 `src/i18n/portal.ts`，每一句都要能在既有內容找到出處。外框元件是 `src/components/PortalShell.astro` 與 `WordArt.astro`。
+
 ---
 
 ## 色彩

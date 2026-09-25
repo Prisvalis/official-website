@@ -1,0 +1,50 @@
+---
+// 早期 Word 文字藝術師式的標題（roc-aesthetic 的 typography 規則）。
+//
+// 文字切成幾段，每段各自 skew / scale、各自一組漸層；短標題另外疊一份拉長斜切的淡影子。
+// 影子是另一個元素而不是 ::after { content: attr() }：偽元素的文字會被部分螢幕閱讀器
+// 唸出來，同一句標題就會被讀兩次。影子元素整個 aria-hidden。
+//
+// 切法：中文在「，、：」之後切；英文沒有這些標點時，按字數平均切成最多三段。
+// 外觀在 styles/global.css 的 .wordart。
+interface Props {
+	text: string;
+	as?: "h1" | "h2" | "p";
+	class?: string;
+}
+
+const { text, as: Tag = "h1", class: extra } = Astro.props;
+
+function split(input: string): string[] {
+	const byPunct = input.split(/(?<=[，、：；])/).filter(Boolean);
+	if (byPunct.length > 1) return byPunct;
+	const byComma = input.split(/(?<=[,:;])\s+/).filter(Boolean);
+	if (byComma.length > 1) return byComma;
+	const words = input.split(/\s+/);
+	if (words.length < 4) return [input];
+	const size = Math.ceil(words.length / 3);
+	const out: string[] = [];
+	for (let i = 0; i < words.length; i += size) out.push(words.slice(i, i + size).join(" "));
+	return out;
+}
+
+const chunks = split(text);
+// 拉長的影子只給短標題（例如「聯絡」）。長標題會折行，影子是另一份不折行的文字，
+// 疊在上面反而讓標題難讀，窄螢幕上還會把頁面撐出橫向捲軸。
+const withShadow = [...text].length <= 16;
+---
+
+<Tag class:list={["wordart", extra]}>
+	<span class="wa-text">
+		{
+			chunks.map((chunk, i) => (
+				<>
+					{/* 英文的段與段之間要留空白，中文不用。 */}
+					{i > 0 && !/[　-鿿＀-￯]$/.test(chunks[i - 1]) && " "}
+					<span class="wa-chunk" data-n={(i % 4) + 1}>{chunk}</span>
+				</>
+			))
+		}
+	</span>
+	{withShadow && <span class="wa-shadow" aria-hidden="true">{text}</span>}
+</Tag>
