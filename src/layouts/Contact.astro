@@ -686,6 +686,76 @@ const year = new Date().getFullYear();
 			select:invalid {
 				color: var(--text-muted);
 			}
+
+			/* 展開後的選項清單。原生 <option> 幾乎吃不到 CSS，要自訂面板只能靠
+			   customizable select（appearance: base-select）。不支援的瀏覽器會
+			   整段忽略 @supports，落回上面那組 appearance:none + 自繪箭頭 ——
+			   外觀樸素但完全可用，而且元素始終是真正的 <select>，鍵盤操作、
+			   表單驗證、行動裝置的原生選單都不受影響。 */
+			@supports (appearance: base-select) {
+				select,
+				select::picker(select) {
+					appearance: base-select;
+				}
+				select {
+					/* 改用 ::picker-icon 畫箭頭，收回 fallback 的背景圖與右內距。 */
+					background-image: none;
+					padding-right: 0.85rem;
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					gap: 0.5rem;
+				}
+				select::picker-icon {
+					color: var(--text-muted);
+					transition: transform 0.15s ease;
+				}
+				select:open::picker-icon {
+					transform: rotate(180deg);
+				}
+
+				select::picker(select) {
+					border: 1px solid var(--border);
+					border-radius: 12px;
+					/* 面板要不透明 —— 用半透明的 --surface 會讓底下的文字透出來。 */
+					background: var(--bg);
+					box-shadow: var(--shadow);
+					padding: 0.35rem;
+					/* 類別多的時候不要把面板拉到整個視窗高。 */
+					max-height: 20rem;
+					overflow-y: auto;
+				}
+
+				option {
+					position: relative;
+					display: flex;
+					align-items: center;
+					/* 左側留出打勾的欄位，未選中的列才不會跟選中的列對不齊。 */
+					padding: 0.6rem 1rem 0.6rem 2.1rem;
+					border-radius: 8px;
+					color: var(--text);
+					font-size: 0.95rem;
+					line-height: 1.4;
+					cursor: pointer;
+				}
+				option:hover,
+				option:focus {
+					background: var(--surface);
+				}
+				/* placeholder 雖然也是 :checked，但它不是一個「選擇」，不該被強調。 */
+				option:checked:not([value=""]) {
+					font-weight: 600;
+				}
+				option::checkmark {
+					position: absolute;
+					left: 0.75rem;
+					color: var(--accent);
+				}
+				/* placeholder 那一列比照收合狀態淡化，跟真正的選項區分開。 */
+				option[value=""] {
+					color: var(--text-muted);
+				}
+			}
 			textarea {
 				resize: vertical;
 				min-height: 8rem;
