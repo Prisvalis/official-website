@@ -3,15 +3,11 @@ import type { Locale } from "../consts";
 // UI string table. Add new keys here; each locale must provide every key.
 export const ui = {
 	"zh-Hant": {
-		"meta.title": "算力有限公司 Prisvalis｜官方網站即將上線",
+		"meta.title": "算力有限公司 Prisvalis｜量身訂做的系統開發、AI 導入與雲端部署",
 		"meta.description":
-			"算力有限公司（Prisvalis LTD.）官方網站建置中，敬請期待。我們專注於算力與智慧運算解決方案。",
+			"算力有限公司（Prisvalis LTD.）為中小型企業與個人開發者提供量身訂做的系統開發、AI 導入與資料分析、GPU 運算環境與雲端部署維運。不是套裝方案，每個案子重新估價。",
 		"html.lang": "zh-Hant",
 		"og.locale": "zh_TW",
-		badge: "官方網站建置中",
-		heading: "即將上線",
-		subheading: "我們正在打造更好的體驗，敬請期待。",
-		contact: "聯絡我們",
 		"switch.to": "English",
 		"switch.aria": "Switch to English",
 		"theme.aria": "切換深色／淺色模式",
@@ -58,15 +54,11 @@ export const ui = {
 		"contact.back": "回首頁",
 	},
 	en: {
-		"meta.title": "Prisvalis LTD.｜Official Website Coming Soon",
+		"meta.title": "Prisvalis LTD.｜Bespoke systems, AI and cloud deployment",
 		"meta.description":
-			"The official website of Prisvalis LTD. (算力有限公司) is under construction. We build computing power and intelligent compute solutions.",
+			"Prisvalis LTD. (算力有限公司) builds bespoke backend systems, AI and data analysis, GPU compute environments and cloud deployment for small businesses and individual developers. Not packages — every project is scoped and priced on its own.",
 		"html.lang": "en",
 		"og.locale": "en_US",
-		badge: "Website under construction",
-		heading: "Coming Soon",
-		subheading: "We are crafting a better experience. Stay tuned.",
-		contact: "Get in touch",
 		"switch.to": "中文",
 		"switch.aria": "切換為中文",
 		"theme.aria": "Toggle dark / light mode",
