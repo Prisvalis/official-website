@@ -1,0 +1,19 @@
+---
+// 文字藝術師標題。把文字在第一個逗號後切成兩段，各自變形，
+// 後面再疊一份 aria-hidden 的拉長淡影子。樣式在 global.css 的 .wordart。
+interface Props {
+	text: string;
+	tag?: "h1" | "h2";
+	class?: string;
+}
+
+const { text, tag: Tag = "h1", class: className } = Astro.props;
+
+const match = text.match(/^(.+?[，,]\s?)(.+)$/);
+const parts = match ? [match[1], match[2]] : [text];
+---
+
+<Tag class:list={["wordart", className]}>
+	{parts.map((part) => <span class="wordart-line">{part}</span>)}
+	<span class="wordart-shadow" aria-hidden="true">{text}</span>
+</Tag>

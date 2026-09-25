@@ -1,10 +1,9 @@
 ---
 // Global <head>: SEO metadata, social cards, hreflang alternates,
-// structured data, fonts and a no-flash theme bootstrap. Included on every page.
+// structured data and a no-flash theme bootstrap. Included on every page.
 import "../styles/global.css";
 import { SITE, COMPANY, SOCIAL, LOCALE_HOME, type Locale } from "../consts";
 import { t } from "../i18n/ui";
-import Fonts from "./Fonts.astro";
 import ThemeInit from "./ThemeInit.astro";
 
 interface Props {
@@ -52,8 +51,8 @@ const jsonLd = {
 <meta name="generator" content={Astro.generator} />
 <!-- Site manages its own zh/en switch; suppress the browser's auto-translate prompt -->
 <meta name="google" content="notranslate" />
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F4F1EA" />
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1A1A1A" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#000095" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000060" />
 
 <!-- Canonical + language alternates (hreflang) -->
 <link rel="canonical" href={canonicalURL} />
@@ -86,8 +85,6 @@ const jsonLd = {
 
 <!-- Structured data -->
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-
-<Fonts />
 
 <!-- No-flash bootstrap: theme and mourning-day attributes are set before paint -->
 <ThemeInit />

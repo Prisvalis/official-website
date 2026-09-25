@@ -1,68 +1,66 @@
-/* 設計 token 與全站共用的版面語彙。規範出處是 CLAUDE.md。
+/* 全站共用樣式。設計依「華國美學」Skill（.claude/skills/roc-aesthetic）：
+ * 資訊密集、框線與標題列、行政表格、亮面浮雕按鈕、黃底公告、文字藝術師標題，
+ * 各區塊的內距與邊框刻意不完全一致，像是多年來由不同廠商陸續維護。
+ * 但仍須可讀、可點、可完成操作（「糙但能用」）。
  *
- * 全站只有三個色值（--paper / --ink / --accent），層次一律用 color-mix() 由它們衍生，
- * 不得在這個檔案以外的地方寫死色值。主題由 <html data-theme> 決定。
- *
- * 強調色的對比度：在紙色上 4.40、在墨色上 3.50，內文門檻 4.5 兩邊都未達。
- * 所以它只用於色塊、線條、邊框與大字（>= 24px，或 >= 18.66px 且粗體），
- * 不得用在內文級字級的文字上。內文連結用 --fg 加底線。
+ * 主題由 <html data-theme> 決定（components/ThemeInit.astro）。
+ * 追悼日由 <html data-mourning> 決定，整頁轉灰階，做法見本檔案最後。
  */
 :root {
-	--paper: #F4F1EA;
-	--ink: #1A1A1A;
-	--accent: #C8411B;
+	--page-bg: #d9dfeb;
+	--page-stripe: #d2d9e7;
+	--panel: #ffffff;
+	--panel-alt: hsl(220 34% 95.5%);
+	--panel-alt-2: hsl(221 30% 92.8%);
+	--text: #151515;
+	--text-2: #3f4658;
+	--border: #8f9bb3;
+	--border-dark: #4f5f82;
 
-	--bg: var(--paper);
-	--fg: var(--ink);
-	/* 放在強調色色塊上的文字。追悼模式的暗色版會把強調色換成淺灰，屆時改用墨色。 */
-	--on-accent: var(--paper);
+	--roc-blue: #000095;
+	--blue: #1d3fa8;
+	--red: #c8001a;
+	--yellow: hsl(52 94% 78%);
+	--yellow-2: hsl(52 96% 73.6%);
+	--yellow-border: #c9a400;
+	--link: #0033cc;
+	--link-visited: #551a8b;
+	/* 深藍底上的連結。亮青色只放在深色底上，放在白底上對比不夠。 */
+	--cyan: #7fe9ff;
 
-	--fg-secondary: color-mix(in srgb, var(--fg) 65%, var(--bg));
-	--rule: color-mix(in srgb, var(--fg) 18%, var(--bg));
-	--hover: color-mix(in srgb, var(--fg) 7%, var(--bg));
+	--bar-top: #3563d1;
+	--bar-bottom: #000095;
 
-	/* 三組都以襯線字體收尾。無襯線的 fallback 會與襯線內文的調性衝突。
-	   LXGW WenKai TC 的載入方式見 components/Fonts.astro。 */
-	--font-display: "LXGW WenKai TC", "Noto Serif TC", "Songti TC", "Source Han Serif TC",
-		"Noto Serif CJK TC", "PMingLiU", "MingLiU", Georgia, "Times New Roman", serif;
-	--font-body: "Noto Serif TC", "Songti TC", "Source Han Serif TC", "Noto Serif CJK TC",
-		"PMingLiU", "MingLiU", Georgia, "Times New Roman", serif;
-	--font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas,
-		"Liberation Mono", monospace;
+	/* 老系統字體。Windows 上會是新細明體、標楷體、微軟正黑體；
+	   其他平台落到最接近的明體、楷體與黑體。 */
+	--font-body: "PMingLiU", "MingLiU", "新細明體", "細明體", "Apple LiSung", "LiSong Pro",
+		"Songti TC", "Noto Serif CJK TC", serif;
+	--font-kai: "DFKai-SB", "標楷體", "BiauKai", "Kaiti TC", "STKaiti", "AR PL UKai TW", serif;
+	--font-hei: "Microsoft JhengHei", "微軟正黑體", "PingFang TC", "Heiti TC", "Noto Sans TC",
+		Arial, sans-serif;
+	--font-ui: Tahoma, Verdana, Arial, "Microsoft JhengHei", "微軟正黑體", sans-serif;
+	--font-mono: "Courier New", Courier, "MingLiU", monospace;
 
-	/* 圓角只允許 2px 或 0。驗收用 grep 檢查 border-radius 的字面值，
-	   所以宣告處直接寫 2px，不引用這個變數。 */
-	--radius: 2px;
-
-	--page-max: 68rem;
-	--gutter: clamp(1.25rem, 5vw, 3rem);
 	color-scheme: light;
 }
 
+/* 夜間模式：深藍底，連結改為亮青色。黃底公告維持黃底黑字，警示色不隨主題改變。 */
 :root[data-theme="dark"] {
-	--bg: var(--ink);
-	--fg: var(--paper);
+	--page-bg: #070b18;
+	--page-stripe: #0a1022;
+	--panel: #121a33;
+	--panel-alt: hsl(226 38% 16.4%);
+	--panel-alt-2: hsl(225 34% 19.2%);
+	--text: #eef1f8;
+	--text-2: #c2cae0;
+	--border: #3f5082;
+	--border-dark: #6a7fb8;
+	--red: #ff8a96;
+	--link: #7fe9ff;
+	--link-visited: #d6a8ff;
+	--bar-top: #22408f;
+	--bar-bottom: #000060;
 	color-scheme: dark;
-}
-
-/* 追悼日（data-mourning 由 components/ThemeInit.astro 設定）。
- * 全站唯一不是中性色的只有強調色，所以把它換成灰階就是整站黑白，
- * 不必用 filter：filter 加在 <html> 上會讓它變成 fixed 子元素的 containing block，
- * 而且結果值無法精確控制。灰階值由 ink 與 paper 混出，不引入新的色值。
- *   淺色：ink 70% 混 paper，對紙色 6.04
- *   暗色：paper 60% 混 ink，對墨色 6.27 */
-:root[data-mourning] {
-	--accent: color-mix(in srgb, var(--ink) 70%, var(--paper));
-}
-:root[data-theme="dark"][data-mourning] {
-	--accent: color-mix(in srgb, var(--paper) 60%, var(--ink));
-	/* 紙色放在這個淺灰上只有 2.46，改用墨色（6.27）。 */
-	--on-accent: var(--ink);
-}
-/* 影像與第三方嵌入的顏色不歸 token 管。 */
-:root[data-mourning] .brand-logo,
-:root[data-mourning] .cf-turnstile {
-	filter: grayscale(1);
 }
 
 *,
@@ -78,68 +76,56 @@ html {
 body {
 	margin: 0;
 	min-height: 100svh;
-	background: var(--bg);
-	color: var(--fg);
+	/* 細條紋底，老入口網站外框常見的背景。 */
+	background: repeating-linear-gradient(0deg, var(--page-bg) 0 3px, var(--page-stripe) 3px 4px);
+	background-color: var(--page-bg);
+	color: var(--text);
 	font-family: var(--font-body);
-	font-size: 1rem;
-	line-height: 1.8;
-	-webkit-font-smoothing: antialiased;
-	text-rendering: optimizeLegibility;
+	font-size: 15px;
+	line-height: 1.62;
+	/* 較硬的文字渲染，降低柔順的現代感。只影響 macOS，文字仍清楚。 */
+	-webkit-font-smoothing: none;
+	text-rendering: geometricPrecision;
 }
 
-/* 標題字體只用在 h1 與 h2。LXGW WenKai TC 只載入 400 一個字重（見 Fonts.astro），
-   標題若吃瀏覽器預設的粗體就會變成假粗體，所以字重明確寫 400。
-   h3 以下改用內文字體加粗，層級靠字體與字重區分。 */
 h1,
-h2 {
-	margin: 0;
-	font-family: var(--font-display);
-	font-weight: 400;
-	line-height: 1.3;
-	/* 讓各行長度接近，避免「一人負責。」這種孤字行。不支援的瀏覽器照常斷行。 */
-	text-wrap: balance;
-}
+h2,
 h3,
 h4 {
 	margin: 0;
-	font-weight: 700;
-	line-height: 1.5;
+	line-height: 1.3;
+}
+h3 {
+	font-family: var(--font-hei);
+	font-size: 15.4px;
+	font-weight: bold;
 }
 p {
 	margin: 0;
-	/* 避免段落最後一行只剩一兩個字。不支援的瀏覽器照常斷行。 */
-	text-wrap: pretty;
+}
+strong {
+	font-weight: bold;
+	color: var(--red);
 }
 
-/* 內文連結不靠顏色區分：--fg 加底線。hover 只改底線的粗細與顏色。 */
 a {
-	color: inherit;
+	color: var(--link);
 	text-decoration: underline;
-	text-decoration-thickness: 1px;
-	text-underline-offset: 0.2em;
+}
+a:visited {
+	color: var(--link-visited);
 }
 a:hover {
-	text-decoration-thickness: 2px;
-	text-decoration-color: var(--accent);
+	color: var(--red);
 }
 
-/* 不得移除或改成 outline: none。 */
+/* 鍵盤焦點：虛線外框，老系統的做法。不得移除。 */
 :focus-visible {
-	outline: 2px solid var(--accent);
+	outline: 2px dotted var(--text);
 	outline-offset: 2px;
 }
 
-strong {
-	font-weight: 700;
-}
-
-code,
-kbd {
-	font-family: var(--font-mono);
-	font-size: 0.92em;
-}
-
-/* 只給輔助技術讀的文字。用 clip 而非 display:none，後者連輔助技術也讀不到。 */
+/* 只給輔助技術讀的文字。 */
 .sr-only {
 	position: absolute !important;
 	width: 1px;
@@ -157,134 +143,190 @@ kbd {
 	position: absolute;
 	left: -9999px;
 	top: 0;
-	z-index: 100;
-	padding: 0.6rem 1rem;
-	background: var(--bg);
-	color: var(--fg);
-	border: 1px solid var(--fg);
+	z-index: 200;
+	padding: 6px 10px;
+	background: var(--yellow);
+	color: #000;
+	border: 2px solid #000;
 }
 .skip-link:focus {
-	left: 1rem;
-	top: 1rem;
+	left: 8px;
+	top: 8px;
 }
 
-/* --- 版面 ------------------------------------------------------------ */
+/* --- 外框 ------------------------------------------------------------ */
 
-.wrap {
-	width: min(var(--page-max), 100% - 2 * var(--gutter));
-	margin-inline: auto;
-}
-
-/* 區塊之間用留白與 1px 實線分隔，不用卡片、陰影或底色。 */
-.section {
-	padding-block: clamp(2.5rem, 6vw, 4.5rem);
-	border-top: 1px solid var(--rule);
-}
-
-/* 左窄右寬的不對稱兩欄：區塊標題在左，內容在右。窄螢幕收成一欄。
-   欄寬比刻意不均，右欄放不滿也沒關係，留白是設計的一部分。 */
-.cols {
-	display: grid;
-	/* 單欄時也要明確寫 minmax(0, ...)：沒寫的話欄寬會被內容的 min-width（例如
-	   橫向捲動的表格）撐開，整頁跟著橫向溢出。 */
-	grid-template-columns: minmax(0, 1fr);
-	gap: 1.25rem clamp(2rem, 6vw, 5rem);
-}
-@media (min-width: 56rem) {
-	.cols {
-		grid-template-columns: minmax(9rem, 1fr) minmax(0, 3fr);
-	}
-}
-.cols > h2 {
-	font-size: clamp(1.5rem, 3vw, 1.85rem);
+/* 整頁收在一個固定寬度的白色框裡，外面是條紋底，像 1024×768 年代的入口網站。 */
+.portal {
+	max-width: 1000px;
+	margin: 0 auto;
+	background: var(--panel);
+	border-left: 1px solid var(--border-dark);
+	border-right: 2px solid var(--border-dark);
+	box-shadow: 0 0 6px rgba(0, 0, 40, 0.35);
 }
 
-/* 行寬用 em 而不是 ch：ch 以「0」的字寬為基準，中日韓字元約是它的兩倍，
-   同一個數值在兩種文字下代表的字數會差一倍。 */
-.prose {
-	max-width: 38em;
-}
-.prose > * + * {
-	margin-top: 1em;
-}
-
-.secondary {
-	color: var(--fg-secondary);
-}
-.small {
-	font-size: 0.9rem;
-}
-
-/* --- 頁首 ------------------------------------------------------------ */
-
-.site-header {
-	border-bottom: 1px solid var(--rule);
-}
-.site-header .wrap {
+/* 頁首第一層：深藍細條，放語言切換與夜間模式。 */
+.topbar {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	justify-content: space-between;
-	gap: 1rem;
-	min-height: 4.25rem;
+	gap: 2px 10px;
+	padding: 3.4px 9.2px 3px 11px;
+	background: var(--roc-blue);
+	color: #fff;
+	font-family: var(--font-ui);
+	font-size: 12px;
+}
+.topbar a,
+.topbar a:visited {
+	color: var(--cyan);
+}
+.topbar a:hover {
+	color: #fff;
+}
+.topbar-tools {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+/* 頁首第二層：銀色漸層的報頭，放標誌與文字藝術師字樣。 */
+.masthead {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 18px;
+	padding: 12.6px 14px 11.2px 13px;
+	background: linear-gradient(180deg, #ffffff 0%, #e9edf5 46%, #d4dbe8 52%, #eef1f7 100%);
+	background-color: #e9edf5;
+	border-bottom: 1px solid #9aa6bf;
+	color: #151515;
+}
+:root[data-theme="dark"] .masthead {
+	background: linear-gradient(180deg, #3a4668 0%, #28324f 46%, #1c2440 52%, #2b3556 100%);
+	background-color: #28324f;
+	border-bottom-color: #5a6a99;
+	color: #eef1f8;
 }
 .brand {
 	display: inline-flex;
 	align-items: center;
-	color: var(--fg);
 	text-decoration: none;
 }
 .brand-logo {
 	display: block;
-	height: 28px;
+	height: 30px;
 	width: auto;
+	transform: translateY(-0.7px);
 }
-.brand-name {
-	font-family: var(--font-display);
-	font-size: 1.35rem;
-	line-height: 1.2;
-}
-.site-nav {
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
-	justify-content: flex-end;
-	gap: 0.5rem 1.4rem;
-}
-.site-nav a:not(.btn) {
+/* 報頭上的名稱。以文字藝術師的方式拉寬、傾斜。 */
+.masthead-name {
+	font-family: var(--font-kai);
+	font-size: 26px;
+	font-weight: bold;
+	letter-spacing: 0.08em;
+	color: var(--roc-blue);
 	text-decoration: none;
+	text-shadow: 1px 1px 0 #fff, 2px 2px 0 #b8c3dc;
+	transform: scaleX(1.08) skewX(-6deg);
+	transform-origin: left center;
 }
-.site-nav a:not(.btn):hover {
-	text-decoration: underline;
-	text-decoration-thickness: 1px;
-	text-decoration-color: currentColor;
+a.masthead-name:visited {
+	color: var(--roc-blue);
 }
-/* 目前頁面不只靠顏色：粗體加強調色底線。 */
-.site-nav a[aria-current="page"] {
-	font-weight: 700;
-	text-decoration: underline;
-	text-decoration-thickness: 2px;
-	text-decoration-color: var(--accent);
+:root[data-theme="dark"] .masthead-name,
+:root[data-theme="dark"] a.masthead-name:visited {
+	color: #ffe45c;
+	text-shadow: 1px 1px 0 #000, 2px 2px 0 #1b2240;
 }
 
+/* 頁首第三層：藍色亮面導覽列。 */
+.mainnav {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background: linear-gradient(180deg, #4d7ae6 0%, var(--bar-top) 45%, var(--bar-bottom) 55%, #1a2fa0 100%);
+	background-color: var(--bar-bottom);
+	border-top: 1px solid #7fa0f0;
+	border-bottom: 2px solid #00005a;
+	font-family: var(--font-hei);
+	font-size: 14.6px;
+}
+.mainnav li {
+	border-right: 1px solid #6f8fe0;
+	box-shadow: 1px 0 0 #00005a;
+}
+.mainnav a,
+.mainnav a:visited {
+	display: block;
+	padding: 6.4px 15.2px 5.8px 14px;
+	color: #fff;
+	font-weight: bold;
+	text-decoration: none;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.55);
+}
+.mainnav a:hover {
+	background: #ffe45c;
+	color: #000;
+	text-shadow: none;
+}
+/* 目前頁面：黃字加底線，不只靠顏色。 */
+.mainnav a[aria-current="page"] {
+	color: #ffe45c;
+	text-decoration: underline;
+}
+.mainnav a[aria-current="page"]:hover {
+	color: #000;
+}
+.mainnav .nav-cta {
+	margin-left: auto;
+	border-right: 0;
+	box-shadow: none;
+	padding: 3px 6px 2px;
+}
+/* 導覽列裡的按鈕：.mainnav a 的白字規則比 .btn 優先，所以這裡要把按鈕的字色寫回來。 */
+.mainnav .nav-cta a.btn,
+.mainnav .nav-cta a.btn:visited {
+	padding: 3.6px 12px 4px 11px;
+	color: #151515;
+	font-size: 14px;
+	text-shadow: 0 1px 0 #fff;
+}
+.mainnav .nav-cta a.btn:hover {
+	background: linear-gradient(180deg, #fffbe0, #ffe45c);
+}
+:root[data-theme="dark"] .mainnav .nav-cta a.btn,
+:root[data-theme="dark"] .mainnav .nav-cta a.btn:visited {
+	color: #ffffff;
+	text-shadow: 0 -1px 0 #000;
+}
+
+/* 夜間模式切換鈕：小小的浮雕按鈕。 */
 .icon-btn {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 2.5rem;
-	height: 2.5rem;
+	width: 24px;
+	height: 22px;
 	padding: 0;
-	border: 1px solid var(--rule);
+	border: 1px solid #8fa3d9;
 	border-radius: 2px;
-	background: transparent;
-	color: var(--fg);
+	background: linear-gradient(180deg, #3a5bc4, #0c1f8a);
+	color: #fff;
 	cursor: pointer;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 .icon-btn:hover {
-	border-color: var(--fg);
-	background: var(--hover);
+	background: linear-gradient(180deg, #5b7ee0, #1b34a8);
 }
 .icon-btn .icon {
 	display: block;
+	width: 14px;
+	height: 14px;
 }
 :root[data-theme="dark"] .icon-btn .sun {
 	display: none;
@@ -293,112 +335,411 @@ kbd {
 	display: none;
 }
 
+/* --- 版面：主欄加側欄 ----------------------------------------------- */
+
+/* 主欄在 DOM 前面（窄螢幕與螢幕閱讀器先讀到內容），寬螢幕時側欄排到左邊。 */
+.portal-body {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 9px 11px;
+	padding: 10.4px 9.6px 12px 10px;
+}
+@media (min-width: 760px) {
+	.portal-body {
+		grid-template-columns: 208px minmax(0, 1fr);
+		grid-template-areas: "side main";
+	}
+	.portal-main {
+		grid-area: main;
+	}
+	.portal-side {
+		grid-area: side;
+		/* 側欄與主欄的上緣刻意差一點點。 */
+		margin-top: 1.4px;
+	}
+}
+.portal-main {
+	display: grid;
+	gap: 10.6px;
+	align-content: start;
+	min-width: 0;
+}
+.portal-side {
+	display: grid;
+	gap: 8.2px;
+	align-content: start;
+	min-width: 0;
+}
+
+/* --- 框：標題列加內容 ------------------------------------------------- */
+
+.box {
+	border: 1px solid var(--border);
+	background: var(--panel);
+	min-width: 0;
+}
+.box-title {
+	margin: 0;
+	padding: 4.2px 9.4px 3.6px 8px;
+	background: linear-gradient(180deg, #5a84e8 0%, var(--bar-top) 48%, var(--bar-bottom) 100%);
+	background-color: var(--bar-bottom);
+	border-bottom: 1px solid #00005a;
+	color: #ffffff;
+	font-family: var(--font-kai);
+	font-size: 18.2px;
+	font-weight: bold;
+	letter-spacing: 0.04em;
+	text-shadow: 1px 1px 0 #00003a;
+}
+/* 【】是裝飾，不給螢幕閱讀器唸。 */
+.box-title::before {
+	content: "【" / "";
+	color: #ffe45c;
+}
+.box-title::after {
+	content: "】" / "";
+	color: #ffe45c;
+}
+.box-body {
+	padding: 9.4px 11.2px 10.8px 10.6px;
+}
+.box-body > * + * {
+	margin-top: 8.6px;
+}
+/* 每個框的內距各差一點，像不同年份補上去的。 */
+.portal-main > .box:nth-of-type(2n) .box-body {
+	padding: 10.2px 9.8px 11.6px 12px;
+}
+.portal-main > .box:nth-of-type(3n) .box-title {
+	padding-left: 10.2px;
+	font-size: 17.6px;
+}
+.portal-main > .box:nth-of-type(4) {
+	border-width: 1px 2px 2px 1px;
+}
+
+/* 側欄的框：銀灰標題列，字小一點。 */
+.side-box {
+	border: 1px solid var(--border-dark);
+	background: var(--panel-alt);
+}
+.side-box-title {
+	margin: 0;
+	padding: 3px 7.2px 2.6px;
+	background: linear-gradient(180deg, #f4f6fa, #c9d1e0);
+	background-color: #d8dee9;
+	border-bottom: 1px solid var(--border-dark);
+	color: #101a4a;
+	font-family: var(--font-hei);
+	font-size: 14px;
+	font-weight: bold;
+}
+:root[data-theme="dark"] .side-box-title {
+	background: linear-gradient(180deg, #34406a, #1d2546);
+	background-color: #283258;
+	color: #ffe45c;
+}
+.side-box ul {
+	margin: 0;
+	padding: 5.6px 6px 6.4px 7px;
+	list-style: none;
+	font-size: 14px;
+	line-height: 1.5;
+}
+.side-box li {
+	padding: 3.2px 0 3px;
+	border-bottom: 1px dashed var(--border);
+}
+.side-box li:last-child {
+	border-bottom: 0;
+}
+.side-box li::before {
+	content: "◆ " / "";
+	color: var(--red);
+	font-size: 10px;
+	vertical-align: 1px;
+}
+.side-box p {
+	padding: 6.2px 8px 7px;
+	font-size: 13.6px;
+	overflow-wrap: anywhere;
+}
+
+/* --- 文字藝術師標題 -------------------------------------------------- */
+
+/* 標題拆成數段，每段各自拉伸、傾斜、上漸層；後面再疊一份拉長的淡影子。
+   影子是 aria-hidden 的重複文字，只給眼睛看。 */
+.wordart {
+	position: relative;
+	margin: 0;
+	font-family: var(--font-hei);
+	font-size: clamp(24px, 4.4vw, 36px);
+	font-weight: 900;
+	line-height: 1.32;
+	letter-spacing: -0.01em;
+	/* 漸層文字不支援時的顏色，也是對比度量測的依據。 */
+	color: var(--roc-blue);
+}
+.wordart-line {
+	display: inline-block;
+	position: relative;
+	z-index: 1;
+	background: linear-gradient(180deg, #000095 0%, #3a2bb8 38%, #c8001a 62%, #6a0010 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	filter: drop-shadow(1px 1px 0 #ffffff) drop-shadow(2px 2px 0 #9fb0d8);
+}
+.wordart-line:nth-child(1) {
+	transform: skewX(-8deg) scaleY(1.1);
+	transform-origin: left bottom;
+}
+.wordart-line:nth-child(2) {
+	transform: scaleX(1.04) translateY(0.8px);
+	transform-origin: left center;
+	letter-spacing: 0.01em;
+}
+:root[data-theme="dark"] .wordart {
+	color: #ffe45c;
+}
+:root[data-theme="dark"] .wordart-line {
+	background: linear-gradient(180deg, #ffffff 0%, #ffe45c 45%, #ffb04a 70%, #ffd0d6 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	filter: drop-shadow(1px 1px 0 #000030) drop-shadow(2px 2px 0 #3a2b8f);
+}
+.wordart-shadow {
+	position: absolute;
+	inset: 0;
+	top: 12px;
+	left: 10px;
+	z-index: 0;
+	color: var(--roc-blue);
+	opacity: 0.08;
+	transform: skewX(-22deg) scaleY(1.3);
+	transform-origin: left top;
+	pointer-events: none;
+	user-select: none;
+}
+:root[data-theme="dark"] .wordart-shadow {
+	color: #ffe45c;
+	opacity: 0.1;
+}
+
 /* --- 按鈕 ------------------------------------------------------------ */
 
-.btn {
+/* 亮面、浮雕、上亮下暗，像 Windows XP 的按鈕。文字刻意不完全置中（左右內距不同）。 */
+.btn,
+.btn:visited {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
-	padding: 0.7rem 1.35rem;
-	border: 1px solid var(--fg);
-	border-radius: 2px;
-	background: transparent;
-	color: var(--fg);
-	font: inherit;
-	font-weight: 700;
-	line-height: 1.4;
+	gap: 4px;
+	padding: 6.6px 15.4px 7.4px 13.8px;
+	border: 1px solid #6b7a99;
+	border-radius: 3px;
+	background: linear-gradient(180deg, #ffffff 0%, #eceff5 48%, #d5dae5 52%, #f1f3f7 100%);
+	background-color: #e3e7ef;
+	color: #151515;
+	font-family: var(--font-hei);
+	font-size: 15px;
+	font-weight: bold;
+	line-height: 1.3;
 	text-decoration: none;
+	text-shadow: 0 1px 0 #fff;
+	box-shadow: inset 0 1px 0 #fff, 0 1px 1px rgba(0, 0, 0, 0.3);
 	cursor: pointer;
 }
 .btn:hover {
-	background: var(--fg);
-	color: var(--bg);
-	text-decoration: none;
+	color: #151515;
+	filter: brightness(1.06);
+	border-color: #3d4b6b;
 }
-/* 強調色底加紙色字只有 4.40，達不到內文的 4.5，所以文字必須是大字：
-   >= 18.66px 且粗體。1.2rem 是 19.2px。 */
-.btn-primary {
-	border-color: var(--accent);
-	background: var(--accent);
-	color: var(--on-accent);
-	font-size: 1.2rem;
+.btn:active {
+	transform: translateY(1px);
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+.btn-primary,
+.btn-primary:visited {
+	border-color: #0a237a;
+	background: linear-gradient(180deg, #5d88ec 0%, #2452c4 48%, #0c33a0 52%, #2657cc 100%);
+	background-color: #1a45b8;
+	color: #ffffff;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.45);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 1px 2px rgba(0, 0, 40, 0.45);
 }
 .btn-primary:hover {
-	border-color: var(--fg);
-	background: var(--fg);
-	color: var(--bg);
+	color: #ffe45c;
+	filter: brightness(1.12);
+}
+/* 夜間模式的灰色按鈕改成深色浮雕。 */
+:root[data-theme="dark"] .btn:not(.btn-primary) {
+	border-color: #6a7fb8;
+	background: linear-gradient(180deg, #4a5680 0%, #323d63 48%, #232c4c 52%, #353f66 100%);
+	background-color: #323d63;
+	color: #ffffff;
+	text-shadow: 0 -1px 0 #000;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 1px #000;
 }
 
-/* --- 頁尾 ------------------------------------------------------------ */
+.ext {
+	display: inline-block;
+	margin-left: 2px;
+	vertical-align: -1px;
+}
 
-.site-footer {
-	border-top: 1px solid var(--rule);
-	padding: 2rem 0 3rem;
-	color: var(--fg-secondary);
-	font-size: 0.9rem;
+/* --- 黃底公告 -------------------------------------------------------- */
+
+/* 內層再套一層幾乎一樣的黃（同色微差）。黃底一律黑字，夜間模式也一樣。 */
+.notice {
+	padding: 7.6px 10.2px 8.2px 9.4px;
+	border: 1px dashed var(--yellow-border);
+	border-left: 5px solid #e0a800;
+	background: var(--yellow);
+	color: #151515;
 }
-.social {
-	display: flex;
-	gap: 0.5rem;
-	margin-bottom: 1rem;
+.notice > * {
+	background: var(--yellow-2);
 }
-.social a {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 2.5rem;
-	height: 2.5rem;
-	border: 1px solid var(--rule);
-	border-radius: 2px;
-	color: var(--fg);
-	text-decoration: none;
+.notice > :first-child::before {
+	content: "※ " / "";
+	font-weight: bold;
+	color: #a00015;
 }
-.social a:hover {
-	border-color: var(--fg);
-	background: var(--hover);
+.notice a,
+.notice a:visited {
+	color: #0033cc;
+}
+.notice strong {
+	color: #a00015;
 }
 
 /* --- 表格 ------------------------------------------------------------ */
 
+/* 行政表格：每格都有框線，表頭藍底白字，資料列灰白交錯。 */
 table {
-	border-collapse: collapse;
 	width: 100%;
+	border-collapse: collapse;
+	border: 2px solid var(--border-dark);
+	font-size: 14.4px;
+	line-height: 1.5;
 }
 caption {
-	padding-bottom: 0.75rem;
-	color: var(--fg-secondary);
-	font-size: 0.9rem;
+	padding: 3px 2px 4.6px;
+	color: var(--text-2);
+	font-family: var(--font-hei);
+	font-size: 13.4px;
+	font-weight: bold;
 	text-align: left;
+}
+caption::before {
+	content: "◎ " / "";
+	color: var(--red);
 }
 th,
 td {
-	padding: 0.75rem 1rem 0.75rem 0;
-	border-top: 1px solid var(--rule);
+	padding: 5.2px 7.6px 4.8px 7px;
+	border: 1px solid var(--border);
 	text-align: left;
 	vertical-align: top;
 }
 thead th {
-	border-top: 0;
-	border-bottom: 1px solid var(--fg);
-	font-size: 0.9rem;
-	font-weight: 700;
+	background: linear-gradient(180deg, #5a84e8, var(--bar-bottom));
+	background-color: var(--blue);
+	color: #fff;
+	font-family: var(--font-hei);
+	font-weight: bold;
+	white-space: nowrap;
+}
+tbody tr:nth-child(odd) {
+	background: var(--panel-alt);
+}
+tbody tr:nth-child(even) {
+	background: var(--panel-alt-2);
 }
 tbody th {
-	font-weight: 700;
+	font-family: var(--font-hei);
+	font-weight: bold;
+	color: var(--text);
+}
+tbody tr:hover {
+	background: hsl(52 90% 86%);
+}
+:root[data-theme="dark"] tbody tr:hover {
+	background: hsl(226 40% 24%);
+}
+
+/* --- 頁尾 ------------------------------------------------------------ */
+
+/* 頁尾貼得有點近，深藍底青色連結。 */
+.site-footer {
+	margin-top: 2px;
+	padding: 7.8px 12px 9.4px 11px;
+	border-top: 3px double #7fa0f0;
+	background: var(--roc-blue);
+	color: #e8ecff;
+	font-family: var(--font-ui);
+	font-size: 12.4px;
+	line-height: 1.55;
+	text-align: center;
+}
+.site-footer a,
+.site-footer a:visited {
+	color: var(--cyan);
+}
+.site-footer a:hover {
+	color: #fff;
+}
+.site-footer p {
+	margin: 0;
+}
+.social {
+	display: flex;
+	justify-content: center;
+	gap: 6px;
+	margin-bottom: 4.4px;
+}
+.social a,
+.social a:visited {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 26px;
+	border: 1px solid #7fa0f0;
+	border-radius: 2px;
+	background: linear-gradient(180deg, #2a4cc0, #00006a);
+	color: #fff;
+}
+.social a:hover {
+	background: #ffe45c;
+	color: #000;
 }
 
 /* --- 追悼日說明（components/MourningNotice.astro）-------------------- */
 
 /* 預設隱藏；display:none 會一併從無障礙樹移除，螢幕閱讀器只會讀到當天那一行。
-   逐日的顯示規則由 MourningNotice.astro 依 MOURNING_DAYS 產生。
-   左右內距讓文字對齊 .wrap，底線則橫跨整個視窗。 */
+   逐日的顯示規則由 MourningNotice.astro 依 MOURNING_DAYS 產生。 */
 .mourning-notice {
 	display: none;
-	margin: 0;
-	padding: 0.75rem max(var(--gutter), calc((100% - var(--page-max)) / 2));
-	border-bottom: 1px solid var(--rule);
-	color: var(--fg);
-	line-height: 1.6;
+	max-width: 1000px;
+	margin: 0 auto;
+	padding: 6.4px 12px 6px;
+	border: 1px solid #444;
+	border-bottom-width: 2px;
+	background: #f2f2f2;
+	color: #111;
+	font-family: var(--font-hei);
+	font-size: 15px;
+	font-weight: bold;
+	text-align: center;
+}
+
+/* 追悼日：整頁灰階。
+ * 這套風格有很多色相，無法只換一個 token，所以用 filter。filter 會讓元素變成
+ * position: fixed 子孫的 containing block，本站目前沒有 fixed 元素；日後若新增，
+ * 要改成對個別區塊套用。 */
+:root[data-mourning] body {
+	filter: grayscale(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
