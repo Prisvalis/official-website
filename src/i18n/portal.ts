@@ -59,7 +59,7 @@ export const portal: Record<Locale, PortalContent> = {
 	"zh-Hant": {
 		skip: "跳至主要內容",
 		siteTitle: "算力有限公司",
-		siteSub: "全球資訊網",
+		siteSub: "官方網站",
 		slogans: ["推動系統開發服務e化", "先確認範圍・再誠實報價", "誠摯為您服務"],
 		topbarAria: "快速連結",
 		navAria: "主選單",
@@ -120,7 +120,7 @@ export const portal: Record<Locale, PortalContent> = {
 	en: {
 		skip: "Skip to main content",
 		siteTitle: "Prisvalis LTD.",
-		siteSub: "Official Information Website",
+		siteSub: "Official Website",
 		slogans: ["Promoting e-Service in Systems Development", "Scope First, Then an Honest Quote", "Sincerely at Your Service"],
 		topbarAria: "Quick links",
 		navAria: "Main menu",
