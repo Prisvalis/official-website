@@ -519,8 +519,11 @@ const year = new Date().getFullYear();
 			}
 			.lead {
 				margin: 0.9rem 0 0;
-				/* 標題與導言不跟著兩欄版面拉到 1080px，長行很難讀。 */
-				max-width: 60ch;
+				/* 導言不跟著兩欄版面拉到 1080px，長行很難讀。
+				   用 em 而不是 ch：ch 以「0」的字寬為基準，中日韓字元約是它的兩倍，
+				   60ch 對英文剛好，對中文只放得下三十個字，句尾會被擠到第二行。
+				   44em 讓中文導言（37 字）穩定單行，英文也還在合理的行寬內。 */
+				max-width: 44em;
 				color: var(--text-muted);
 				font-size: clamp(1rem, 2.2vw, 1.1rem);
 			}
