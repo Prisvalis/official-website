@@ -1,0 +1,317 @@
+---
+// 公司沿革。文案與登記資料在 src/i18n/about.ts，這裡只負責結構。
+// 沿用首頁的入口網站外框（styles/global.css），內容以行政表格為主。
+import BaseHead from "../components/BaseHead.astro";
+import MourningNotice from "../components/MourningNotice.astro";
+import PortalHeader from "../components/PortalHeader.astro";
+import PortalFooter from "../components/PortalFooter.astro";
+import WordArt from "../components/WordArt.astro";
+import { COMPANY, SITE, LOCALE_HOME_PATH, type Locale } from "../consts";
+import { t } from "../i18n/ui";
+import { cooUrl, COO_NAME } from "../i18n/coo";
+import { about, ABOUT_PATH, FINDBIZ_URL, ETAX_URL } from "../i18n/about";
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const otherLocale: Locale = locale === "zh-Hant" ? "en" : "zh-Hant";
+// canonical 與 hreflang 用絕對網址指向 SITE；站內連結一律相對路徑。
+const alternates: Record<Locale, string> = {
+	"zh-Hant": new URL(ABOUT_PATH["zh-Hant"], SITE).href,
+	en: new URL(ABOUT_PATH.en, SITE).href,
+};
+const homeHref = LOCALE_HOME_PATH[locale];
+const contactHref = locale === "en" ? "/en/contact/" : "/contact/";
+const external = t(locale, "link.external");
+
+const c = about[locale];
+
+const sections = [
+	{ id: "origin", label: c.origin.title },
+	{ id: "vision", label: c.vision.title },
+	{ id: "timeline", label: c.timeline.title },
+	{ id: "profile", label: c.profile.title },
+	{ id: "business", label: c.business.title },
+];
+
+const nav = [
+	{ href: homeHref, label: t(locale, "contact.back") },
+	{ href: ABOUT_PATH[locale], label: c.navLabel, current: true },
+	{ href: cooUrl(locale, "/"), label: COO_NAME },
+	{ href: contactHref, label: t(locale, "nav.contact") },
+];
+---
+
+<!doctype html>
+<html lang={t(locale, "html.lang")}>
+	<head>
+		<BaseHead
+			locale={locale}
+			title={c.metaTitle}
+			description={c.metaDescription}
+			alternates={alternates}
+		/>
+	</head>
+	<body>
+		<MourningNotice locale={locale} />
+
+		<div class="portal">
+			<PortalHeader
+				locale={locale}
+				homeHref={homeHref}
+				name={COMPANY.nameZh}
+				switchHref={ABOUT_PATH[otherLocale]}
+				nav={nav}
+			/>
+
+			<div class="portal-body">
+				<main class="portal-main">
+					<section class="about-head">
+						<WordArt text={c.h1} />
+						<p class="lead">{c.lead}</p>
+					</section>
+
+					<section class="box" id="origin">
+						<h2 class="box-title">{c.origin.title}</h2>
+						<div class="box-body">
+							{c.origin.body.map((para) => <p>{para}</p>)}
+						</div>
+					</section>
+
+					<section class="box" id="vision">
+						<h2 class="box-title">{c.vision.title}</h2>
+						<div class="box-body">
+							<p class="slogan">{c.vision.lead}</p>
+							<ul class="vision-points">
+								{c.vision.points.map((point) => <li>{point}</li>)}
+							</ul>
+						</div>
+					</section>
+
+					<section class="box" id="timeline">
+						<h2 class="box-title">{c.timeline.title}</h2>
+						<div class="box-body">
+							<div class="table-scroll">
+								<table>
+									<caption>{c.timeline.caption}</caption>
+									<thead>
+										<tr>
+											<th scope="col">{c.timeline.colDate}</th>
+											<th scope="col">{c.timeline.colEvent}</th>
+										</tr>
+									</thead>
+									<tbody>
+										{
+											c.timeline.rows.map((row) => (
+												<tr>
+													<th scope="row" class="date">{row.label}</th>
+													<td>{row.value}</td>
+												</tr>
+											))
+										}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</section>
+
+					<section class="box" id="profile">
+						<h2 class="box-title">{c.profile.title}</h2>
+						<div class="box-body">
+							<div class="table-scroll">
+								<table>
+									<caption>{c.profile.caption}</caption>
+									<thead>
+										<tr>
+											<th scope="col">{c.profile.colItem}</th>
+											<th scope="col">{c.profile.colValue}</th>
+										</tr>
+									</thead>
+									<tbody>
+										{
+											c.profile.rows.map((row) => (
+												<tr>
+													<th scope="row">{row.label}</th>
+													<td>{row.value}</td>
+												</tr>
+											))
+										}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</section>
+
+					<section class="box" id="business">
+						<h2 class="box-title">{c.business.title}</h2>
+						<div class="box-body">
+							{
+								[
+									{ caption: c.business.captionCompany, rows: c.business.company },
+									{ caption: c.business.captionTax, rows: c.business.tax },
+								].map((group) => (
+									<div class="table-scroll">
+										<table>
+											<caption>{group.caption}</caption>
+											<thead>
+												<tr>
+													<th scope="col">{c.business.colCode}</th>
+													<th scope="col">{c.business.colName}</th>
+												</tr>
+											</thead>
+											<tbody>
+												{group.rows.map((row) => (
+													<tr>
+														<th scope="row" class="code">
+															{row.code}
+														</th>
+														<td>{row.name}</td>
+													</tr>
+												))}
+											</tbody>
+										</table>
+									</div>
+								))
+							}
+							<div class="notice">
+								<p>{c.business.note}</p>
+							</div>
+						</div>
+					</section>
+
+					<div class="notice source">
+						<p>{c.source.text}</p>
+						<ul>
+							<li>
+								<a href={FINDBIZ_URL} target="_blank" rel="noopener noreferrer">
+									{c.source.findbiz}
+									<span class="sr-only">{external}</span>
+								</a>
+							</li>
+							<li>
+								<a href={ETAX_URL} target="_blank" rel="noopener noreferrer">
+									{c.source.etax}
+									<span class="sr-only">{external}</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</main>
+
+				<aside class="portal-side">
+					<section class="side-box">
+						<h2 class="side-box-title">{c.navLabel}</h2>
+						<ul>
+							{
+								sections.map((s) => (
+									<li>
+										<a href={`#${s.id}`}>{s.label}</a>
+									</li>
+								))
+							}
+						</ul>
+					</section>
+
+					<section class="side-box">
+						<h2 class="side-box-title">{COMPANY.nameZh}</h2>
+						<ul>
+							<li><a href={homeHref}>{t(locale, "contact.back")}</a></li>
+							<li><a href={cooUrl(locale, "/")}>{COO_NAME}</a></li>
+							<li><a href={contactHref}>{t(locale, "nav.contact")}</a></li>
+						</ul>
+					</section>
+				</aside>
+			</div>
+
+			<PortalFooter locale={locale} social />
+		</div>
+
+		<style>
+			/* 頁首框：與首頁同一種金色雙線，內距各自不同。 */
+			.about-head {
+				position: relative;
+				overflow: hidden;
+				padding: 13.4px 15.2px 14.6px 14px;
+				border: 3px double #b8860b;
+				background: hsl(220 58% 97.2%);
+			}
+			:global(:root[data-theme="dark"]) .about-head {
+				border-color: #e0b43a;
+				background: hsl(228 42% 14%);
+			}
+			.lead {
+				position: relative;
+				margin-top: 10.6px;
+				max-width: 44em;
+				font-size: 15.4px;
+				line-height: 1.75;
+			}
+
+			/* 願景：大標語，紅色粗體加文字陰影，像簡報封面。 */
+			.slogan {
+				padding: 6.6px 9px 7.4px;
+				border: 1px solid #b8860b;
+				background: hsl(48 100% 94%);
+				color: #a00015;
+				font-family: var(--font-hei);
+				font-size: 18.8px;
+				font-weight: bold;
+				text-shadow: 1px 1px 0 #fff;
+			}
+			:global(:root[data-theme="dark"]) .slogan {
+				border-color: #e0b43a;
+				background: hsl(40 40% 14%);
+				color: #ffe45c;
+				text-shadow: 1px 1px 0 #000;
+			}
+			.vision-points {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			.vision-points li {
+				padding: 4.2px 4px 4.6px 1.4em;
+				border-bottom: 1px dashed var(--border);
+				text-indent: -1.2em;
+				font-weight: bold;
+			}
+			.vision-points li::before {
+				content: "★ " / "";
+				color: var(--red);
+			}
+
+			.table-scroll {
+				position: relative;
+				overflow-x: auto;
+			}
+			.table-scroll + .table-scroll {
+				margin-top: 12.4px;
+			}
+			.table-scroll table {
+				min-width: 22em;
+			}
+			/* 日期與代碼欄不斷行，讓內容欄吃掉剩下的寬度。 */
+			th.date,
+			th.code {
+				white-space: nowrap;
+				font-family: var(--font-ui);
+			}
+			#timeline th.date {
+				white-space: normal;
+				min-width: 9em;
+				width: 30%;
+			}
+			#profile tbody th {
+				width: 34%;
+			}
+
+			.source ul {
+				margin: 5px 0 0;
+				padding-left: 1.4em;
+				background: none;
+			}
+		</style>
+	</body>
+</html>
