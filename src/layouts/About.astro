@@ -30,6 +30,7 @@ const c = about[locale];
 
 const sections = [
 	{ id: "origin", label: c.origin.title },
+	{ id: "naming", label: c.naming.title },
 	{ id: "vision", label: c.vision.title },
 	{ id: "timeline", label: c.timeline.title },
 	{ id: "profile", label: c.profile.title },
@@ -77,6 +78,42 @@ const nav = [
 						<h2 class="box-title">{c.origin.title}</h2>
 						<div class="box-body">
 							{c.origin.body.map((para) => <p>{para}</p>)}
+						</div>
+					</section>
+
+					<section class="box" id="naming">
+						<h2 class="box-title">{c.naming.title}</h2>
+						<div class="box-body">
+							<p>{c.naming.zh}</p>
+							<div class="name-card">
+								<p class="name-word" lang="en">Prisvalis</p>
+								{c.naming.en.map((para) => <p>{para}</p>)}
+							</div>
+							<div class="table-scroll">
+								<table>
+									<caption>{c.naming.caption}</caption>
+									<thead>
+										<tr>
+											<th scope="col">{c.naming.colRoot}</th>
+											<th scope="col">{c.naming.colOrigin}</th>
+											<th scope="col">{c.naming.colMeaning}</th>
+										</tr>
+									</thead>
+									<tbody>
+										{
+											c.naming.roots.map((row) => (
+												<tr>
+													<th scope="row" class="root" lang={row.lang}>
+														{row.root}
+													</th>
+													<td>{row.origin}</td>
+													<td>{row.meaning}</td>
+												</tr>
+											))
+										}
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</section>
 
@@ -280,6 +317,41 @@ const nav = [
 			.vision-points li::before {
 				content: "★ " / "";
 				color: var(--red);
+			}
+
+			/* 英文名稱說明：淡藍底加金框，名稱本身用拉寬傾斜的大字。 */
+			.name-card {
+				padding: 7.4px 10.2px 8.6px 9.6px;
+				border: 1px solid #b8860b;
+				border-left-width: 5px;
+				background: hsl(220 60% 96.4%);
+			}
+			:global(:root[data-theme="dark"]) .name-card {
+				border-color: #e0b43a;
+				background: hsl(228 40% 18%);
+			}
+			.name-card > * + * {
+				margin-top: 6.2px;
+			}
+			.name-word {
+				color: var(--roc-blue);
+				font-family: Georgia, "Times New Roman", serif;
+				font-size: 26px;
+				font-style: italic;
+				font-weight: bold;
+				letter-spacing: 0.06em;
+				text-shadow: 1px 1px 0 #fff, 2px 2px 0 #b8c3dc;
+				transform: scaleX(1.06);
+				transform-origin: left center;
+			}
+			:global(:root[data-theme="dark"]) .name-word {
+				color: #ffe45c;
+				text-shadow: 1px 1px 0 #000, 2px 2px 0 #1b2240;
+			}
+			th.root {
+				font-family: Georgia, "Times New Roman", serif;
+				font-style: italic;
+				white-space: nowrap;
 			}
 
 			.table-scroll {

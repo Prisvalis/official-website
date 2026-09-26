@@ -4,7 +4,8 @@
 // 事實只寫有出處的：
 // - 登記資料取自經濟部商工登記公示資料與財政部稅籍登記資料公示查詢（2026-09 站方提供之截圖）。
 //   資料有異動時，這裡要跟著改，並以主管機關公示為準。
-// - 創立緣起與願景只寫站方交代的兩件事：受大學好友影響而成立、致力推動資訊科技並期盼站上世界舞台。
+// - 創立緣起、名稱由來與願景只寫站方交代的事：受大學好友影響而成立；Prisvalis 取自
+//   pristine + valere，寓意「原初的價值」「純粹的力量」；致力推動資訊科技並期盼站上世界舞台。
 //   不自行補寫人名、事件或日期。
 // 兩個語系的物件形狀必須一致，由 AboutContent 介面約束。
 
@@ -13,6 +14,14 @@ import type { Locale } from "../consts";
 interface Row {
 	label: string;
 	value: string;
+}
+
+interface RootRow {
+	root: string;
+	origin: string;
+	meaning: string;
+	/** 字根本身的語言標記（BCP 47），給螢幕閱讀器正確發音。 */
+	lang: string;
 }
 
 interface CodeRow {
@@ -27,6 +36,16 @@ interface AboutContent {
 	h1: string;
 	lead: string;
 	origin: { title: string; body: string[] };
+	naming: {
+		title: string;
+		zh: string;
+		en: string[];
+		caption: string;
+		colRoot: string;
+		colOrigin: string;
+		colMeaning: string;
+		roots: RootRow[];
+	};
 	vision: { title: string; lead: string; points: string[] };
 	timeline: { title: string; caption: string; colDate: string; colEvent: string; rows: Row[] };
 	profile: { title: string; caption: string; colItem: string; colValue: string; rows: Row[] };
@@ -75,8 +94,24 @@ export const about: Record<Locale, AboutContent> = {
 			title: "創立緣起說明",
 			body: [
 				"本公司之成立，係深受大學時期好友之影響。在好友的影響之下，創辦人決定投身資訊科技領域，並於中華民國一一五年九月三日經臺中市政府核准設立「算力有限公司」。",
-				"公司名稱「算力」，取其「運算能力」之意；章程所訂外文名稱為「Prisvalis LTD.」。",
 				"本公司目前為一人公司，由同一人負責需求洽談、系統開發與部署上線，請大家多多指教！",
+			],
+		},
+
+		naming: {
+			title: "公司名稱由來說明",
+			zh: "中文名稱「算力」，取其「運算能力」之意。",
+			en: [
+				"英文名稱「Prisvalis」，由英文 pristine 與拉丁文 valere 兩個字根組合而成，希望能夠傳達「原初的價值」與「純粹的力量」之信念。",
+				"在資訊科技飛速發展的現在，本公司希望透過這個名稱，找回大家對於資訊科技最原始的期盼以及信念！",
+			],
+			caption: "英文名稱 Prisvalis 字根說明一覽表",
+			colRoot: "字根",
+			colOrigin: "語源",
+			colMeaning: "意義",
+			roots: [
+				{ root: "pristine", origin: "英文", meaning: "原初的、純粹的、未經染污的", lang: "en" },
+				{ root: "valere", origin: "拉丁文", meaning: "有力量的、有價值的", lang: "la" },
 			],
 		},
 
@@ -181,8 +216,24 @@ export const about: Record<Locale, AboutContent> = {
 			title: "Founding Background",
 			body: [
 				"This Company was founded under the deep influence of close friends from university. Under that influence, the founder decided to take up the field of information technology, and Prisvalis LTD. (算力有限公司) was approved for incorporation by the Taichung City Government on 3 September 2026.",
-				"The Chinese name 算力 means “computing power”; the foreign-language name stated in the Articles of Incorporation is “Prisvalis LTD.”.",
 				"This Company is at present a one-person company: one and the same person handles requirement discussions, system development and deployment. Your kind guidance is warmly welcomed!",
+			],
+		},
+
+		naming: {
+			title: "Origin of the Company Name",
+			zh: "The Chinese name 算力 means “computing power”.",
+			en: [
+				"The English name “Prisvalis” combines two roots, the English word pristine and the Latin verb valere, and is intended to convey the belief in “original value” and “pure strength”.",
+				"At a time when information technology is advancing at great speed, this Company hopes through this name to recover the original hopes and beliefs that everyone once held for information technology!",
+			],
+			caption: "Table of the roots of the English name Prisvalis",
+			colRoot: "Root",
+			colOrigin: "Language of origin",
+			colMeaning: "Meaning",
+			roots: [
+				{ root: "pristine", origin: "English", meaning: "original, pure, unspoilt", lang: "en" },
+				{ root: "valere", origin: "Latin", meaning: "to be strong, to be of worth", lang: "la" },
 			],
 		},
 
