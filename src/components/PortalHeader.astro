@@ -1,0 +1,80 @@
+---
+// 三層式頁首：深藍細條（語言切換、夜間模式）、銀色報頭（標誌與名稱）、藍色亮面導覽列。
+// 首頁、聯絡頁與 Company of One 共用，各自傳入導覽項目。
+import ThemeToggle from "./ThemeToggle.astro";
+import { COMPANY, type Locale } from "../consts";
+import { t } from "../i18n/ui";
+
+interface NavItem {
+	href: string;
+	label: string;
+	current?: boolean;
+}
+
+interface Props {
+	locale: Locale;
+	homeHref: string;
+	/** 報頭上以文字藝術師方式呈現的名稱。 */
+	name: string;
+	/** 是否在名稱前放公司標誌圖。 */
+	logo?: boolean;
+	switchHref: string;
+	nav: NavItem[];
+	cta?: { href: string; label: string };
+	navLabel?: string;
+}
+
+const { locale, homeHref, name, logo = true, switchHref, nav, cta, navLabel } = Astro.props;
+---
+
+<header>
+	<div class="topbar">
+		<span>{COMPANY.nameEn}｜{COMPANY.nameZh}</span>
+		<span class="topbar-tools">
+			<a href={switchHref} aria-label={t(locale, "switch.aria")}>{t(locale, "switch.to")}</a>
+			<ThemeToggle locale={locale} />
+		</span>
+	</div>
+	<div class="masthead">
+		{
+			logo && (
+				<a class="brand" href={homeHref}>
+					<img class="brand-logo" src="/logo.png" alt={COMPANY.nameEn} width="583" height="86" />
+				</a>
+			)
+		}
+		{
+			logo ? (
+				<span class="masthead-name" aria-hidden="true">
+					{name}
+				</span>
+			) : (
+				<a class="masthead-name" href={homeHref}>
+					{name}
+				</a>
+			)
+		}
+	</div>
+	<nav aria-label={navLabel}>
+		<ul class="mainnav">
+			{
+				nav.map((item) => (
+					<li>
+						<a href={item.href} aria-current={item.current ? "page" : undefined}>
+							{item.label}
+						</a>
+					</li>
+				))
+			}
+			{
+				cta && (
+					<li class="nav-cta">
+						<a class="btn" href={cta.href}>
+							{cta.label}
+						</a>
+					</li>
+				)
+			}
+		</ul>
+	</nav>
+</header>

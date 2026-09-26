@@ -7,7 +7,6 @@ import type { Locale } from "../consts";
 
 /** 產品本身的入口，與這個介紹網站是不同的主機。 */
 export const APP_URL = "https://coo.jw-albert.dev";
-export const REPO_URL = "https://github.com/Prisvalis/Company-of-One";
 export const COO_NAME = "Company of One";
 
 export type CooPage = "home" | "features" | "pricing";
@@ -91,14 +90,10 @@ const zhHant = {
 	footer: {
 		blurb: "一人公司的完整後台。從報價到報稅。",
 		product: "產品",
-		resources: "資源",
 		begin: "開始",
 		featuresAll: "功能總覽",
 		pricingAll: "方案與定價",
 		security: "資安與稽核",
-		repo: "原始碼（GitHub）",
-		schema: "資料模型文件",
-		issues: "問題回報",
 		signin: "登入 / 註冊",
 		note: "測試站運作中，功能與定價仍可能調整。",
 	},
@@ -460,14 +455,10 @@ const en: CooContent = {
 	footer: {
 		blurb: "The complete back office for a one-person company. From quote to tax filing.",
 		product: "Product",
-		resources: "Resources",
 		begin: "Start",
 		featuresAll: "Feature overview",
 		pricingAll: "Plans and pricing",
 		security: "Security and audit",
-		repo: "Source code (GitHub)",
-		schema: "Data model docs",
-		issues: "Report an issue",
 		signin: "Sign in / Sign up",
 		note: "Running on a staging deployment; features and pricing may still change.",
 	},

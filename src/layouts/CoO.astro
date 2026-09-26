@@ -3,16 +3,15 @@
 //
 // 仍然自己出 head，不用官網的 BaseHead：canonical 由路由自己算（帶不帶尾斜線
 // 會產出兩種值），而且這幾頁沒有 Organization 的結構化資料。
-// 樣式則與官網共用 global.css 的 token，coo.css 只放產品頁自己的版面。
+// 外框（三層頁首、側欄、頁尾）與官網共用 global.css，coo.css 只放產品頁自己的元件。
 import "../styles/global.css";
 import "../styles/coo.css";
-import Fonts from "../components/Fonts.astro";
 import MourningNotice from "../components/MourningNotice.astro";
 import ThemeInit from "../components/ThemeInit.astro";
-import ThemeToggle from "../components/ThemeToggle.astro";
+import PortalHeader from "../components/PortalHeader.astro";
 import { SITE, COMPANY, type Locale } from "../consts";
 import { t } from "../i18n/ui";
-import { coo, cooUrl, cooPageUrl, APP_URL, REPO_URL, COO_NAME, type CooPage } from "../i18n/coo";
+import { coo, cooUrl, cooPageUrl, APP_URL, COO_NAME, type CooPage } from "../i18n/coo";
 
 interface Props {
 	locale: Locale;
@@ -48,14 +47,6 @@ const footerGroups = [
 		],
 	},
 	{
-		title: c.footer.resources,
-		links: [
-			{ href: REPO_URL, label: c.footer.repo },
-			{ href: `${REPO_URL}/blob/main/docs/schema.md`, label: c.footer.schema },
-			{ href: `${REPO_URL}/issues`, label: c.footer.issues },
-		],
-	},
-	{
 		title: c.footer.begin,
 		links: [{ href: APP_URL, label: c.footer.signin }],
 	},
@@ -71,8 +62,8 @@ const footerGroups = [
 		<meta name="description" content={meta.description} />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="google" content="notranslate" />
-		<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F4F1EA" />
-		<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1A1A1A" />
+		<meta name="theme-color" media="(prefers-color-scheme: light)" content="#000095" />
+		<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000060" />
 
 		<link rel="canonical" href={canonical} />
 		<link rel="alternate" hreflang="zh-Hant" href={zhHref} />
@@ -92,8 +83,6 @@ const footerGroups = [
 		<meta name="twitter:description" content={meta.description} />
 		<meta name="twitter:image" content={new URL("/og.svg", SITE).href} />
 
-		<Fonts />
-
 		<!-- 與官網同一套：繪製前決定主題與追悼日，避免深淺色或彩色閃一下 -->
 		<ThemeInit />
 	</head>
@@ -102,62 +91,50 @@ const footerGroups = [
 
 		<MourningNotice locale={locale} />
 
-		<header class="site-header">
-			<div class="wrap">
-				<a class="brand" href={cooUrl(locale, "/")}>
-					<span class="brand-name">{COO_NAME}</span>
-				</a>
-				<nav class="site-nav" aria-label={c.navAria}>
-					{
-						nav.map((item) => (
-							<a href={item.href} aria-current={page === item.key ? "page" : undefined}>
-								{item.label}
-							</a>
-						))
-					}
-					<a href={cooPageUrl(otherLocale, page)} aria-label={t(locale, "switch.aria")}>
-						{t(locale, "switch.to")}
-					</a>
-					<ThemeToggle locale={locale} />
-					<a class="btn nav-cta" href={APP_URL}>{c.start}</a>
-				</nav>
-			</div>
-		</header>
+		<div class="portal">
+			<PortalHeader
+				locale={locale}
+				homeHref={cooUrl(locale, "/")}
+				name={COO_NAME}
+				logo={false}
+				switchHref={cooPageUrl(otherLocale, page)}
+				nav={nav.map((item) => ({ href: item.href, label: item.label, current: page === item.key }))}
+				cta={{ href: APP_URL, label: c.start }}
+				navLabel={c.navAria}
+			/>
 
-		<main id="main" tabindex="-1">
-			<slot />
-		</main>
+			<div class="portal-body">
+				<main id="main" class="portal-main" tabindex="-1">
+					<slot />
+				</main>
 
-		<footer class="site-footer">
-			<div class="wrap">
-				<p>{c.footer.blurb}</p>
-				<dl class="footer-rows">
+				<aside class="portal-side">
 					{
 						footerGroups.map((group) => (
-							<div>
-								<dt>{group.title}</dt>
-								<dd>
-									<ul>
-										{group.links.map((link) => (
-											<li>
-												<a href={link.href}>{link.label}</a>
-											</li>
-										))}
-									</ul>
-								</dd>
-							</div>
+							<section class="side-box">
+								<h2 class="side-box-title">{group.title}</h2>
+								<ul>
+									{group.links.map((link) => (
+										<li>
+											<a href={link.href}>{link.label}</a>
+										</li>
+									))}
+								</ul>
+							</section>
 						))
 					}
-				</dl>
-				<div class="footer-bottom">
-					<p>{COO_NAME} · {c.footer.note}</p>
-					<p>
-						© {new Date().getFullYear()}
-						{COMPANY.nameEn} · {t(locale, "rights")} · {t(locale, "taxId")}
-						{COMPANY.taxId}
-					</p>
-				</div>
+				</aside>
 			</div>
-		</footer>
+
+			<footer class="site-footer">
+				<p>{c.footer.blurb}</p>
+				<p>{COO_NAME} · {c.footer.note}</p>
+				<p>
+					© {new Date().getFullYear()}
+					{COMPANY.nameEn} · {t(locale, "rights")}｜{t(locale, "taxId")}
+					{COMPANY.taxId}
+				</p>
+			</footer>
+		</div>
 	</body>
 </html>
