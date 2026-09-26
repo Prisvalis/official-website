@@ -97,8 +97,8 @@ export const home: Record<Locale, HomeContent> = {
 					body: "報價一律依實際工作量計算。本公司沒有平台抽成，也沒有業務層層加價，敬請安心洽詢。",
 				},
 				{
-					title: "第三步：同一人員全程負責",
-					body: "與您討論需求之人員，即為撰寫程式之人員，需求不會在轉述過程中走樣，請放心交給本公司辦理。",
+					title: "第三步：開發期間直接聯繫",
+					body: "開發期間之進度與問題，均可直接來信詢問，毋須透過業務或專案經理轉達。需求如有變更，將先說明對範圍與費用之影響，經您同意後始行調整，請放心交給本公司辦理。",
 				},
 				{
 					title: "第四步：交付內容包含部署",
@@ -179,8 +179,8 @@ export const home: Record<Locale, HomeContent> = {
 					body: "All quotations are calculated according to the actual amount of work. This Company charges no platform commission and adds no layers of sales markup. Please enquire with confidence.",
 				},
 				{
-					title: "Step 3: One Person Responsible Throughout",
-					body: "The person who discusses your requirements is the person who writes the code, so requirements will not be distorted in relaying. Please feel free to entrust the matter to this Company.",
+					title: "Step 3: Direct Contact during Development",
+					body: "Progress and questions during development may be raised directly by email, without passing through a salesperson or project manager. Should requirements change, their effect on scope and cost will be explained first, and adjustments will be made only with your consent. Please feel free to entrust the matter to this Company.",
 				},
 				{
 					title: "Step 4: Delivery Includes Deployment",
