@@ -21,10 +21,12 @@ interface Props {
 	switchHref: string;
 	nav: NavItem[];
 	cta?: { href: string; label: string };
+	/** 導覽列最左邊的返回按鈕（例如 CoO 頁面返回官網首頁）。 */
+	back?: { href: string; label: string };
 	navLabel?: string;
 }
 
-const { locale, homeHref, name, logo = true, switchHref, nav, cta, navLabel } = Astro.props;
+const { locale, homeHref, name, logo = true, switchHref, nav, cta, back, navLabel } = Astro.props;
 ---
 
 <header>
@@ -57,6 +59,16 @@ const { locale, homeHref, name, logo = true, switchHref, nav, cta, navLabel } = 
 	</div>
 	<nav aria-label={navLabel}>
 		<ul class="mainnav">
+			{
+				back && (
+					<li class="nav-back">
+						<a class="btn" href={back.href}>
+							<span aria-hidden="true">◀</span>
+							{back.label}
+						</a>
+					</li>
+				)
+			}
 			{
 				nav.map((item) => (
 					<li>
