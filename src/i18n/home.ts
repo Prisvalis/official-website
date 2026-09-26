@@ -4,12 +4,13 @@
 // 混在一起會讓共用字串表變得難找。兩個語系的物件形狀必須完全一樣，
 // 由下面的 HomeContent 介面約束，少一個 key 是型別錯誤。
 //
-// 寫這份文案時的取捨（規則出處在 CLAUDE.md「文案」一節）：
-// - 每個能力宣稱都要有可指向的佐證。目前站上唯一有可開啟的測試站的
-//   是 Company of One（原始碼 repo 為私有，不得寫成公開），所以它是頁面主體；AI、GPU 與雲端主機沒有可公開的
-//   案例，只在「承接範圍」以一句話交代，不寫經驗宣稱。
+// 語氣依「華國美學」Skill 的 rules/copywriting.md：正式、公告式、過度說明、
+// 自稱「本公司」、經常強調「e化」、句尾常用驚嘆號。
+// 但語氣再熱情，事實不得誇大：
+// - 目前站上唯一有可開啟的測試站的是 Company of One。它的原始碼 repo 為私有，
+//   不得寫成公開。AI、GPU 與雲端主機沒有可公開的案例，只能寫「可洽詢」。
 // - 產品的限制照實寫，不得比產品站自己標註的更成熟（見 coo.ts 的 status）。
-// - 人稱一律單數。
+// - 本公司為一人公司，不得寫出暗示有團隊或多名人員的說法。
 
 import type { Locale } from "../consts";
 
@@ -43,165 +44,165 @@ interface HomeContent {
 export const home: Record<Locale, HomeContent> = {
 	"zh-Hant": {
 		hero: {
-			h1: "量身訂做的系統，從需求談到上線由我一人負責。",
-			lead: "算力有限公司是一人公司，跟你討論需求的人就是寫程式的人。我不是把現成平台租給你，而是從你的問題出發，重新設計架構、重新估價。系統開發與部署都在這個範圍內。",
-			ctaPrimary: "聊聊需求",
-			ctaSecondary: "看 Company of One",
+			h1: "量身訂做系統開發e化服務，從需求洽談到正式上線全程專人負責！",
+			lead: "歡迎蒞臨算力有限公司官方網站！本公司為一人公司，與您洽談需求之人員，即為實際撰寫程式之人員，中間沒有任何轉手。本公司並非出租現成平台，而是依照您的實際問題，重新設計系統架構、重新評估報價。系統開發與部署上線作業，均在本公司服務範圍之內，誠摯歡迎多加利用。",
+			ctaPrimary: "e化線上需求諮詢申請",
+			ctaSecondary: "Company of One 產品介紹專區",
 		},
 
 		work: {
-			title: "作品",
-			lead: "Company of One 是我自己寫的一人公司後台，涵蓋報價、訂單、進銷存、電子發票與營業稅申報，有可以實際註冊的測試站。",
-			caption: "Company of One 的幾個技術決策",
-			columns: { area: "項目", approach: "做法", reason: "原因" },
+			title: "作品成果展示專區",
+			lead: "Company of One 為本公司自行開發之一人公司營運管理e化平台，涵蓋報價、訂單、進銷存、電子發票及營業稅申報等各項作業，並設有測試站，歡迎實際註冊體驗！",
+			caption: "Company of One 主要技術決策一覽表",
+			columns: { area: "項目類別", approach: "實施做法", reason: "採用原因" },
 			rows: [
 				{
-					area: "稽核紀錄",
-					approach: "雜湊鏈，每筆紀錄都含前一筆的雜湊",
-					reason: "事後改動任何一筆，之後的每一筆都會對不上",
+					area: "稽核紀錄管理",
+					approach: "採用雜湊鏈機制，每筆紀錄皆包含前一筆紀錄之雜湊值",
+					reason: "事後如有任何一筆遭到修改，其後每一筆均將無法對應",
 				},
 				{
-					area: "報價確認",
-					approach: "免登入連結，期限內只能回覆一次",
-					reason: "客戶的決定連同時間與來源 IP 一起留存",
+					area: "報價確認作業",
+					approach: "提供免登入連結，於有效期限內僅能回覆一次",
+					reason: "客戶之決定將連同時間與來源 IP 一併留存備查",
 				},
 				{
-					area: "營業稅 401",
-					approach: "不另建報表資料表，由發票與憑證即時彙總",
-					reason: "報表不可能與單據對不起來",
+					area: "營業稅 401 申報",
+					approach: "不另行建立報表資料表，由發票與憑證即時彙總產生",
+					reason: "報表與單據不會發生不一致之情形",
 				},
 				{
-					area: "庫存",
-					approach: "由異動流水帳即時加總，不存快取數量",
-					reason: "不會出現兩個數字互相打架的情況",
+					area: "庫存數量管理",
+					approach: "由異動流水帳即時加總計算，不另行儲存快取數量",
+					reason: "不會發生兩個數字互相矛盾之情況",
 				},
 			],
-			limits: "目前是測試站。綠界金流與電子發票依公開文件實作，尚未在沙盒以真實交易驗證；稽核鏈的外部見證端點尚未接上；沒有監控與告警。",
+			limits: "【重要提醒】本系統目前仍為測試站，敬請特別留意！綠界金流與電子發票係依公開文件實作，尚未於沙盒環境以真實交易進行驗證；稽核鏈之外部見證端點尚未接上；目前亦尚無監控與告警機制。造成不便之處，敬請見諒。",
 			links: {
-				product: "產品介紹",
-				demo: "測試站",
-				status: "完整現況",
+				product: "產品介紹資訊專區",
+				demo: "e化測試站",
+				status: "系統完整現況說明",
 			},
 		},
 
 		process: {
-			title: "合作方式",
+			title: "合作流程說明",
 			steps: [
 				{
-					title: "先談範圍",
-					body: "你說明現況，我問清楚要解決的是什麼問題，再決定做多少。該砍的功能我會建議砍掉，不會包進報價裡湊金額。",
+					title: "第一步：先行確認需求範圍",
+					body: "請您先說明目前的現況，本公司將協助您釐清真正需要解決的問題，再決定開發的規模。不必要的功能，本公司會主動建議刪減，不會包進報價裡湊金額，請大家放心！",
 				},
 				{
-					title: "確認後才報價",
-					body: "報價依實際工作量計算。沒有平台抽成，也沒有業務層層加價。",
+					title: "第二步：範圍確認後始行報價",
+					body: "報價一律依實際工作量計算。本公司沒有平台抽成，也沒有業務層層加價，敬請安心洽詢。",
 				},
 				{
-					title: "同一個人做到底",
-					body: "跟你討論的人就是寫程式的人，需求不會在轉述中走樣。",
+					title: "第三步：同一人員全程負責",
+					body: "與您討論需求之人員，即為撰寫程式之人員，需求不會在轉述過程中走樣，請放心交給本公司辦理。",
 				},
 				{
-					title: "交付含部署",
-					body: "上線的方式在報價前一起談定，監控與後續維護是否納入，也會寫進報價。",
+					title: "第四步：交付內容包含部署",
+					body: "上線方式將於報價前與您共同確認；監控與後續維護是否納入，亦會明確載明於報價之中，以維護您的相關權益。",
 				},
 			],
 		},
 
 		scope: {
-			title: "承接範圍",
+			title: "服務承接範圍說明",
 			body: [
-				"主要承接系統與後端開發，以及網站與部署：從資料模型設計、後端 API 到部署上線。",
-				"AI 導入、資料分析、GPU 運算環境與雲端主機也在可以討論的範圍內。這幾項目前沒有可以公開指向的案例，請先來信說明需求，我再回覆是否適合。",
-				"已經用 AI 做出可執行的雛形、卡在上線之前的個人，可以只找我補缺的部分，例如資料庫設計、部署與安全檢查。中小型企業的流程若還在 Excel、紙本與 LINE 之間往返，我會先看你現在怎麼做事；有時候調整流程就夠，不需要寫程式。",
+				"本公司主要承接項目為系統與後端開發，以及網站建置與部署上線作業，範圍涵蓋資料模型設計、後端 API 開發，一直到正式部署上線為止。",
+				"AI 導入、資料分析、GPU 運算環境及雲端主機等項目，亦在可洽詢討論之範圍內。惟上述項目目前尚無可公開提供參考之案例，請先來信說明您的需求，本公司將再回覆是否適合承接，敬請見諒。",
+				"已經使用 AI 做出可執行雛形、但卡在上線之前的個人朋友，可以只委託本公司補足缺少的部分，例如資料庫設計、部署作業或安全檢查。中小企業如流程仍在 Excel、紙本與 LINE 之間往返，本公司將先了解您目前實際的作業方式；有時只需調整流程即可，不一定需要撰寫程式，請不要擔心！",
 			],
 		},
 
 		contact: {
-			title: "聯絡",
-			body: "把現況說清楚就好，不需要先寫規格。我會直接回覆可不可行、大概的規模與費用，包含「這個你自己做比較快」這種答案。",
-			cta: "填寫表單",
-			email: "或直接寫信",
+			title: "聯絡資訊與服務窗口",
+			body: "請將目前的狀況說明清楚即可，不需要事先撰寫規格文件。本公司將直接回覆是否可行、大約的規模與費用，也包括「這項工作您自行處理會比較快」這類的答案。如有任何疑問，歡迎隨時洽詢本公司服務窗口！",
+			cta: "e化線上表單填寫申請",
+			email: "或以電子郵件直接洽詢：",
 		},
 	},
 
 	en: {
 		hero: {
-			h1: "Bespoke systems, taken from first conversation to production by one person.",
-			lead: "Prisvalis is a one-person company, so the person discussing your requirements is the one writing the code. I don't rent you a ready-made platform; I start from your problem, design the architecture around it and price it from scratch. Systems development and deployment both fall inside that.",
-			ctaPrimary: "Tell me what you need",
-			ctaSecondary: "See Company of One",
+			h1: "Bespoke System Development e-Services, with One Dedicated Person from Enquiry to Launch!",
+			lead: "Welcome to the Official Website of Prisvalis LTD.! This Company is a one-person company: the person who discusses your requirements is the very same person who writes the code, with no intermediaries of any kind. This Company does not rent out a ready-made platform. Instead, the system architecture is designed and the quotation is prepared afresh according to your actual problem. Both systems development and deployment fall within the service scope of this Company. You are warmly welcome to make use of them.",
+			ctaPrimary: "Online e-Enquiry Application",
+			ctaSecondary: "Company of One Product Information Section",
 		},
 
 		work: {
-			title: "Work",
-			lead: "Company of One is a back office for one-person companies that I wrote myself: quotes, orders, inventory, e-invoicing and VAT filing. There is a test deployment you can register on.",
-			caption: "A few of the technical decisions in Company of One",
-			columns: { area: "Area", approach: "Approach", reason: "Reason" },
+			title: "Work Results Exhibition Section",
+			lead: "Company of One is an e-platform for one-person company operations management, developed in-house by this Company. It covers quotations, orders, inventory, e-invoicing and VAT filing, and a test site is provided. You are warmly welcome to register and try it!",
+			caption: "Table of Principal Technical Decisions in Company of One",
+			columns: { area: "Item Category", approach: "Method of Implementation", reason: "Reason for Adoption" },
 			rows: [
 				{
-					area: "Audit trail",
-					approach: "A hash chain: every record includes the previous record's hash",
-					reason: "Changing any record afterwards breaks every record after it",
+					area: "Audit Record Management",
+					approach: "A hash chain mechanism is adopted: each record contains the hash of the preceding record",
+					reason: "Should any record be altered afterwards, every record after it will fail to match",
 				},
 				{
-					area: "Quote acceptance",
-					approach: "A login-free link, answerable once within its validity period",
-					reason: "The client's decision is kept with its timestamp and source IP",
+					area: "Quotation Confirmation",
+					approach: "A login-free link is provided, which may be answered only once within its validity period",
+					reason: "The client's decision is retained, together with its time and source IP, for future reference",
 				},
 				{
-					area: "VAT Form 401",
-					approach: "No separate report tables; totalled live from invoices and vouchers",
-					reason: "The report cannot disagree with the documents",
+					area: "VAT Form 401 Filing",
+					approach: "No separate report tables are created; figures are totalled live from invoices and vouchers",
+					reason: "The report and the documents will not disagree",
 				},
 				{
-					area: "Inventory",
-					approach: "Totalled live from the movement ledger, with no cached quantity",
-					reason: "There are never two numbers disagreeing",
+					area: "Inventory Quantity Management",
+					approach: "Totalled live from the movement ledger; no cached quantity is stored",
+					reason: "Two contradictory figures will not arise",
 				},
 			],
-			limits: "It is a test deployment. The ECPay payment and e-invoice integrations follow the public documentation and have not been run against the sandbox with real transactions, the audit chain's external witness endpoint is not connected, and there is no monitoring or alerting.",
+			limits: "IMPORTANT NOTICE: This system is currently a test site. Please take particular note! The ECPay payment and e-invoice integrations are implemented according to the public documentation and have not yet been verified with real transactions in the sandbox; the audit chain's external witness endpoint is not yet connected; and there is at present no monitoring or alerting mechanism. This Company sincerely apologises for any inconvenience caused.",
 			links: {
-				product: "Product overview",
-				demo: "Test site",
-				status: "Full status",
+				product: "Product Information Section",
+				demo: "e-Test Site",
+				status: "Complete System Status Statement",
 			},
 		},
 
 		process: {
-			title: "How I work",
+			title: "Cooperation Procedure Explanation",
 			steps: [
 				{
-					title: "Scope first",
-					body: "You describe where things stand and I work out which problem actually needs solving, then decide how much to build. Features that do not earn their place get cut, and they stay out of the quote.",
+					title: "Step 1: Confirmation of Requirement Scope",
+					body: "Please first describe your present situation. This Company will assist you in clarifying the problem that truly needs solving before deciding the scale of development. Unnecessary features will be proactively recommended for removal and will not be padded into the quotation. Please rest assured!",
 				},
 				{
-					title: "Price once scope is agreed",
-					body: "The quote follows the actual amount of work. There is no platform commission and no layers of sales markup.",
+					title: "Step 2: Quotation after Scope Confirmation",
+					body: "All quotations are calculated according to the actual amount of work. This Company charges no platform commission and adds no layers of sales markup. Please enquire with confidence.",
 				},
 				{
-					title: "One person throughout",
-					body: "The person you talk to is the person writing the code, so requirements are never relayed second-hand.",
+					title: "Step 3: One Person Responsible Throughout",
+					body: "The person who discusses your requirements is the person who writes the code, so requirements will not be distorted in relaying. Please feel free to entrust the matter to this Company.",
 				},
 				{
-					title: "Deployment included",
-					body: "How it goes live is settled before the quote, and whether monitoring and later maintenance are included is written into it.",
+					title: "Step 4: Delivery Includes Deployment",
+					body: "The method of going live will be confirmed jointly with you before quotation. Whether monitoring and subsequent maintenance are included will also be clearly stated in the quotation, in order to safeguard your rights and interests.",
 				},
 			],
 		},
 
 		scope: {
-			title: "Scope",
+			title: "Service Scope Explanation",
 			body: [
-				"Mostly backend and systems development, plus websites and deployment: from data model and API design through to going live.",
-				"AI integration, data analysis, GPU compute environments and cloud hosting are also open for discussion. There are no public projects I can point to for these yet, so please write first and I will tell you whether it is a fit.",
-				"If you have built a working prototype with AI and are stuck before production, you can hire me for just the missing part, such as database design, deployment or a security check. If a small business's process still moves between spreadsheets, paper and chat messages, I start by looking at how you work today; sometimes adjusting the process is enough and no code is needed.",
+				"The principal services of this Company are systems and backend development, together with website construction and deployment, covering data model design and backend API development all the way to formal launch.",
+				"AI integration, data analysis, GPU compute environments and cloud hosting are also within the scope of enquiry and discussion. However, there are at present no public cases available for reference in these areas. Please first write to describe your requirements, and this Company will reply as to whether they can be undertaken. Your kind understanding is respectfully requested.",
+				"Individuals who have already built a working prototype with AI but are stuck before launch may entrust this Company with only the missing part, such as database design, deployment work or a security check. Where a small or medium business's workflow still moves between spreadsheets, paper and LINE messages, this Company will first understand how you actually work at present; sometimes adjusting the workflow is sufficient and no programming is required. Please do not worry!",
 			],
 		},
 
 		contact: {
-			title: "Contact",
-			body: "Just describe where things stand; no written spec needed. I will tell you straight whether it is feasible, roughly how big it is and what it would cost, including the answer “you would be faster doing this yourself”.",
-			cta: "Open the form",
-			email: "Or write directly",
+			title: "Contact Information and Service Window",
+			body: "Simply describe your present situation clearly; no written specification is required in advance. This Company will reply directly as to feasibility, approximate scale and cost, including answers such as “this work would be quicker for you to handle yourself”. Should you have any questions, you are welcome to contact the Service Window of this Company at any time!",
+			cta: "Online e-Form Application",
+			email: "Or enquire directly by email:",
 		},
 	},
 };
