@@ -86,13 +86,14 @@ const zhHant = {
 	tagline: "一人公司營運管理e化平台",
 	colon: "：",
 	nav: {
-		home: "首頁",
+		home: "產品首頁",
 		features: "產品功能介紹",
 		pricing: "方案資費說明",
 	},
 	navAria: "主選單導覽列",
 	skip: "跳至主要內容區塊",
 	start: "立即申辦使用",
+	backToSite: "返回算力有限公司官網首頁",
 	footer: {
 		blurb: "一人公司營運管理e化平台，從報價到報稅，一次到位！",
 		product: "產品資訊服務專區",
@@ -594,13 +595,14 @@ const en: CooContent = {
 	tagline: "The e-Platform for One-Person Company Operations Management",
 	colon: ": ",
 	nav: {
-		home: "Home",
+		home: "Product Home",
 		features: "Product Features Introduction",
 		pricing: "Plans and Fees Explanation",
 	},
 	navAria: "Main Navigation Menu",
 	skip: "Skip to the main content section",
 	start: "Apply Now",
+	backToSite: "Return to the Prisvalis LTD. Home Page",
 	footer: {
 		blurb: "The e-platform for one-person company operations management, from quotation to tax filing, all in one place!",
 		product: "Product Information Service Section",

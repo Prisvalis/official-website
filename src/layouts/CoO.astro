@@ -9,7 +9,7 @@ import "../styles/coo.css";
 import MourningNotice from "../components/MourningNotice.astro";
 import ThemeInit from "../components/ThemeInit.astro";
 import PortalHeader from "../components/PortalHeader.astro";
-import { SITE, COMPANY, type Locale } from "../consts";
+import { SITE, COMPANY, LOCALE_HOME_PATH, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { coo, cooUrl, cooPageUrl, APP_URL, COO_NAME, type CooPage } from "../i18n/coo";
 
@@ -100,6 +100,7 @@ const footerGroups = [
 				switchHref={cooPageUrl(otherLocale, page)}
 				nav={nav.map((item) => ({ href: item.href, label: item.label, current: page === item.key }))}
 				cta={{ href: APP_URL, label: c.start }}
+				back={{ href: LOCALE_HOME_PATH[locale], label: c.backToSite }}
 				navLabel={c.navAria}
 			/>
 
@@ -109,6 +110,12 @@ const footerGroups = [
 				</main>
 
 				<aside class="portal-side">
+					<section class="side-box">
+						<h2 class="side-box-title">{COMPANY.nameZh}</h2>
+						<ul>
+							<li><a href={LOCALE_HOME_PATH[locale]}>{c.backToSite}</a></li>
+						</ul>
+					</section>
 					{
 						footerGroups.map((group) => (
 							<section class="side-box">

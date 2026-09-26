@@ -288,19 +288,28 @@ a.masthead-name:visited {
 	box-shadow: none;
 	padding: 3px 6px 2px;
 }
+/* 導覽列最左邊的返回按鈕（CoO 頁面返回官網首頁）。 */
+.mainnav .nav-back {
+	padding: 3px 7.4px 2px 5px;
+}
 /* 導覽列裡的按鈕：.mainnav a 的白字規則比 .btn 優先，所以這裡要把按鈕的字色寫回來。 */
 .mainnav .nav-cta a.btn,
-.mainnav .nav-cta a.btn:visited {
+.mainnav .nav-cta a.btn:visited,
+.mainnav .nav-back a.btn,
+.mainnav .nav-back a.btn:visited {
 	padding: 3.6px 12px 4px 11px;
 	color: #151515;
 	font-size: 14px;
 	text-shadow: 0 1px 0 #fff;
 }
-.mainnav .nav-cta a.btn:hover {
+.mainnav .nav-cta a.btn:hover,
+.mainnav .nav-back a.btn:hover {
 	background: linear-gradient(180deg, #fffbe0, #ffe45c);
 }
 :root[data-theme="dark"] .mainnav .nav-cta a.btn,
-:root[data-theme="dark"] .mainnav .nav-cta a.btn:visited {
+:root[data-theme="dark"] .mainnav .nav-cta a.btn:visited,
+:root[data-theme="dark"] .mainnav .nav-back a.btn,
+:root[data-theme="dark"] .mainnav .nav-back a.btn:visited {
 	color: #ffffff;
 	text-shadow: 0 -1px 0 #000;
 }
