@@ -1,37 +1,84 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- 社群分享圖的原始檔。社群平台不讀 SVG，實際使用的是由這份輸出的 og.png；
+       改這裡之後要重新輸出 PNG。字體用舊系統字（新細明體、微軟正黑體、標楷體），
+       與 global.css 的字體堆疊一致。 -->
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0a0a12"/>
-      <stop offset="1" stop-color="#15132b"/>
+    <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3563d1"/>
+      <stop offset="1" stop-color="#000095"/>
     </linearGradient>
-    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#5b6cff"/>
-      <stop offset="1" stop-color="#7c3aed"/>
+    <linearGradient id="silver" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f6fa"/>
+      <stop offset="0.5" stop-color="#d4d9e3"/>
+      <stop offset="1" stop-color="#a9b1c2"/>
     </linearGradient>
-    <radialGradient id="glow" cx="50%" cy="0%" r="70%">
-      <stop offset="0" stop-color="#5b6cff" stop-opacity="0.35"/>
-      <stop offset="1" stop-color="#5b6cff" stop-opacity="0"/>
-    </radialGradient>
-    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
-      <path d="M48 0H0V48" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1"/>
+    <linearGradient id="laser" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000095"/>
+      <stop offset="0.38" stop-color="#3a2bb8"/>
+      <stop offset="0.62" stop-color="#c8001a"/>
+      <stop offset="1" stop-color="#6a0010"/>
+    </linearGradient>
+    <pattern id="stripe" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="2" fill="#d2d9e7"/>
     </pattern>
   </defs>
 
-  <rect width="1200" height="630" fill="url(#bg)"/>
-  <rect width="1200" height="630" fill="url(#grid)"/>
-  <rect width="1200" height="630" fill="url(#glow)"/>
+  <!-- 底色與細橫紋 -->
+  <rect width="1200" height="630" fill="#d9dfeb"/>
+  <rect width="1200" height="630" fill="url(#stripe)"/>
 
-  <g transform="translate(100 210)">
-    <rect width="96" height="96" rx="22" fill="url(#mark)"/>
-    <path fill="#fff" d="M33 24h18.6c10.4 0 17.4 6.3 17.4 15.9 0 9.75-7 16.05-17.7 16.05H43.8V72H33V24Zm10.8 9v13.65h6.9c4.8 0 7.8-2.55 7.8-6.9 0-4.2-3-6.75-7.8-6.75h-6.9Z"/>
+  <!-- 頂端藍色標題列 -->
+  <rect x="0" y="0" width="1200" height="92" fill="url(#bar)"/>
+  <rect x="0" y="91" width="1200" height="3" fill="#c8001a"/>
+  <rect x="36" y="17.4" width="58" height="58" fill="#c8001a" stroke="#ffffff" stroke-width="2.6"/>
+  <text x="65" y="60" text-anchor="middle" font-family="DFKai-SB, 標楷體, BiauKai, serif" font-size="40" fill="#ffffff">算</text>
+  <text x="112" y="59.6" font-family="'Microsoft JhengHei', 微軟正黑體, 'PingFang TC', sans-serif" font-size="40" font-weight="bold" fill="#ffffff" stroke="#000060" stroke-width="0.8">算力有限公司</text>
+  <text x="372" y="58" font-family="Tahoma, Verdana, Arial, sans-serif" font-size="25" font-weight="bold" fill="#ffe45c">Prisvalis LTD.</text>
+  <text x="1164" y="57" text-anchor="end" font-family="Tahoma, Verdana, Arial, sans-serif" font-size="22" fill="#7fe9ff" text-decoration="underline">www.prisvalis.com</text>
+
+  <!-- 黃底公告帶：同色微差兩層 -->
+  <rect x="24" y="112" width="1152" height="52" fill="hsl(52 94% 78%)" stroke="#c9a400" stroke-width="2"/>
+  <rect x="31.4" y="118.6" width="126" height="39" fill="hsl(52 96% 73.6%)"/>
+  <text x="40" y="146" font-family="'Microsoft JhengHei', 微軟正黑體, sans-serif" font-size="23" font-weight="bold" fill="#c8001a">【公告】</text>
+  <text x="166" y="146.4" font-family="PMingLiU, MingLiU, 新細明體, serif" font-size="23" fill="#151515">本公司為一人公司，與您洽談需求之人員，即為實際撰寫程式之人員！</text>
+
+  <!-- 主要內容框 -->
+  <rect x="24" y="180" width="1152" height="378" fill="#ffffff" stroke="#4f5f82" stroke-width="2"/>
+  <rect x="25" y="181" width="1150" height="32" fill="url(#silver)"/>
+  <line x1="25" y1="213.5" x2="1175" y2="213.5" stroke="#8f9bb3"/>
+  <text x="40" y="204" font-family="'Microsoft JhengHei', 微軟正黑體, sans-serif" font-size="18" font-weight="bold" fill="#000095">■ 服務項目e化說明</text>
+
+  <!-- 文字藝術師標題：淡影子、第一段斜體拉高、第二段略拉寬 -->
+  <text x="180" y="300" font-family="'Microsoft JhengHei', 微軟正黑體, sans-serif" font-size="66" font-weight="900" fill="#000095" opacity="0.08" transform="translate(12 12) skewX(-22)">量身訂做系統開發e化服務！</text>
+  <g font-family="'Microsoft JhengHei', 微軟正黑體, sans-serif" font-size="66" font-weight="900" stroke="#ffffff" stroke-width="1.4" paint-order="stroke">
+    <text x="0" y="0" fill="#9fb0d8" transform="translate(52 294) skewX(-8) scale(1 1.1)">量身訂做，</text>
+    <text x="0" y="0" fill="url(#laser)" transform="translate(50 292) skewX(-8) scale(1 1.1)">量身訂做，</text>
+    <text x="0" y="0" fill="#9fb0d8" transform="translate(412 293.8) scale(1.04 1)">系統開發e化服務！</text>
+    <text x="0" y="0" fill="url(#laser)" transform="translate(410 292.8) scale(1.04 1)">系統開發e化服務！</text>
   </g>
 
-  <text x="100" y="410" font-family="Inter, 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', sans-serif" font-size="88" font-weight="800" fill="#f4f5ff" letter-spacing="-2">算力有限公司</text>
-  <text x="104" y="470" font-family="Inter, sans-serif" font-size="40" font-weight="600" fill="#a5a7c4">Prisvalis Co., Ltd.</text>
+  <!-- 行政表格 -->
+  <g font-size="24">
+    <rect x="48" y="326" width="1104" height="198" fill="none" stroke="#4f5f82" stroke-width="1.6"/>
+    <rect x="49" y="327" width="208" height="196" fill="hsl(220 34% 95.5%)"/>
+    <line x1="257.5" y1="326" x2="257.5" y2="524" stroke="#8f9bb3"/>
+    <line x1="48" y1="392" x2="1152" y2="392" stroke="#8f9bb3"/>
+    <line x1="48" y1="458.6" x2="1152" y2="458.6" stroke="#8f9bb3"/>
 
-  <g transform="translate(100 520)">
-    <rect width="230" height="52" rx="26" fill="none" stroke="#ffffff" stroke-opacity="0.18"/>
-    <circle cx="34" cy="26" r="5" fill="#5b6cff"/>
-    <text x="52" y="34" font-family="Inter, sans-serif" font-size="24" font-weight="600" fill="#f4f5ff">Coming Soon</text>
+    <g font-family="'Microsoft JhengHei', 微軟正黑體, sans-serif" font-weight="bold" fill="#3f4658">
+      <text x="66" y="368">承接項目</text>
+      <text x="66" y="434">自有產品</text>
+      <text x="66" y="500.4">服務流程</text>
+    </g>
+    <g font-family="PMingLiU, MingLiU, 新細明體, serif" fill="#151515">
+      <text x="276" y="368">系統與後端開發・網站建置・部署上線作業</text>
+      <text x="276" y="434"><tspan fill="#0033cc" text-decoration="underline">Company of One</tspan> 一人公司營運管理e化平台</text>
+      <text x="276.6" y="500">先確認範圍 → 再行報價 → 開發 → 部署上線</text>
+    </g>
   </g>
+
+  <!-- 底部灰銀列 -->
+  <rect x="0" y="578" width="1200" height="52" fill="url(#silver)"/>
+  <line x1="0" y1="578.5" x2="1200" y2="578.5" stroke="#8f9bb3"/>
+  <text x="36" y="611" font-family="PMingLiU, MingLiU, 新細明體, serif" font-size="21" fill="#3f4658">統一編號 62010947　｜　繁體中文／English　｜　e化線上需求諮詢，歡迎多加利用！</text>
 </svg>

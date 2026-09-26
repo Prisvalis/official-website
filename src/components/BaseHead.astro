@@ -17,7 +17,8 @@ interface Props {
 
 const {
 	locale,
-	image = "/og.svg",
+	// 社群平台不讀 SVG；og.png 由 public/og.svg 輸出，改圖時兩個一起更新。
+	image = "/og.png",
 	title: titleProp,
 	description: descriptionProp,
 	alternates = LOCALE_HOME,
@@ -76,6 +77,8 @@ const jsonLd = {
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={socialImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
