@@ -8,7 +8,7 @@ export const COMPANY = {
 	nameZh: "算力有限公司",
 	nameEn: "Prisvalis LTD.",
 	shortEn: "Prisvalis",
-	// 公開聯絡信箱，頁尾、聯絡頁與結構化資料共用。
+	// 公開聯絡信箱，首頁、聯絡頁與結構化資料共用。
 	email: "support@mail.prisvalis.com",
 	// 聯絡頁會自動把它變成可直接撥號的 tel: 連結。
 	phone: "+886-4-2369-7788",
