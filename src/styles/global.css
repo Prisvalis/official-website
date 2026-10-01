@@ -33,8 +33,9 @@
 
 	/* 老系統字體。Windows 上會是新細明體、標楷體、微軟正黑體；
 	   其他平台落到最接近的明體、楷體與黑體。 */
-	--font-body: "PMingLiU", "MingLiU", "新細明體", "細明體", "Apple LiSung", "LiSong Pro",
-		"Songti TC", "Noto Serif CJK TC", serif;
+	/* Mac 不放 Apple LiSung／LiSong Pro：只有細體、粗體靠合成，小字筆畫會斷。 */
+	--font-body: "PMingLiU", "MingLiU", "新細明體", "細明體", "Songti TC", "Noto Serif CJK TC",
+		serif;
 	--font-kai: "DFKai-SB", "標楷體", "BiauKai", "Kaiti TC", "STKaiti", "AR PL UKai TW", serif;
 	--font-hei: "Microsoft JhengHei", "微軟正黑體", "PingFang TC", "Heiti TC", "Noto Sans TC",
 		Arial, sans-serif;
@@ -83,8 +84,7 @@ body {
 	font-family: var(--font-body);
 	font-size: 15px;
 	line-height: 1.62;
-	/* 較硬的文字渲染，降低柔順的現代感。只影響 macOS，文字仍清楚。 */
-	-webkit-font-smoothing: none;
+	/* 不關閉反鋸齒：macOS 上明體細筆畫會斷裂，違反 Skill「文字仍要清楚」的底線。 */
 	text-rendering: geometricPrecision;
 }
 
