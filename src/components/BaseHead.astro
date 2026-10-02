@@ -41,7 +41,7 @@ const jsonLd = {
 	email: COMPANY.email,
 	taxID: COMPANY.taxId,
 	foundingDate: COMPANY.founded,
-	logo: new URL("/favicon.svg", SITE).href,
+	logo: new URL("/logo.svg", SITE).href,
 	sameAs: [SOCIAL.instagram, SOCIAL.threads],
 };
 ---
@@ -50,6 +50,8 @@ const jsonLd = {
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" href="/favicon-180.png" />
 <meta name="generator" content={Astro.generator} />
 <!-- Site manages its own zh/en switch; suppress the browser's auto-translate prompt -->
 <meta name="google" content="notranslate" />

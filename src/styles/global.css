@@ -217,9 +217,18 @@ a:hover {
 }
 .brand-logo {
 	display: block;
-	height: 30px;
+	height: 36px;
 	width: auto;
 	transform: translateY(-0.7px);
+}
+.brand-logo.logo-dark {
+	display: none;
+}
+:root[data-theme="dark"] .brand-logo.logo-light {
+	display: none;
+}
+:root[data-theme="dark"] .brand-logo.logo-dark {
+	display: block;
 }
 /* 報頭上的名稱。以文字藝術師的方式拉寬、傾斜。 */
 .masthead-name {
