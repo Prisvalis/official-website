@@ -94,7 +94,7 @@ const nav = [
 			</div>
 
 			
-				<section class="box">
+				<section class="box" id="form">
 					<h2 class="box-title">{t(locale, "contact.form.title")}</h2>
 				<form class="form box-body" method="post" action="/api/contact">
 
@@ -241,7 +241,10 @@ const nav = [
 							<dd>
 								{
 									hasLine ? (
-										<span>{COMPANY.lineId}</span>
+										<a href={COMPANY.lineUrl} target="_blank" rel="noopener noreferrer">
+											{COMPANY.lineId}
+											<span class="sr-only">{t(locale, "link.external")}</span>
+										</a>
 									) : (
 										<span class="empty">
 											{COMPANY.lineId}
