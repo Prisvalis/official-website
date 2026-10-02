@@ -38,7 +38,7 @@ interface HomeContent {
 	};
 	process: { title: string; steps: { title: string; body: string }[] };
 	scope: { title: string; body: string[] };
-	contact: { title: string; body: string; cta: string; email: string };
+	contact: { title: string; body: string };
 }
 
 export const home: Record<Locale, HomeContent> = {
@@ -118,9 +118,7 @@ export const home: Record<Locale, HomeContent> = {
 
 		contact: {
 			title: "聯絡資訊與服務窗口",
-			body: "請將目前的狀況說明清楚即可，不需要事先撰寫規格文件。本公司將直接回覆是否可行、大約的規模與費用，也包括「這項工作您自行處理會比較快」這類的答案。如有任何疑問，歡迎隨時洽詢本公司服務窗口！",
-			cta: "e化線上表單填寫申請",
-			email: "或以電子郵件直接洽詢：",
+			body: "洽詢請使用下方所列之服務電話或 LINE 官方帳號即可，不需要事先撰寫規格文件。請將目前的狀況說明清楚，本公司將直接回覆是否可行、大約的規模與費用，也包括「這項工作您自行處理會比較快」這類的答案。如有任何疑問，歡迎隨時洽詢本公司服務窗口，誠摯為您服務！",
 		},
 	},
 
@@ -200,9 +198,7 @@ export const home: Record<Locale, HomeContent> = {
 
 		contact: {
 			title: "Contact Information and Service Window",
-			body: "Simply describe your present situation clearly; no written specification is required in advance. This Company will reply directly as to feasibility, approximate scale and cost, including answers such as “this work would be quicker for you to handle yourself”. Should you have any questions, you are welcome to contact the Service Window of this Company at any time!",
-			cta: "Online e-Form Application",
-			email: "Or enquire directly by email:",
+			body: "Please enquire by the service telephone or the LINE Official Account listed below. No written specification is required in advance. Simply describe your present situation clearly, and this Company will reply directly as to feasibility, approximate scale and cost, including answers such as “this work would be quicker for you to handle yourself”. Should you have any questions, you are welcome to contact the Service Window of this Company at any time!",
 		},
 	},
 };

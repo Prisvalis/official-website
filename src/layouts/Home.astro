@@ -9,7 +9,7 @@ import MourningNotice from "../components/MourningNotice.astro";
 import PortalHeader from "../components/PortalHeader.astro";
 import PortalFooter from "../components/PortalFooter.astro";
 import WordArt from "../components/WordArt.astro";
-import { COMPANY, LOCALE_HOME_PATH, type Locale } from "../consts";
+import { COMPANY, LOCALE_HOME_PATH, SOCIAL, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { home } from "../i18n/home";
 import { cooUrl, APP_URL, COO_NAME } from "../i18n/coo";
@@ -25,6 +25,11 @@ const otherLocale: Locale = locale === "zh-Hant" ? "en" : "zh-Hant";
 // 相對路徑：切換語言時留在訪客當下的網域，不要跳回 SITE。
 const switchHref = LOCALE_HOME_PATH[otherLocale];
 const contactHref = locale === "en" ? "/en/contact/" : "/contact/";
+const hasPhone = COMPANY.phone !== "-";
+const hasLine = COMPANY.lineId !== "-";
+const telHref = `tel:${COMPANY.phone.replace(/[^\d+]/g, "")}`;
+const lineHref = `https://line.me/R/ti/p/${encodeURIComponent(COMPANY.lineId)}`;
+const instagramHandle = `@${SOCIAL.instagram.split("/").filter(Boolean).pop()}`;
 const cooHref = cooUrl(locale, "/");
 const statusHref = cooUrl(locale, "/#status");
 const external = t(locale, "link.external");
@@ -139,13 +144,54 @@ const nav = [
 						<h2 class="box-title">{c.contact.title}</h2>
 						<div class="box-body">
 							<p>{c.contact.body}</p>
-							<div class="actions">
-								<a class="btn btn-primary" href={contactHref}>{c.contact.cta}</a>
-								<span>
-									{c.contact.email}
-									<a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a>
-								</span>
-							</div>
+							<dl class="info-list">
+								<div class="info-item">
+									<dt>{t(locale, "contact.info.phone")}</dt>
+									<dd>
+										{
+											hasPhone ? (
+												<a href={telHref}>{COMPANY.phone}</a>
+											) : (
+												<span class="empty">
+													{COMPANY.phone}
+													<span class="sr-only">{t(locale, "contact.info.pending")}</span>
+												</span>
+											)
+										}
+									</dd>
+								</div>
+								<div class="info-item">
+									<dt>{t(locale, "contact.info.line")}</dt>
+									<dd>
+										{
+											hasLine ? (
+												<a href={lineHref} target="_blank" rel="noopener noreferrer">
+													{COMPANY.lineId}
+													<span class="sr-only">{external}</span>
+												</a>
+											) : (
+												<span class="empty">
+													{COMPANY.lineId}
+													<span class="sr-only">{t(locale, "contact.info.pending")}</span>
+												</span>
+											)
+										}
+									</dd>
+								</div>
+								<div class="info-item">
+									<dt>{t(locale, "contact.info.instagram")}</dt>
+									<dd>
+										<a href={SOCIAL.instagram} target="_blank" rel="me noopener noreferrer">
+											{instagramHandle}
+											<span class="sr-only">{external}</span>
+										</a>
+									</dd>
+								</div>
+								<div class="info-item">
+									<dt>{t(locale, "contact.info.reply")}</dt>
+									<dd>{t(locale, "contact.info.replyValue")}</dd>
+								</div>
+							</dl>
 						</div>
 					</section>
 				</main>
@@ -193,10 +239,30 @@ const nav = [
 
 					<section class="side-box">
 						<h2 class="side-box-title">{c.contact.title}</h2>
-						<p>
-							<a href={contactHref}>{c.contact.cta}</a><br />
-							<a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a>
-						</p>
+						<dl class="info-list">
+							<div class="info-item">
+								<dt>{t(locale, "contact.info.phone")}</dt>
+								<dd>
+									{hasPhone ? <a href={telHref}>{COMPANY.phone}</a> : <span class="empty">{COMPANY.phone}</span>}
+								</dd>
+							</div>
+							<div class="info-item">
+								<dt>{t(locale, "contact.info.line")}</dt>
+								<dd>
+									{
+										hasLine ? (
+											<a href={lineHref} target="_blank" rel="noopener noreferrer">{COMPANY.lineId}</a>
+										) : (
+											<span class="empty">{COMPANY.lineId}</span>
+										)
+									}
+								</dd>
+							</div>
+							<div class="info-item">
+								<dt>{t(locale, "contact.info.reply")}</dt>
+								<dd>{t(locale, "contact.info.replyValue")}</dd>
+							</div>
+						</dl>
 					</section>
 				</aside>
 			</div>
@@ -230,6 +296,43 @@ const nav = [
 				align-items: center;
 				gap: 8px 13px;
 				margin-top: 13.6px;
+			}
+
+			/* 服務窗口欄位清單，標籤小字、值粗體，與聯絡頁側欄同一套。 */
+			.info-list {
+				margin: 2px 0 0;
+				padding: 1px 2px 0;
+			}
+			.side-box .info-list {
+				margin: 0;
+				padding: 5.6px 7px 6.4px 7.6px;
+			}
+			.info-item {
+				padding: 4.2px 0 4.6px;
+				border-bottom: 1px dashed var(--border);
+			}
+			.info-item:last-child {
+				border-bottom: 0;
+			}
+			.info-item dt {
+				color: var(--text-2);
+				font-family: var(--font-hei);
+				font-size: 12.6px;
+			}
+			.info-item dt::before {
+				content: "◆ " / "";
+				color: var(--red);
+				font-size: 10px;
+			}
+			.info-item dd {
+				margin: 0.6px 0 0;
+				font-family: var(--font-ui);
+				font-size: 13.8px;
+				font-weight: bold;
+				overflow-wrap: anywhere;
+			}
+			.empty {
+				color: var(--text-2);
 			}
 
 			.table-scroll {
