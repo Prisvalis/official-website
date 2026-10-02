@@ -28,7 +28,7 @@ const contactHref = locale === "en" ? "/en/contact/" : "/contact/";
 const hasPhone = COMPANY.phone !== "-";
 const hasLine = COMPANY.lineId !== "-";
 const telHref = `tel:${COMPANY.phone.replace(/[^\d+]/g, "")}`;
-const lineHref = `https://line.me/R/ti/p/${encodeURIComponent(COMPANY.lineId)}`;
+const lineHref = COMPANY.lineUrl;
 const instagramHandle = `@${SOCIAL.instagram.split("/").filter(Boolean).pop()}`;
 const cooHref = cooUrl(locale, "/");
 const statusHref = cooUrl(locale, "/#status");
@@ -161,6 +161,10 @@ const nav = [
 									</dd>
 								</div>
 								<div class="info-item">
+									<dt>{t(locale, "contact.info.email")}</dt>
+									<dd><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></dd>
+								</div>
+								<div class="info-item">
 									<dt>{t(locale, "contact.info.line")}</dt>
 									<dd>
 										{
@@ -192,6 +196,9 @@ const nav = [
 									<dd>{t(locale, "contact.info.replyValue")}</dd>
 								</div>
 							</dl>
+							<p class="section-entry">
+								<a href={contactHref}>{t(locale, "contact.heading")}</a>
+							</p>
 						</div>
 					</section>
 				</main>
@@ -247,6 +254,10 @@ const nav = [
 								</dd>
 							</div>
 							<div class="info-item">
+								<dt>{t(locale, "contact.info.email")}</dt>
+								<dd><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></dd>
+							</div>
+							<div class="info-item">
 								<dt>{t(locale, "contact.info.line")}</dt>
 								<dd>
 									{
@@ -263,6 +274,9 @@ const nav = [
 								<dd>{t(locale, "contact.info.replyValue")}</dd>
 							</div>
 						</dl>
+						<p class="section-entry">
+							<a href={contactHref}>{t(locale, "contact.heading")}</a>
+						</p>
 					</section>
 				</aside>
 			</div>
@@ -333,6 +347,22 @@ const nav = [
 			}
 			.empty {
 				color: var(--text-2);
+			}
+			.section-entry {
+				margin: 1px 2px 0;
+				font-family: var(--font-hei);
+				font-size: 14.2px;
+				font-weight: bold;
+			}
+			.section-entry::before {
+				content: "◆ " / "";
+				color: var(--red);
+				font-size: 10px;
+			}
+			.side-box .section-entry {
+				margin: 0;
+				padding: 4.2px 7px 6.4px 7.6px;
+				font-size: 13.6px;
 			}
 
 			.table-scroll {

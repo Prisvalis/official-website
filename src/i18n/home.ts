@@ -118,7 +118,7 @@ export const home: Record<Locale, HomeContent> = {
 
 		contact: {
 			title: "聯絡資訊與服務窗口",
-			body: "洽詢請使用下方所列之服務電話或 LINE 官方帳號即可，不需要事先撰寫規格文件。請將目前的狀況說明清楚，本公司將直接回覆是否可行、大約的規模與費用，也包括「這項工作您自行處理會比較快」這類的答案。如有任何疑問，歡迎隨時洽詢本公司服務窗口，誠摯為您服務！",
+			body: "洽詢請使用下方所列之服務電話、電子郵件信箱或 LINE 官方帳號，亦可前往e化線上聯絡服務專區填寫表單。不需要事先撰寫規格文件。請將目前的狀況說明清楚，本公司將直接回覆是否可行、大約的規模與費用，也包括「這項工作您自行處理會比較快」這類的答案。如有任何疑問，歡迎隨時洽詢本公司服務窗口，誠摯為您服務！",
 		},
 	},
 
@@ -198,7 +198,7 @@ export const home: Record<Locale, HomeContent> = {
 
 		contact: {
 			title: "Contact Information and Service Window",
-			body: "Please enquire by the service telephone or the LINE Official Account listed below. No written specification is required in advance. Simply describe your present situation clearly, and this Company will reply directly as to feasibility, approximate scale and cost, including answers such as “this work would be quicker for you to handle yourself”. Should you have any questions, you are welcome to contact the Service Window of this Company at any time!",
+			body: "Please enquire by the service telephone, email address or LINE Official Account listed below, or proceed to the Online e-Contact Service Section to complete the form. No written specification is required in advance. Simply describe your present situation clearly, and this Company will reply directly as to feasibility, approximate scale and cost, including answers such as “this work would be quicker for you to handle yourself”. Should you have any questions, you are welcome to contact the Service Window of this Company at any time!",
 		},
 	},
 };
