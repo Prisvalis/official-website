@@ -93,8 +93,10 @@ Recipe 規定全站只用 Helvetica，依字級而非字重分層。
 | 中文（全站） | Noto Sans TC（思源黑體），`@fontsource-variable/noto-sans-tc@5.3.0` | 400、500、700 |
 
 ```css
---font-sans: "Helvetica Neue", Helvetica, "Arimo Variable", "Noto Sans TC Variable", "PingFang TC", "Microsoft JhengHei", sans-serif;
+--font-sans: "Helvetica Neue", "Arimo Variable", Helvetica, "Noto Sans TC Variable", "PingFang TC", "Microsoft JhengHei", sans-serif;
 ```
+
+順序是 Helvetica Neue、Arimo、Helvetica：Windows 內建的字體替換會把 `Helvetica` 對應到 Arial，若 Helvetica 排在 Arimo 前面，Windows 上永遠輪不到 Arimo。
 
 `noto-sans-tc` 的 5.3.1 在 2026-10-11 才發布，太新，固定用 5.3.0。Noto Sans TC 依 `unicode-range` 切成多個分片，瀏覽器只下載用到的分片。全站不使用等寬字體與襯線字體。
 

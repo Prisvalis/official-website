@@ -22,7 +22,7 @@
 	--on-bar: #f7f5f1;
 
 	--font-sans:
-		"Helvetica Neue", Helvetica, "Arimo Variable", "Noto Sans TC Variable", "PingFang TC",
+		"Helvetica Neue", "Arimo Variable", Helvetica, "Noto Sans TC Variable", "PingFang TC",
 		"Microsoft JhengHei", sans-serif;
 
 	/* 間距只用 8 的倍數。 */
