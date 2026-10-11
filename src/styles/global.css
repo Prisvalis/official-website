@@ -223,6 +223,8 @@ tbody th {
 /* 左欄標題、右欄內容。桌機上左欄跟著捲動停在頁首下方。 */
 .split {
 	display: grid;
+	/* 單欄時也要指定 minmax(0, 1fr)：預設的 auto 欄會被最寬的子元素（例如寬表格）撐開。 */
+	grid-template-columns: minmax(0, 1fr);
 	gap: var(--s-6);
 }
 @media (min-width: 960px) {
@@ -242,6 +244,7 @@ tbody th {
 }
 .split-body {
 	display: grid;
+	grid-template-columns: minmax(0, 1fr);
 	gap: var(--s-5);
 	align-content: start;
 }
@@ -316,17 +319,17 @@ tbody th {
 	display: inline-flex;
 	align-items: center;
 	gap: var(--s-2);
-	height: 40px;
-	padding-inline: var(--s-4);
+	/* 高度至少 40px；文字長時可以換行，手機上不撐出水平捲軸。 */
+	min-height: 40px;
+	padding: var(--s-2) var(--s-4);
 	border: 1px solid var(--hairline);
 	border-radius: var(--radius-s);
 	background: var(--surface-2);
 	color: var(--text);
 	font-size: 0.9375rem;
 	font-weight: 500;
-	line-height: 1;
+	line-height: 1.2;
 	text-decoration: none;
-	white-space: nowrap;
 	transition:
 		background-color 150ms ease-out,
 		border-color 150ms ease-out;

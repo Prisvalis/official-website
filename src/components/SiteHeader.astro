@@ -205,9 +205,16 @@ const { locale, homeHref, switchHref, nav, navLabel, brandText, back, cta } = As
 		border-right: 1px solid var(--hairline);
 	}
 	.cta {
-		height: 32px;
-		padding-inline: var(--s-3);
+		min-height: 32px;
+		padding: var(--s-1) var(--s-3);
 		font-size: 0.875rem;
+		white-space: nowrap;
+	}
+	/* 手機上頁首放不下；頁面開頭本來就有同一個按鈕。 */
+	@media (max-width: 479.98px) {
+		.cta {
+			display: none;
+		}
 	}
 
 	.tools {

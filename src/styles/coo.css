@@ -14,6 +14,7 @@ main.coo:focus {
 
 .cols {
 	display: grid;
+	grid-template-columns: minmax(0, 1fr);
 	gap: var(--s-5) var(--s-7);
 }
 @media (min-width: 960px) {
@@ -29,6 +30,7 @@ main.coo:focus {
 
 .stack {
 	display: grid;
+	grid-template-columns: minmax(0, 1fr);
 	gap: var(--s-5);
 	align-content: start;
 }
@@ -59,6 +61,7 @@ main.coo:focus {
 }
 .hero-body {
 	display: grid;
+	grid-template-columns: minmax(0, 1fr);
 	gap: var(--s-5);
 	align-content: end;
 }
