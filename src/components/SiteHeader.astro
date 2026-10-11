@@ -1,0 +1,125 @@
+---
+// 全站頁首：logo 靠左、導覽靠右，下方一條粗線。不固定在頂端（brand-spec §8）。
+// 導覽項目由各頁面傳入，連結目標不在這裡決定。
+//
+// 改版過渡期間，首頁先用這個元件；其他頁面在各自的改版階段（#31、#32）換過來後，
+// 舊的 PortalHeader 才會刪除。
+import ThemeToggle from "./ThemeToggle.astro";
+import { COMPANY, type Locale } from "../consts";
+import { t } from "../i18n/ui";
+
+interface NavItem {
+	href: string;
+	label: string;
+	current?: boolean;
+}
+
+interface Props {
+	locale: Locale;
+	homeHref: string;
+	switchHref: string;
+	nav: NavItem[];
+	navLabel?: string;
+}
+
+const { locale, homeHref, switchHref, nav, navLabel } = Astro.props;
+---
+
+<header class="site-header">
+	<div class="wrap bar">
+		<a class="brand" href={homeHref} aria-label={`${COMPANY.nameEn}｜${COMPANY.nameZh}`}>
+			<img class="logo logo-light" src="/logo.svg" alt="" width="297" height="46" />
+			<img class="logo logo-dark" src="/logo-dark.svg" alt="" width="297" height="46" />
+		</a>
+
+		<div class="tools">
+			<a class="lang" href={switchHref} aria-label={t(locale, "switch.aria")}>{t(locale, "switch.to")}</a>
+			<ThemeToggle locale={locale} />
+		</div>
+
+		<nav class="nav" aria-label={navLabel}>
+			<ul>
+				{
+					nav.map((item) => (
+						<li>
+							<a href={item.href} aria-current={item.current ? "page" : undefined}>
+								{item.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+	</div>
+</header>
+
+<style>
+	.site-header {
+		border-bottom: var(--rule-thick) solid var(--rule);
+	}
+
+	/* 第一行 logo 與工具，第二行導覽，全部靠左對齊同一條網格線。 */
+	.bar {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		grid-template-areas:
+			"brand tools"
+			"nav nav";
+		align-items: center;
+		row-gap: var(--s-2);
+		padding-block: var(--s-3) var(--s-2);
+	}
+
+	.brand {
+		grid-area: brand;
+		display: flex;
+	}
+	.logo {
+		width: auto;
+		height: 24px;
+	}
+	.logo-dark,
+	:global(:root[data-theme="dark"]) .logo-light {
+		display: none;
+	}
+	:global(:root[data-theme="dark"]) .logo-dark {
+		display: block;
+	}
+
+	.tools {
+		grid-area: tools;
+		display: flex;
+		align-items: center;
+		gap: var(--s-1);
+	}
+	.lang {
+		font-size: 0.875rem;
+		font-weight: 700;
+	}
+
+	.nav {
+		grid-area: nav;
+	}
+	.nav ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0 var(--s-3);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.nav a {
+		display: inline-block;
+		padding-block: var(--s-1);
+		font-size: 0.875rem;
+		font-weight: 700;
+		text-decoration: none;
+	}
+	.nav a:hover {
+		color: var(--accent);
+	}
+	/* 目前所在頁面：紅色底線。 */
+	.nav a[aria-current="page"] {
+		box-shadow: inset 0 -3px 0 var(--accent);
+	}
+</style>

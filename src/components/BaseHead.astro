@@ -1,6 +1,10 @@
 ---
 // Global <head>: SEO metadata, social cards, hreflang alternates,
 // structured data and a no-flash theme bootstrap. Included on every page.
+// 字體自行託管（brand-spec §4）：Apple 裝置用內建的 Helvetica，其他平台落到 Arimo；
+// 中文用 Noto Sans TC，依 unicode-range 切片，瀏覽器只下載頁面用到的分片。
+import "@fontsource-variable/arimo";
+import "@fontsource-variable/noto-sans-tc";
 import "../styles/global.css";
 import { SITE, COMPANY, SOCIAL, LOCALE_HOME, type Locale } from "../consts";
 import { t } from "../i18n/ui";
@@ -55,8 +59,8 @@ const jsonLd = {
 <meta name="generator" content={Astro.generator} />
 <!-- Site manages its own zh/en switch; suppress the browser's auto-translate prompt -->
 <meta name="google" content="notranslate" />
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#000095" />
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000060" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f5f1" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1e23" />
 
 <!-- Canonical + language alternates (hreflang) -->
 <link rel="canonical" href={canonicalURL} />

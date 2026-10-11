@@ -1,0 +1,104 @@
+---
+// 全站頁尾：上方一條粗線，公司名稱、統一編號、聯絡方式與社群連結排成表格式的欄位，
+// 資料取自 consts.ts。品牌方塊是全站唯一的圖形元素（brand-spec §9-5）。
+//
+// 改版過渡期間，首頁先用這個元件；其他頁面換過來後，舊的 PortalFooter 才會刪除。
+import { COMPANY, SOCIAL, type Locale } from "../consts";
+import { t } from "../i18n/ui";
+
+interface Props {
+	locale: Locale;
+	/** 頁尾的站內連結，由各頁面傳入。 */
+	links?: { href: string; label: string }[];
+}
+
+const { locale, links = [] } = Astro.props;
+const year = new Date().getFullYear();
+const external = t(locale, "link.external");
+---
+
+<footer class="site-footer">
+	<div class="wrap grid">
+		<div class="who">
+			<span class="square" aria-hidden="true"></span>
+			<p class="name">{COMPANY.nameZh}<br />{COMPANY.nameEn}</p>
+			<p>{t(locale, "taxId")} {COMPANY.taxId}</p>
+		</div>
+
+		{
+			links.length > 0 && (
+				<ul class="links">
+					{links.map((l) => (
+						<li>
+							<a href={l.href}>{l.label}</a>
+						</li>
+					))}
+				</ul>
+			)
+		}
+
+		<ul class="links">
+			<li><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></li>
+			<li>
+				<a href={SOCIAL.instagram} target="_blank" rel="me noopener noreferrer">
+					Instagram<span class="sr-only">{external}</span>
+				</a>
+			</li>
+			<li>
+				<a href={SOCIAL.threads} target="_blank" rel="me noopener noreferrer">
+					Threads<span class="sr-only">{external}</span>
+				</a>
+			</li>
+		</ul>
+
+		<p class="copy">© {year} {COMPANY.nameEn} · {t(locale, "rights")}</p>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		padding-block: var(--s-5) var(--s-4);
+		border-top: var(--rule-thick) solid var(--rule);
+		font-size: 0.875rem;
+		line-height: 1.71;
+	}
+	.grid {
+		row-gap: var(--s-4);
+	}
+	@media (min-width: 760px) {
+		.who {
+			grid-column: 1 / span 6;
+		}
+		.links {
+			grid-column: span 3;
+		}
+	}
+	.square {
+		display: block;
+		width: 16px;
+		height: 16px;
+		margin-bottom: var(--s-2);
+		background: var(--accent);
+	}
+	.name {
+		font-weight: 700;
+	}
+	.links {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.links li {
+		padding-block: var(--s-1);
+		border-bottom: var(--rule-thin) solid var(--rule);
+	}
+	.links li:first-child {
+		border-top: var(--rule-thin) solid var(--rule);
+	}
+	.links a {
+		text-decoration: none;
+	}
+	.copy {
+		color: var(--text-2);
+	}
+</style>

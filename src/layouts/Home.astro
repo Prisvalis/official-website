@@ -1,14 +1,14 @@
 ---
 // 首頁。文案全部在 src/i18n/home.ts，這裡只負責結構與版面。
 //
-// 版面依「華國美學」Skill：固定寬度的入口網站外框、三層頁首、左側欄重複導覽、
-// 主欄是一格一格有標題列的框，作品用行政表格，限制用黃底公告。
-// 共用樣式在 styles/global.css。
+// 設計依 docs/brand-spec.md（Vignelli／瑞士國際主義 recipe）。全頁嚴格對齊 12 欄網格：
+// 每個區塊上方一條粗線、左上一個大號紅色編號、內容從第 3 欄開始；資訊一律用表格
+// 或編號清單。整頁只有一條色條標題，放在承接範圍。
+// 共用樣式在 styles/global.css，頁首與頁尾在 SiteHeader、SiteFooter。
 import BaseHead from "../components/BaseHead.astro";
 import MourningNotice from "../components/MourningNotice.astro";
-import PortalHeader from "../components/PortalHeader.astro";
-import PortalFooter from "../components/PortalFooter.astro";
-import WordArt from "../components/WordArt.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 import { COMPANY, LOCALE_HOME_PATH, SOCIAL, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { home } from "../i18n/home";
@@ -35,6 +35,11 @@ const statusHref = cooUrl(locale, "/#status");
 const external = t(locale, "link.external");
 
 const c = home[locale];
+const a = about[locale];
+
+// 開頭下方的公司資料，直接取自沿革頁的登記資料表（統一編號、公司所在地、核准設立日期），
+// 不另外寫一份。沿革頁的表格順序改了，這裡的索引要跟著改。
+const facts = [0, 7, 9].map((i) => a.profile.rows[i]);
 
 const sections = [
 	{ id: "work", label: c.work.title },
@@ -45,10 +50,12 @@ const sections = [
 
 const nav = [
 	...sections.slice(0, 3).map((s) => ({ href: `#${s.id}`, label: s.label })),
-	{ href: ABOUT_PATH[locale], label: about[locale].navLabel },
+	{ href: ABOUT_PATH[locale], label: a.navLabel },
 	{ href: cooHref, label: COO_NAME },
 	{ href: contactHref, label: t(locale, "nav.contact") },
 ];
+
+const no = (i: number) => String(i).padStart(2, "0");
 ---
 
 <!doctype html>
@@ -58,172 +65,74 @@ const nav = [
 	</head>
 	<body>
 		<MourningNotice locale={locale} />
+		<SiteHeader locale={locale} homeHref={LOCALE_HOME_PATH[locale]} switchHref={switchHref} nav={nav} />
 
-		<div class="portal">
-			<PortalHeader
-				locale={locale}
-				homeHref={LOCALE_HOME_PATH[locale]}
-				name={COMPANY.nameZh}
-				switchHref={switchHref}
-				nav={nav}
-			/>
+		<main id="main">
+			<section class="hero">
+				<div class="wrap grid">
+					<h1 class="hero-title">{c.hero.h1}</h1>
+					<p class="lead measure hero-lead">{c.hero.lead}</p>
+					<div class="actions hero-lead">
+						<a class="btn btn-primary" href={contactHref}>{c.hero.ctaPrimary}</a>
+						<a class="btn" href={cooHref}>{c.hero.ctaSecondary}</a>
+					</div>
 
-			<div class="portal-body">
-				<main class="portal-main">
-					<section class="hero-box">
-						<WordArt text={c.hero.h1} />
-						<p class="hero-lead">{c.hero.lead}</p>
-						<div class="actions">
-							<a class="btn btn-primary" href={contactHref}>{c.hero.ctaPrimary}</a>
-							<a class="btn" href={cooHref}>{c.hero.ctaSecondary}</a>
+					<dl class="facts" aria-label={a.profile.title}>
+						{
+							facts.map((f) => (
+								<div>
+									<dt>{f.label}</dt>
+									<dd>{f.value}</dd>
+								</div>
+							))
+						}
+						<div>
+							<dt>{a.navLabel}</dt>
+							<dd><a href={ABOUT_PATH[locale]}>{a.profile.title}</a></dd>
 						</div>
-					</section>
+					</dl>
+				</div>
+			</section>
 
-					<section class="box" id="work">
-						<h2 class="box-title">{c.work.title}</h2>
-						<div class="box-body">
-							<p>{c.work.lead}</p>
+			<section class="section" id="work">
+				<div class="wrap grid">
+					<p class="section-no" aria-hidden="true">{no(1)}</p>
+					<div class="section-body">
+						<h2>{c.work.title}</h2>
+						<p class="measure intro">{c.work.lead}</p>
 
-							<div class="table-scroll">
-								<table>
-									<caption>{c.work.caption}</caption>
-									<thead>
-										<tr>
-											<th scope="col">{c.work.columns.area}</th>
-											<th scope="col">{c.work.columns.approach}</th>
-											<th scope="col">{c.work.columns.reason}</th>
-										</tr>
-									</thead>
-									<tbody>
-										{
-											c.work.rows.map((row) => (
-												<tr>
-													<th scope="row">{row.area}</th>
-													<td>{row.approach}</td>
-													<td>{row.reason}</td>
-												</tr>
-											))
-										}
-									</tbody>
-								</table>
-							</div>
-
-							<div class="notice">
-								<p>
-									{c.work.limits}
-									<a href={statusHref}>{c.work.links.status}</a>
-								</p>
-							</div>
+						<div class="table-scroll">
+							<table>
+								<caption>{c.work.caption}</caption>
+								<thead>
+									<tr>
+										<th scope="col">{c.work.columns.area}</th>
+										<th scope="col">{c.work.columns.approach}</th>
+										<th scope="col">{c.work.columns.reason}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{
+										c.work.rows.map((row) => (
+											<tr>
+												<th scope="row">{row.area}</th>
+												<td>{row.approach}</td>
+												<td>{row.reason}</td>
+											</tr>
+										))
+									}
+								</tbody>
+							</table>
 						</div>
-					</section>
 
-					<section class="box" id="process">
-						<h2 class="box-title">{c.process.title}</h2>
-						<div class="box-body">
-							<ol class="steps">
-								{
-									c.process.steps.map((step) => (
-										<li>
-											<h3>{step.title}</h3>
-											<p>{step.body}</p>
-										</li>
-									))
-								}
-							</ol>
-						</div>
-					</section>
-
-					<section class="box" id="scope">
-						<h2 class="box-title">{c.scope.title}</h2>
-						<div class="box-body scope">
-							{c.scope.body.map((para) => <p>{para}</p>)}
-						</div>
-					</section>
-
-					<section class="box" id="contact">
-						<h2 class="box-title">{c.contact.title}</h2>
-						<div class="box-body">
-							<p>{c.contact.body}</p>
-							<dl class="info-list">
-								<div class="info-item">
-									<dt>{t(locale, "contact.info.phone")}</dt>
-									<dd>
-										{
-											hasPhone ? (
-												<a href={telHref}>{COMPANY.phone}</a>
-											) : (
-												<span class="empty">
-													{COMPANY.phone}
-													<span class="sr-only">{t(locale, "contact.info.pending")}</span>
-												</span>
-											)
-										}
-									</dd>
-								</div>
-								<div class="info-item">
-									<dt>{t(locale, "contact.info.email")}</dt>
-									<dd><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></dd>
-								</div>
-								<div class="info-item">
-									<dt>{t(locale, "contact.info.line")}</dt>
-									<dd>
-										{
-											hasLine ? (
-												<a href={lineHref} target="_blank" rel="noopener noreferrer">
-													{COMPANY.lineId}
-													<span class="sr-only">{external}</span>
-												</a>
-											) : (
-												<span class="empty">
-													{COMPANY.lineId}
-													<span class="sr-only">{t(locale, "contact.info.pending")}</span>
-												</span>
-											)
-										}
-									</dd>
-								</div>
-								<div class="info-item">
-									<dt>{t(locale, "contact.info.instagram")}</dt>
-									<dd>
-										<a href={SOCIAL.instagram} target="_blank" rel="me noopener noreferrer">
-											{instagramHandle}
-											<span class="sr-only">{external}</span>
-										</a>
-									</dd>
-								</div>
-								<div class="info-item">
-									<dt>{t(locale, "contact.info.reply")}</dt>
-									<dd>{t(locale, "contact.info.replyValue")}</dd>
-								</div>
-							</dl>
-							<p class="section-entry">
-								<a href={contactHref}>{t(locale, "contact.heading")}</a>
-							</p>
-							<p class="section-entry">
-								<a href={`${contactHref}#form`}>{t(locale, "contact.form.title")}</a>
+						<div class="notice">
+							<p>
+								{c.work.limits}
+								<a href={statusHref}>{c.work.links.status}</a>
 							</p>
 						</div>
-					</section>
-				</main>
 
-				<aside class="portal-side">
-					<section class="side-box">
-						<h2 class="side-box-title">{COMPANY.nameZh}</h2>
-						<ul>
-							{
-								sections.map((s) => (
-									<li>
-										<a href={`#${s.id}`}>{s.label}</a>
-									</li>
-								))
-							}
-							<li><a href={ABOUT_PATH[locale]}>{about[locale].navLabel}</a></li>
-						</ul>
-					</section>
-
-					<section class="side-box">
-						<h2 class="side-box-title">{COO_NAME}</h2>
-						<ul>
+						<ul class="work-links">
 							<li><a href={cooHref}>{c.work.links.product}</a></li>
 							<li>
 								<a href={APP_URL} target="_blank" rel="noopener noreferrer">
@@ -237,198 +146,274 @@ const nav = [
 										fill="none"
 										stroke="currentColor"
 										stroke-width="2.4"
-										stroke-linecap="round"
-										stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg
+										stroke-linecap="square"><path d="M7 17 17 7M8 7h9v9"></path></svg
 									>
 									<span class="sr-only">{external}</span>
 								</a>
 							</li>
-							<li><a href={statusHref}>{c.work.links.status}</a></li>
 						</ul>
-					</section>
 
-					<section class="side-box">
-						<h2 class="side-box-title">{c.contact.title}</h2>
-						<dl class="info-list">
-							<div class="info-item">
-								<dt>{t(locale, "contact.info.phone")}</dt>
-								<dd>
-									{hasPhone ? <a href={telHref}>{COMPANY.phone}</a> : <span class="empty">{COMPANY.phone}</span>}
-								</dd>
-							</div>
-							<div class="info-item">
-								<dt>{t(locale, "contact.info.email")}</dt>
-								<dd><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></dd>
-							</div>
-							<div class="info-item">
-								<dt>{t(locale, "contact.info.line")}</dt>
-								<dd>
-									{
-										hasLine ? (
-											<a href={lineHref} target="_blank" rel="noopener noreferrer">{COMPANY.lineId}</a>
-										) : (
-											<span class="empty">{COMPANY.lineId}</span>
-										)
-									}
-								</dd>
-							</div>
-							<div class="info-item">
-								<dt>{t(locale, "contact.info.reply")}</dt>
-								<dd>{t(locale, "contact.info.replyValue")}</dd>
-							</div>
-						</dl>
-						<p class="section-entry">
-							<a href={contactHref}>{t(locale, "contact.heading")}</a>
-						</p>
-						<p class="section-entry">
-							<a href={`${contactHref}#form`}>{t(locale, "contact.form.title")}</a>
-						</p>
-					</section>
-				</aside>
-			</div>
+						<!-- v0 佔位：Company of One 的真實介面截圖由站方提供（#26 素材清單）。 -->
+						<div class="placeholder" role="img" aria-label={COO_NAME}>
+							{locale === "en" ? "[Company of One screenshot, 16:9]" : "[Company of One 介面截圖 16:9]"}
+						</div>
+					</div>
+				</div>
+			</section>
 
-			<PortalFooter locale={locale} social />
-		</div>
+			<section class="section" id="process">
+				<div class="wrap grid">
+					<p class="section-no" aria-hidden="true">{no(2)}</p>
+					<div class="section-body">
+						<h2>{c.process.title}</h2>
+						<ol class="steps">
+							{
+								c.process.steps.map((step, i) => (
+									<li>
+										<span class="step-no" aria-hidden="true">
+											{no(i + 1)}
+										</span>
+										<h3>{step.title}</h3>
+										<p>{step.body}</p>
+									</li>
+								))
+							}
+						</ol>
+					</div>
+				</div>
+			</section>
+
+			<section class="section" id="scope">
+				<div class="wrap grid">
+					<p class="section-no" aria-hidden="true">{no(3)}</p>
+					<div class="section-body">
+						<h2 class="bar-title">{c.scope.title}</h2>
+						<div class="prose measure">
+							{c.scope.body.map((para) => <p>{para}</p>)}
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="section" id="contact">
+				<div class="wrap grid">
+					<p class="section-no" aria-hidden="true">{no(4)}</p>
+					<div class="section-body">
+						<h2>{c.contact.title}</h2>
+						<p class="measure intro">{c.contact.body}</p>
+
+						<table class="info">
+							<tbody>
+								<tr>
+									<th scope="row">{t(locale, "contact.info.phone")}</th>
+									<td>
+										{
+											hasPhone ? (
+												<a href={telHref}>{COMPANY.phone}</a>
+											) : (
+												<span class="empty">
+													{COMPANY.phone}
+													<span class="sr-only">{t(locale, "contact.info.pending")}</span>
+												</span>
+											)
+										}
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{t(locale, "contact.info.email")}</th>
+									<td><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></td>
+								</tr>
+								<tr>
+									<th scope="row">{t(locale, "contact.info.line")}</th>
+									<td>
+										{
+											hasLine ? (
+												<a href={lineHref} target="_blank" rel="noopener noreferrer">
+													{COMPANY.lineId}
+													<span class="sr-only">{external}</span>
+												</a>
+											) : (
+												<span class="empty">
+													{COMPANY.lineId}
+													<span class="sr-only">{t(locale, "contact.info.pending")}</span>
+												</span>
+											)
+										}
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{t(locale, "contact.info.instagram")}</th>
+									<td>
+										<a href={SOCIAL.instagram} target="_blank" rel="me noopener noreferrer">
+											{instagramHandle}
+											<span class="sr-only">{external}</span>
+										</a>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{t(locale, "contact.info.reply")}</th>
+									<td>{t(locale, "contact.info.replyValue")}</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<div class="actions">
+							<a class="btn" href={`${contactHref}#form`}>{t(locale, "contact.form.title")}</a>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<SiteFooter
+			locale={locale}
+			links={[
+				{ href: ABOUT_PATH[locale], label: a.navLabel },
+				{ href: cooHref, label: COO_NAME },
+				{ href: contactHref, label: t(locale, "nav.contact") },
+			]}
+		/>
 
 		<style>
-			/* 首頁大框：金色雙線框、淡藍底，像簡報封面。 */
-			.hero-box {
-				position: relative;
-				overflow: hidden;
-				padding: 14.6px 16.2px 16px 15px;
-				border: 3px double #b8860b;
-				background: hsl(220 60% 97%);
+			/* --- 開頭：大標題占 10 欄，導言與按鈕從第 3 欄開始，下方一列公司資料 --- */
+			.hero {
+				padding-block: var(--s-6) var(--s-5);
 			}
-			:global(:root[data-theme="dark"]) .hero-box {
-				border-color: #e0b43a;
-				background: hsl(228 42% 14%);
+			@media (min-width: 760px) {
+				.hero {
+					padding-block: var(--s-7) var(--s-6);
+				}
+				.hero-title {
+					grid-column: 1 / span 10;
+				}
+				.hero-lead {
+					grid-column: 3 / -1;
+				}
 			}
 			.hero-lead {
-				position: relative;
-				margin-top: 12.4px;
-				max-width: 42em;
-				font-size: 15.6px;
-				line-height: 1.75;
+				margin-top: var(--s-4);
 			}
 			.actions {
 				display: flex;
 				flex-wrap: wrap;
-				align-items: center;
-				gap: 8px 13px;
-				margin-top: 13.6px;
+				gap: var(--s-2);
 			}
 
-			/* 服務窗口欄位清單，標籤小字、值粗體，與聯絡頁側欄同一套。 */
-			.info-list {
-				margin: 2px 0 0;
-				padding: 1px 2px 0;
+			/* 公司資料：四欄等寬，上方細線，像站牌上的資訊欄。 */
+			.facts {
+				display: grid;
+				margin: var(--s-6) 0 0;
+				border-top: var(--rule-thin) solid var(--rule);
 			}
-			.side-box .info-list {
-				margin: 0;
-				padding: 5.6px 7px 6.4px 7.6px;
+			@media (min-width: 760px) {
+				.facts {
+					grid-template-columns: repeat(4, minmax(0, 1fr));
+					column-gap: var(--col-gap);
+				}
 			}
-			.info-item {
-				padding: 4.2px 0 4.6px;
-				border-bottom: 1px dashed var(--border);
+			.facts > div {
+				padding-block: var(--s-2);
+				border-bottom: var(--rule-thin) solid var(--rule);
 			}
-			.info-item:last-child {
-				border-bottom: 0;
+			@media (min-width: 760px) {
+				.facts > div {
+					border-bottom: 0;
+				}
 			}
-			.info-item dt {
+			.facts dt {
 				color: var(--text-2);
-				font-family: var(--font-hei);
-				font-size: 12.6px;
+				font-size: 0.875rem;
+				line-height: 1.71;
 			}
-			.info-item dt::before {
-				content: "◆ " / "";
-				color: var(--red);
-				font-size: 10px;
+			.facts dd {
+				margin: 0;
+				font-weight: 700;
 			}
-			.info-item dd {
-				margin: 0.6px 0 0;
-				font-family: var(--font-ui);
-				font-size: 13.8px;
-				font-weight: bold;
+
+			.section-body > * + * {
+				margin-top: var(--s-4);
+			}
+			.intro {
+				font-size: 1.125rem;
+			}
+
+			.table-scroll {
+				overflow-x: auto;
+			}
+			.table-scroll table {
+				min-width: 36em;
+			}
+
+			.work-links {
+				margin-bottom: 0;
+				padding: 0;
+				list-style: none;
+				font-weight: 700;
+			}
+			.work-links li + li {
+				margin-top: var(--s-1);
+			}
+
+			/* --- 流程：編號、標題、說明三欄，細線分隔，看得見的網格 --- */
+			.steps {
+				margin-bottom: 0;
+				padding: 0;
+				list-style: none;
+				border-top: var(--rule-thick) solid var(--rule);
+			}
+			.steps li {
+				display: grid;
+				grid-template-columns: 3rem minmax(0, 1fr);
+				column-gap: var(--col-gap);
+				padding-block: var(--s-3);
+				border-bottom: var(--rule-thin) solid var(--rule);
+			}
+			@media (min-width: 960px) {
+				.steps li {
+					grid-template-columns: 4rem minmax(0, 4fr) minmax(0, 6fr);
+				}
+			}
+			.step-no {
+				grid-row: span 2;
+				color: var(--accent);
+				font-size: 1.5rem;
+				font-weight: 700;
+				line-height: 1.33;
+				font-variant-numeric: tabular-nums;
+			}
+			@media (min-width: 960px) {
+				.step-no {
+					grid-row: auto;
+				}
+			}
+			.steps p {
+				color: var(--text-2);
+			}
+
+			/* --- 承接範圍：色條標題＋單欄散文 --- */
+			.prose {
+				font-size: 1.125rem;
+			}
+			.prose > * + * {
+				margin-top: var(--s-2);
+			}
+
+			/* --- 聯絡：兩欄表格 --- */
+			.info th {
+				width: 30%;
+				color: var(--text-2);
+				font-size: 0.875rem;
+				font-weight: 700;
+			}
+			.info tr:first-child > * {
+				border-top: var(--rule-thick) solid var(--rule);
+			}
+			.info td {
+				font-weight: 700;
 				overflow-wrap: anywhere;
 			}
 			.empty {
 				color: var(--text-2);
-			}
-			.section-entry {
-				margin: 1px 2px 0;
-				font-family: var(--font-hei);
-				font-size: 14.2px;
-				font-weight: bold;
-			}
-			.section-entry::before {
-				content: "◆ " / "";
-				color: var(--red);
-				font-size: 10px;
-			}
-			.side-box .section-entry {
-				margin: 0;
-				padding: 4.2px 7px 6.4px 7.6px;
-				font-size: 13.6px;
-			}
-
-			.table-scroll {
-				position: relative;
-				overflow-x: auto;
-			}
-			.table-scroll table {
-				min-width: 30em;
-			}
-
-			/* 合作方式：一列一格的表格式清單，紅色編號。 */
-			.steps {
-				margin: 0;
-				padding: 0;
-				list-style: none;
-				counter-reset: step;
-				border: 1px solid var(--border);
-			}
-			.steps li {
-				counter-increment: step;
-				display: grid;
-				grid-template-columns: 2.6em minmax(0, 1fr);
-				gap: 1px 8px;
-				padding: 6.8px 9px 7.2px 6px;
-				border-top: 1px solid var(--border);
-			}
-			.steps li:first-child {
-				border-top: 0;
-			}
-			.steps li:nth-child(odd) {
-				background: var(--panel-alt);
-			}
-			.steps li::before {
-				content: counter(step, decimal-leading-zero) / "";
-				grid-row: span 2;
-				color: var(--red);
-				font-family: Arial, sans-serif;
-				font-size: 20px;
-				font-weight: bold;
-				font-style: italic;
-				line-height: 1.1;
-				text-align: center;
-				transform: translateY(0.6px);
-			}
-			.steps h3 {
-				color: var(--roc-blue);
-			}
-			:global(:root[data-theme="dark"]) .steps h3 {
-				color: #ffe45c;
-			}
-
-			/* 承接範圍：三段各一條底色，第二段與第一段只差一點亮度。 */
-			.scope p {
-				padding: 5.4px 7px 6px 8.2px;
-				border-left: 3px solid var(--blue);
-				background: var(--panel-alt);
-			}
-			.scope p:nth-child(2) {
-				background: var(--panel-alt-2);
-				border-left-color: var(--red);
 			}
 		</style>
 	</body>
