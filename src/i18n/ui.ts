@@ -44,6 +44,7 @@ export const ui = {
 		"contact.message": "需求內容詳細說明",
 		"contact.messagePlaceholder": "例如：欲合作之項目、目前遭遇之問題、預計時程等，請盡量詳細填寫",
 		"contact.submit": "確認送出",
+		"contact.submitting": "送出中…",
 		"contact.sending": "資料傳送中，請稍候…",
 		"contact.privacy":
 			"【個人資料保護說明】表單送出後，填寫內容將寄送至本公司信箱，並記錄您的來源 IP 與國家，以防範不當使用。上述資料不會用於其他用途，亦不會提供予任何第三方，請安心使用。",
@@ -98,6 +99,7 @@ export const ui = {
 		"contact.message": "Detailed Description of Requirements",
 		"contact.messagePlaceholder": "For example: the project you wish to cooperate on, problems currently encountered, expected timeline. Please be as detailed as possible.",
 		"contact.submit": "Confirm and Submit",
+		"contact.submitting": "Sending…",
 		"contact.sending": "Transmitting data, please wait…",
 		"contact.privacy":
 			"PERSONAL DATA PROTECTION STATEMENT: Upon submission, the form content will be sent to the mailbox of this Company, and your source IP and country will be recorded to prevent misuse. This data will not be used for any other purpose and will not be provided to any third party. Please use this service with confidence.",

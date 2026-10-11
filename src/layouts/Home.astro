@@ -293,11 +293,6 @@ const no = (i: number) => String(i).padStart(2, "0");
 			.hero-lead {
 				margin-top: var(--s-4);
 			}
-			.actions {
-				display: flex;
-				flex-wrap: wrap;
-				gap: var(--s-2);
-			}
 
 			/* 公司資料：四欄等寬，上方細線，像站牌上的資訊欄。 */
 			.facts {
@@ -330,19 +325,10 @@ const no = (i: number) => String(i).padStart(2, "0");
 				font-weight: 700;
 			}
 
-			.section-body > * + * {
-				margin-top: var(--s-4);
-			}
 			.intro {
 				font-size: 1.125rem;
 			}
 
-			.table-scroll {
-				overflow-x: auto;
-			}
-			.table-scroll table {
-				min-width: 36em;
-			}
 
 			.work-links {
 				margin-bottom: 0;
@@ -391,12 +377,6 @@ const no = (i: number) => String(i).padStart(2, "0");
 			}
 
 			/* --- 承接範圍：色條標題＋單欄散文 --- */
-			.prose {
-				font-size: 1.125rem;
-			}
-			.prose > * + * {
-				margin-top: var(--s-2);
-			}
 
 			/* --- 聯絡：兩欄表格 --- */
 			.info th {

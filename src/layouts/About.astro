@@ -1,12 +1,14 @@
 ---
 // 公司沿革。文案與登記資料在 src/i18n/about.ts，這裡只負責結構。
-// 沿用首頁的入口網站外框（styles/global.css），內容以行政表格為主。
+//
+// 設計依 docs/brand-spec.md（Vignelli／瑞士國際主義 recipe）。與首頁同一套網格：
+// 每個段落上方一條粗線、左上大號紅色編號、內容從第 3 欄開始；登記資料一律用表格。
+// 整頁的色條標題放在公司基本資料。共用樣式在 styles/global.css。
 import BaseHead from "../components/BaseHead.astro";
 import MourningNotice from "../components/MourningNotice.astro";
-import PortalHeader from "../components/PortalHeader.astro";
-import PortalFooter from "../components/PortalFooter.astro";
-import WordArt from "../components/WordArt.astro";
-import { COMPANY, SITE, LOCALE_HOME_PATH, type Locale } from "../consts";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import { SITE, LOCALE_HOME_PATH, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { cooUrl, COO_NAME } from "../i18n/coo";
 import { about, ABOUT_PATH, FINDBIZ_URL, ETAX_URL } from "../i18n/about";
@@ -43,184 +45,214 @@ const nav = [
 	{ href: cooUrl(locale, "/"), label: COO_NAME },
 	{ href: contactHref, label: t(locale, "nav.contact") },
 ];
+
+const no = (i: number) => String(i).padStart(2, "0");
 ---
 
 <!doctype html>
 <html lang={t(locale, "html.lang")}>
 	<head>
-		<BaseHead
-			locale={locale}
-			title={c.metaTitle}
-			description={c.metaDescription}
-			alternates={alternates}
-		/>
+		<BaseHead locale={locale} title={c.metaTitle} description={c.metaDescription} alternates={alternates} />
 	</head>
 	<body>
 		<MourningNotice locale={locale} />
+		<SiteHeader locale={locale} homeHref={homeHref} switchHref={ABOUT_PATH[otherLocale]} nav={nav} />
 
-		<div class="portal">
-			<PortalHeader
-				locale={locale}
-				homeHref={homeHref}
-				name={COMPANY.nameZh}
-				switchHref={ABOUT_PATH[otherLocale]}
-				nav={nav}
-			/>
+		<main id="main">
+			<header class="page-head">
+				<div class="wrap grid">
+					<h1>{c.h1}</h1>
+					<p class="lead measure after-title">{c.lead}</p>
+					<ul class="toc after-title">
+						{
+							sections.map((s, i) => (
+								<li>
+									<a href={`#${s.id}`}>
+										{no(i + 1)} {s.label}
+									</a>
+								</li>
+							))
+						}
+					</ul>
+				</div>
+			</header>
 
-			<div class="portal-body">
-				<main class="portal-main">
-					<section class="about-head">
-						<WordArt text={c.h1} />
-						<p class="lead">{c.lead}</p>
-					</section>
-
-					<section class="box" id="origin">
-						<h2 class="box-title">{c.origin.title}</h2>
-						<div class="box-body">
+			<section class="section" id="origin">
+				<div class="wrap grid">
+					<p class="section-no" aria-hidden="true">{no(1)}</p>
+					<div class="section-body">
+						<h2>{c.origin.title}</h2>
+						<div class="prose measure">
 							{c.origin.body.map((para) => <p>{para}</p>)}
 						</div>
-					</section>
+					</div>
+				</div>
+			</section>
 
-					<section class="box" id="naming">
-						<h2 class="box-title">{c.naming.title}</h2>
-						<div class="box-body">
-							<p>{c.naming.zh}</p>
-							<div class="name-card">
-								<p class="name-word" lang="en">Prisvalis</p>
+			<section class="section" id="naming">
+				<div class="wrap grid">
+					<p class="section-no" aria-hidden="true">{no(2)}</p>
+					<div class="section-body">
+						<h2>{c.naming.title}</h2>
+						<p class="measure">{c.naming.zh}</p>
+						<div class="name-block">
+							<p class="name-word" lang="en">Prisvalis</p>
+							<div class="measure">
 								{c.naming.en.map((para) => <p>{para}</p>)}
 							</div>
-							<div class="table-scroll">
-								<table>
-									<caption>{c.naming.caption}</caption>
-									<thead>
-										<tr>
-											<th scope="col">{c.naming.colRoot}</th>
-											<th scope="col">{c.naming.colOrigin}</th>
-											<th scope="col">{c.naming.colMeaning}</th>
-										</tr>
-									</thead>
-									<tbody>
-										{
-											c.naming.roots.map((row) => (
+						</div>
+						<div class="table-scroll">
+							<table>
+								<caption>{c.naming.caption}</caption>
+								<thead>
+									<tr>
+										<th scope="col">{c.naming.colRoot}</th>
+										<th scope="col">{c.naming.colOrigin}</th>
+										<th scope="col">{c.naming.colMeaning}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{
+										c.naming.roots.map((row) => (
+											<tr>
+												<th scope="row" lang={row.lang}>
+													{row.root}
+												</th>
+												<td>{row.origin}</td>
+												<td>{row.meaning}</td>
+											</tr>
+										))
+									}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="section" id="vision">
+				<div class="wrap grid">
+					<p class="section-no" aria-hidden="true">{no(3)}</p>
+					<div class="section-body">
+						<h2>{c.vision.title}</h2>
+						<p class="slogan measure">{c.vision.lead}</p>
+						<ol class="rule-list points">
+							{c.vision.points.map((point, i) => (
+								<li>
+									<span class="point-no" aria-hidden="true">{no(i + 1)}</span>
+									{point}
+								</li>
+							))}
+						</ol>
+					</div>
+				</div>
+			</section>
+
+			<section class="section" id="timeline">
+				<div class="wrap grid">
+					<p class="section-no" aria-hidden="true">{no(4)}</p>
+					<div class="section-body">
+						<h2>{c.timeline.title}</h2>
+						<div class="table-scroll">
+							<table class="narrow">
+								<caption>{c.timeline.caption}</caption>
+								<thead>
+									<tr>
+										<th scope="col">{c.timeline.colDate}</th>
+										<th scope="col">{c.timeline.colEvent}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{
+										c.timeline.rows.map((row) => (
+											<tr>
+												<th scope="row" class="label-col">{row.label}</th>
+												<td>{row.value}</td>
+											</tr>
+										))
+									}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="section" id="profile">
+				<div class="wrap grid">
+					<p class="section-no" aria-hidden="true">{no(5)}</p>
+					<div class="section-body">
+						<h2 class="bar-title">{c.profile.title}</h2>
+						<div class="table-scroll">
+							<table class="narrow">
+								<caption>{c.profile.caption}</caption>
+								<thead>
+									<tr>
+										<th scope="col">{c.profile.colItem}</th>
+										<th scope="col">{c.profile.colValue}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{
+										c.profile.rows.map((row) => (
+											<tr>
+												<th scope="row" class="label-col">{row.label}</th>
+												<td>{row.value}</td>
+											</tr>
+										))
+									}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="section" id="business">
+				<div class="wrap grid">
+					<p class="section-no" aria-hidden="true">{no(6)}</p>
+					<div class="section-body">
+						<h2>{c.business.title}</h2>
+						{
+							[
+								{ caption: c.business.captionCompany, rows: c.business.company },
+								{ caption: c.business.captionTax, rows: c.business.tax },
+							].map((group) => (
+								<div class="table-scroll">
+									<table class="narrow">
+										<caption>{group.caption}</caption>
+										<thead>
+											<tr>
+												<th scope="col">{c.business.colCode}</th>
+												<th scope="col">{c.business.colName}</th>
+											</tr>
+										</thead>
+										<tbody>
+											{group.rows.map((row) => (
 												<tr>
-													<th scope="row" class="root" lang={row.lang}>
-														{row.root}
+													<th scope="row" class="code">
+														{row.code}
 													</th>
-													<td>{row.origin}</td>
-													<td>{row.meaning}</td>
+													<td>{row.name}</td>
 												</tr>
-											))
-										}
-									</tbody>
-								</table>
-							</div>
+											))}
+										</tbody>
+									</table>
+								</div>
+							))
+						}
+						<div class="notice">
+							<p>{c.business.note}</p>
 						</div>
-					</section>
+					</div>
+				</div>
+			</section>
 
-					<section class="box" id="vision">
-						<h2 class="box-title">{c.vision.title}</h2>
-						<div class="box-body">
-							<p class="slogan">{c.vision.lead}</p>
-							<ul class="vision-points">
-								{c.vision.points.map((point) => <li>{point}</li>)}
-							</ul>
-						</div>
-					</section>
-
-					<section class="box" id="timeline">
-						<h2 class="box-title">{c.timeline.title}</h2>
-						<div class="box-body">
-							<div class="table-scroll">
-								<table>
-									<caption>{c.timeline.caption}</caption>
-									<thead>
-										<tr>
-											<th scope="col">{c.timeline.colDate}</th>
-											<th scope="col">{c.timeline.colEvent}</th>
-										</tr>
-									</thead>
-									<tbody>
-										{
-											c.timeline.rows.map((row) => (
-												<tr>
-													<th scope="row" class="date">{row.label}</th>
-													<td>{row.value}</td>
-												</tr>
-											))
-										}
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</section>
-
-					<section class="box" id="profile">
-						<h2 class="box-title">{c.profile.title}</h2>
-						<div class="box-body">
-							<div class="table-scroll">
-								<table>
-									<caption>{c.profile.caption}</caption>
-									<thead>
-										<tr>
-											<th scope="col">{c.profile.colItem}</th>
-											<th scope="col">{c.profile.colValue}</th>
-										</tr>
-									</thead>
-									<tbody>
-										{
-											c.profile.rows.map((row) => (
-												<tr>
-													<th scope="row">{row.label}</th>
-													<td>{row.value}</td>
-												</tr>
-											))
-										}
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</section>
-
-					<section class="box" id="business">
-						<h2 class="box-title">{c.business.title}</h2>
-						<div class="box-body">
-							{
-								[
-									{ caption: c.business.captionCompany, rows: c.business.company },
-									{ caption: c.business.captionTax, rows: c.business.tax },
-								].map((group) => (
-									<div class="table-scroll">
-										<table>
-											<caption>{group.caption}</caption>
-											<thead>
-												<tr>
-													<th scope="col">{c.business.colCode}</th>
-													<th scope="col">{c.business.colName}</th>
-												</tr>
-											</thead>
-											<tbody>
-												{group.rows.map((row) => (
-													<tr>
-														<th scope="row" class="code">
-															{row.code}
-														</th>
-														<td>{row.name}</td>
-													</tr>
-												))}
-											</tbody>
-										</table>
-									</div>
-								))
-							}
-							<div class="notice">
-								<p>{c.business.note}</p>
-							</div>
-						</div>
-					</section>
-
-					<div class="notice source">
+			<section class="section">
+				<div class="wrap grid">
+					<div class="section-body source">
 						<p>{c.source.text}</p>
-						<ul>
+						<ul class="rule-list">
 							<li>
 								<a href={FINDBIZ_URL} target="_blank" rel="noopener noreferrer">
 									{c.source.findbiz}
@@ -235,154 +267,73 @@ const nav = [
 							</li>
 						</ul>
 					</div>
-				</main>
+				</div>
+			</section>
+		</main>
 
-				<aside class="portal-side">
-					<section class="side-box">
-						<h2 class="side-box-title">{c.navLabel}</h2>
-						<ul>
-							{
-								sections.map((s) => (
-									<li>
-										<a href={`#${s.id}`}>{s.label}</a>
-									</li>
-								))
-							}
-						</ul>
-					</section>
-
-					<section class="side-box">
-						<h2 class="side-box-title">{COMPANY.nameZh}</h2>
-						<ul>
-							<li><a href={homeHref}>{t(locale, "contact.back")}</a></li>
-							<li><a href={cooUrl(locale, "/")}>{COO_NAME}</a></li>
-							<li><a href={contactHref}>{t(locale, "nav.contact")}</a></li>
-						</ul>
-					</section>
-				</aside>
-			</div>
-
-			<PortalFooter locale={locale} social />
-		</div>
+		<SiteFooter
+			locale={locale}
+			links={[
+				{ href: homeHref, label: t(locale, "contact.back") },
+				{ href: cooUrl(locale, "/"), label: COO_NAME },
+				{ href: contactHref, label: t(locale, "nav.contact") },
+			]}
+		/>
 
 		<style>
-			/* 頁首框：與首頁同一種金色雙線，內距各自不同。 */
-			.about-head {
-				position: relative;
-				overflow: hidden;
-				padding: 13.4px 15.2px 14.6px 14px;
-				border: 3px double #b8860b;
-				background: hsl(220 58% 97.2%);
-			}
-			:global(:root[data-theme="dark"]) .about-head {
-				border-color: #e0b43a;
-				background: hsl(228 42% 14%);
-			}
-			.lead {
-				position: relative;
-				margin-top: 10.6px;
-				max-width: 44em;
-				font-size: 15.4px;
-				line-height: 1.75;
-			}
-
-			/* 願景：大標語，紅色粗體加文字陰影，像簡報封面。 */
-			.slogan {
-				padding: 6.6px 9px 7.4px;
-				border: 1px solid #b8860b;
-				background: hsl(48 100% 94%);
-				color: #a00015;
-				font-family: var(--font-hei);
-				font-size: 18.8px;
-				font-weight: bold;
-				text-shadow: 1px 1px 0 #fff;
-			}
-			:global(:root[data-theme="dark"]) .slogan {
-				border-color: #e0b43a;
-				background: hsl(40 40% 14%);
-				color: #ffe45c;
-				text-shadow: 1px 1px 0 #000;
-			}
-			.vision-points {
-				margin: 0;
-				padding: 0;
-				list-style: none;
-			}
-			.vision-points li {
-				padding: 4.2px 4px 4.6px 1.4em;
-				border-bottom: 1px dashed var(--border);
-				text-indent: -1.2em;
-				font-weight: bold;
-			}
-			.vision-points li::before {
-				content: "★ " / "";
-				color: var(--red);
-			}
-
-			/* 英文名稱說明：淡藍底加金框，名稱本身用拉寬傾斜的大字。 */
-			.name-card {
-				padding: 7.4px 10.2px 8.6px 9.6px;
-				border: 1px solid #b8860b;
-				border-left-width: 5px;
-				background: hsl(220 60% 96.4%);
-			}
-			:global(:root[data-theme="dark"]) .name-card {
-				border-color: #e0b43a;
-				background: hsl(228 40% 18%);
-			}
-			.name-card > * + * {
-				margin-top: 6.2px;
+			/* 英文名稱：一個大字，下方細線，後面接說明。 */
+			.name-block {
+				padding-block: var(--s-3);
+				border-top: var(--rule-thick) solid var(--rule);
+				border-bottom: var(--rule-thin) solid var(--rule);
 			}
 			.name-word {
-				color: var(--roc-blue);
-				font-family: Georgia, "Times New Roman", serif;
-				font-size: 26px;
-				font-style: italic;
-				font-weight: bold;
-				letter-spacing: 0.06em;
-				text-shadow: 1px 1px 0 #fff, 2px 2px 0 #b8c3dc;
-				transform: scaleX(1.06);
-				transform-origin: left center;
+				font-size: clamp(2.5rem, 6vw, 4.5rem);
+				font-weight: 700;
+				line-height: 1.1;
+				letter-spacing: -0.01em;
 			}
-			:global(:root[data-theme="dark"]) .name-word {
-				color: #ffe45c;
-				text-shadow: 1px 1px 0 #000, 2px 2px 0 #1b2240;
+			.name-block .measure {
+				margin-top: var(--s-2);
 			}
-			th.root {
-				font-family: Georgia, "Times New Roman", serif;
-				font-style: italic;
-				white-space: nowrap;
+			.name-block .measure > * + * {
+				margin-top: var(--s-1);
 			}
 
-			.table-scroll {
-				position: relative;
-				overflow-x: auto;
+			/* 願景：一句大字，下面是編號清單。 */
+			.slogan {
+				font-size: 1.5rem;
+				font-weight: 700;
+				line-height: 1.33;
 			}
-			.table-scroll + .table-scroll {
-				margin-top: 12.4px;
+			.points li {
+				display: grid;
+				grid-template-columns: 3rem minmax(0, 1fr);
+				column-gap: var(--col-gap);
+				font-weight: 700;
 			}
-			.table-scroll table {
-				min-width: 22em;
+			.point-no {
+				color: var(--accent);
+				font-variant-numeric: tabular-nums;
 			}
-			/* 日期與代碼欄不斷行，讓內容欄吃掉剩下的寬度。 */
-			th.date,
-			th.code {
-				white-space: nowrap;
-				font-family: var(--font-ui);
-			}
-			#timeline th.date {
-				white-space: normal;
-				min-width: 9em;
-				width: 30%;
-			}
-			#profile tbody th {
+
+			.label-col {
 				width: 34%;
 			}
+			.code {
+				white-space: nowrap;
+				font-variant-numeric: tabular-nums;
+			}
 
-			.source ul {
-				margin: 5px 0 0;
-				padding-left: 1.4em;
-				background: none;
+			.source {
+				color: var(--text-2);
+				font-size: 0.875rem;
+				line-height: 1.71;
+			}
+			@media (min-width: 760px) {
+				.source {
+					grid-column: 3 / -1;
+				}
 			}
 		</style>
 	</body>

@@ -233,6 +233,86 @@ tbody th {
 	line-height: 1.6;
 }
 
+/* 子頁開頭：大標題占 10 欄，導言從第 3 欄開始。 */
+.page-head {
+	padding-block: var(--s-6) var(--s-5);
+}
+@media (min-width: 760px) {
+	.page-head {
+		padding-block: var(--s-7) var(--s-6);
+	}
+	.page-head h1 {
+		grid-column: 1 / span 10;
+	}
+	.page-head .after-title {
+		grid-column: 3 / -1;
+	}
+}
+.page-head .after-title {
+	margin-top: var(--s-4);
+}
+
+/* 頁內目錄：一列粗體連結，上方細線。 */
+.toc {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0 var(--s-3);
+	margin: 0;
+	padding: var(--s-1) 0 0;
+	border-top: var(--rule-thin) solid var(--rule);
+	list-style: none;
+	font-size: 0.875rem;
+	font-weight: 700;
+}
+.toc a {
+	display: inline-block;
+	padding-block: var(--s-1);
+	text-decoration: none;
+}
+
+.actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--s-2);
+}
+
+/* 區塊內容的垂直節奏。 */
+.section-body > * + * {
+	margin-top: var(--s-4);
+}
+
+/* 寬表格在窄螢幕上橫向捲動，不撐開頁面。position: relative 不能拿掉：
+   儲存格裡的 .sr-only 是絕對定位，沒有它就會以整頁為基準，把頁面撐寬。 */
+.table-scroll {
+	position: relative;
+	overflow-x: auto;
+}
+.table-scroll table {
+	min-width: 36em;
+}
+.table-scroll table.narrow {
+	min-width: 0;
+}
+
+/* 細線分隔的清單：每一項之間一條細線，上方一條粗線。 */
+.rule-list {
+	margin: 0;
+	padding: 0;
+	border-top: var(--rule-thick) solid var(--rule);
+	list-style: none;
+}
+.rule-list > li {
+	padding-block: var(--s-2);
+	border-bottom: var(--rule-thin) solid var(--rule);
+}
+
+.prose {
+	font-size: 1.125rem;
+}
+.prose > * + * {
+	margin-top: var(--s-2);
+}
+
 /* --- 小元件 ---------------------------------------------------------- */
 
 .btn {

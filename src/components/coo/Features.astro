@@ -1,6 +1,5 @@
 ---
 import CoO from "../../layouts/CoO.astro";
-import WordArt from "../WordArt.astro";
 import type { Locale } from "../../consts";
 import { coo, cooUrl, APP_URL } from "../../i18n/coo";
 
@@ -15,7 +14,7 @@ const c = coo[locale].features;
 <CoO locale={locale} page="features">
 	<section class="hero">
 		<div class="wrap cols">
-			<WordArt text={c.h1} />
+			<h1 class="rise">{c.h1}</h1>
 			<div class="hero-body">
 				<p class="lead">{c.lead}</p>
 				<div class="note">
@@ -53,7 +52,7 @@ const c = coo[locale].features;
 	}
 
 	<section class="section">
-		<div class="wrap cols cols-head">
+		<div class="wrap cols">
 			<h2>{c.ctaTitle}</h2>
 			<div class="stack">
 				<p class="secondary">{c.ctaBody}</p>

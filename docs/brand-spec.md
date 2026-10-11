@@ -196,7 +196,7 @@ Apple 裝置內建 Helvetica Neue，但 Windows 與 Android 沒有。Helvetica �
 | Logo（亮底用） | `public/logo.svg` | 已有 |
 | Logo（暗底用） | `public/logo-dark.svg` | 已有 |
 | Favicon | `public/favicon.svg`、`favicon-32.png`、`favicon-180.png` | 已有；favicon 自帶 12px 圓角，屬於 logo 素材，維持原樣 |
-| 社群分享圖 | `public/og.svg`、`public/og.png` | 華國美學版本，#33 重做 |
+| 社群分享圖 | `public/og.svg`、`public/og.png` | 已依本規格重做（#33）；改 SVG 後要重新輸出 1200×630 的 PNG |
 | CoO 介面截圖 | 預計放 `public/coo/` | **缺，需站方提供** |
 | GPU 機器實拍 | 未定 | **缺，需站方提供** |
 | 具體案例 | — | **缺，需站方提供** |

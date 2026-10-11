@@ -56,6 +56,17 @@ Skill 預設的產出是單一 HTML 檔，本站是 Astro。以下 Skill 規則*
 3. `docs/brand-spec.md`。
 4. `web-design-engineer` Skill 的一般規則。
 
+## 分支與環境
+
+| 分支 | 環境 | 設計 |
+| :-- | :-- | :-- |
+| `main` | prod（<https://www.prisvalis.com>） | Linear 版，依 `main` 上的 `docs/brand-spec.md` |
+| `dev` | dev | Vignelli／瑞士風版，依 `dev` 上的 `docs/brand-spec.md` |
+
+- 兩條分支長期並存，**不互相合併**。兩邊都需要的修改（例如文案）分別 cherry-pick 過去。
+- 兩邊的 `docs/brand-spec.md` 內容不同，動版面前先確認自己在哪條分支上。
+- `dev` 的 `wrangler.json` 中 `name` 必須維持 `official-website-dev`；`main` 是 `official-website-prod`。
+
 ## 測試
 
 不要在本機執行專案。建置、型別檢查與預覽一律在測試機 net2 上進行，步驟見 [README.md](README.md)「測試環境」一節。
