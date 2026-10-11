@@ -283,8 +283,10 @@ tbody th {
 	gap: var(--s-3);
 }
 
-/* 寬表格在窄螢幕上橫向捲動，不撐開頁面。 */
+/* 寬表格在窄螢幕上橫向捲動，不撐開頁面。position: relative 不能拿掉：
+   儲存格裡的 .sr-only 是絕對定位，沒有它就會以整頁為基準，把頁面撐寬。 */
 .table-scroll {
+	position: relative;
 	overflow-x: auto;
 }
 .table-scroll table {

@@ -99,16 +99,17 @@ const { locale, homeHref, switchHref, nav, navLabel, brandText, back, cta } = As
 
 	.bar {
 		display: grid;
-		grid-template-columns: auto 1fr auto;
+		grid-template-columns: minmax(0, 1fr) auto;
 		grid-template-areas:
-			"brand . tools"
-			"nav nav nav";
+			"brand tools"
+			"nav nav";
 		align-items: center;
 		column-gap: var(--s-5);
 	}
 	/* 導覽文字沿用各區塊標題，偏長，1200px 以上才放得進同一行。 */
 	@media (min-width: 1200px) {
 		.bar {
+			grid-template-columns: auto minmax(0, 1fr) auto;
 			grid-template-areas: "brand nav tools";
 			height: 64px;
 		}
