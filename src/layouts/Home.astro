@@ -12,7 +12,7 @@ import SiteFooter from "../components/SiteFooter.astro";
 import { COMPANY, LOCALE_HOME_PATH, SOCIAL, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { home } from "../i18n/home";
-import { cooUrl, APP_URL, COO_NAME } from "../i18n/coo";
+import { coo, cooUrl, APP_URL, COO_NAME } from "../i18n/coo";
 import { about, ABOUT_PATH } from "../i18n/about";
 
 interface Props {
@@ -153,10 +153,16 @@ const nav = [
 							</p>
 						</div>
 
-						<!-- v0 佔位：Company of One 的真實介面截圖由站方提供（#26 素材清單）。 -->
-						<div class="placeholder" role="img" aria-label={COO_NAME}>
-							{locale === "en" ? "[Company of One screenshot, 16:9]" : "[Company of One 介面截圖 16:9]"}
-						</div>
+						<!-- Company of One 的營運總覽，與 CoO 產品首頁開頭同一張截圖。 -->
+						<img
+							class="shot"
+							src="/coo/dashboard.png"
+							alt={coo[locale].home.heroShotAlt}
+							width="2557"
+							height="1226"
+							loading="lazy"
+							decoding="async"
+						/>
 					</div>
 				</div>
 			</section>
