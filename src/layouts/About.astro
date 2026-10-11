@@ -8,6 +8,7 @@ import BaseHead from "../components/BaseHead.astro";
 import MourningNotice from "../components/MourningNotice.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import Phrase from "../components/Phrase.astro";
 import { SITE, LOCALE_HOME_PATH, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { cooUrl, COO_NAME } from "../i18n/coo";
@@ -59,7 +60,7 @@ const nav = [
 		<main id="main">
 			<header class="page-head">
 				<div class="wrap">
-					<h1 class="rise">{c.h1}</h1>
+					<h1 class="rise"><Phrase text={c.h1} /></h1>
 					<p class="lead measure rise rise-2">{c.lead}</p>
 					<ul class="toc rise rise-3">
 						{

@@ -1,12 +1,13 @@
 ---
 // Company of One 產品首頁。文案在 src/i18n/coo.ts，樣式在 styles/coo.css。
 //
-// 產品頁的主角是產品本身（brand-spec §9-5）。開頭放的是站方提供的真實截圖
-// （public/coo/dashboard.png，營運總覽）；其他畫面還沒有截圖，放標明的佔位，
+// 產品頁的主角是產品本身（brand-spec §9-5）。開頭放的是站方提供的真實截圖，
+// 從 public/coo/dashboard.png 裁出營運總覽的卡片區（dashboard-overview.png）；其他畫面還沒有截圖，放標明的佔位，
 // 不用 HTML 拼出假介面、不放虛構的金額。佔位的標題沿用 coo.ts 裡原本示意畫面的名稱，
 // 截圖到了把 src、width、height 傳給 Shot 即可。
 import CoO from "../../layouts/CoO.astro";
 import Shot from "./Shot.astro";
+import Phrase from "../Phrase.astro";
 import type { Locale } from "../../consts";
 import { coo, cooUrl, APP_URL, COO_NAME } from "../../i18n/coo";
 
@@ -22,7 +23,7 @@ const c = coo[locale].home;
 	<section class="hero">
 		<div class="wrap">
 			<div class="cols">
-				<h1 class="rise">{c.h1}</h1>
+				<h1 class="rise"><Phrase text={c.h1} /></h1>
 				<div class="hero-body">
 					<p class="lead rise rise-2">{c.lead}</p>
 					<div class="actions rise rise-3">
@@ -36,9 +37,9 @@ const c = coo[locale].home;
 				locale={locale}
 				label={COO_NAME}
 				aria={c.heroShotAlt}
-				src="/coo/dashboard.png"
-				width={2557}
-				height={1226}
+				src="/coo/dashboard-overview.png"
+				width={1374}
+				height={470}
 			/>
 		</div>
 	</section>

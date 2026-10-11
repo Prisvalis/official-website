@@ -9,10 +9,11 @@ import BaseHead from "../components/BaseHead.astro";
 import MourningNotice from "../components/MourningNotice.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import Phrase from "../components/Phrase.astro";
 import { COMPANY, LOCALE_HOME_PATH, SOCIAL, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { home } from "../i18n/home";
-import { cooUrl, APP_URL, COO_NAME } from "../i18n/coo";
+import { coo, cooUrl, APP_URL, COO_NAME } from "../i18n/coo";
 import { about, ABOUT_PATH } from "../i18n/about";
 
 interface Props {
@@ -69,7 +70,7 @@ const nav = [
 			<section class="hero">
 				<div class="wrap hero-grid">
 					<div class="hero-main">
-						<h1 class="rise">{c.hero.h1}</h1>
+						<h1 class="rise"><Phrase text={c.hero.h1} /></h1>
 						<p class="lead measure rise rise-2">{c.hero.lead}</p>
 						<div class="actions rise rise-3">
 							<a class="btn btn-primary" href={contactHref}>{c.hero.ctaPrimary}</a>
@@ -153,10 +154,16 @@ const nav = [
 							</p>
 						</div>
 
-						<!-- v0 佔位：Company of One 的真實介面截圖由站方提供（#26 素材清單）。 -->
-						<div class="placeholder" role="img" aria-label={COO_NAME}>
-							{locale === "en" ? "[Company of One screenshot, 16:9]" : "[Company of One 介面截圖 16:9]"}
-						</div>
+						<!-- Company of One 的營運總覽，與 CoO 產品首頁開頭同一張截圖。 -->
+						<img
+							class="shot"
+							src="/coo/dashboard-overview.png"
+							alt={coo[locale].home.heroShotAlt}
+							width="1374"
+							height="470"
+							loading="lazy"
+							decoding="async"
+						/>
 					</div>
 				</div>
 			</section>

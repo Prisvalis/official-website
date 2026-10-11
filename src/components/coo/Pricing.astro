@@ -1,5 +1,6 @@
 ---
 import CoO from "../../layouts/CoO.astro";
+import Phrase from "../Phrase.astro";
 import type { Locale } from "../../consts";
 import {
 	coo,
@@ -52,7 +53,7 @@ const quotaKeys = Object.keys(data.quotaLabels);
 <CoO locale={locale} page="pricing">
 	<section class="hero">
 		<div class="wrap cols">
-			<h1 class="rise">{c.h1}</h1>
+			<h1 class="rise"><Phrase text={c.h1} /></h1>
 			<div class="hero-body">
 				<p class="lead">
 					{c.leadA}<strong>{c.leadQuota}</strong>{c.leadAnd}<strong>{c.leadScope}</strong>{c.leadB}

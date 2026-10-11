@@ -119,11 +119,11 @@ const zhHant = {
 		},
 	},
 	home: {
-		h1: "一個人的公司，也要有一間公司該有的後台",
+		h1: "一個人的公司，也要有|一間公司|該有的後台",
 		lead: "報價、訂單、進銷存、電子發票、營業稅申報，全部在同一個地方完成。不需要三套系統與一堆 Excel，也不需要為了記一筆帳而先學會會計。",
 		ctaFree: "免費註冊",
 		ctaFeatures: "產品功能完整介紹",
-		heroShotAlt: "Company of One 的營運總覽畫面：本月開立發票、未收款總額、逾期未收、待跟進報價、負庫存商品與 401 申報倒數，左側是各功能的選單。",
+		heroShotAlt: "Company of One 的營運總覽畫面：本月開立發票、未收款總額、逾期未收、待跟進報價、負庫存商品與 401 申報倒數。",
 		whyTitle: "本系統開發緣起說明",
 		whyBody: "一人公司最常見的困境，是收不到錢，以及被行政瑣事佔去本來應該用來接案的時間。報價寄出去沒有人追蹤、貨出了不知道客戶還欠多少、申報期限到了才開始翻找單據，這些光靠「認真一點」是解決不了的，需要由系統替您記得。",
 		quote: {
@@ -328,7 +328,7 @@ const zhHant = {
 		finalCompare: "各方案比較一覽",
 	},
 	features: {
-		h1: "一間公司會用到的功能",
+		h1: "一間公司|會用到的功能",
 		lead: "以下為各項功能之實際內容說明。所寫的都是系統確實做得到的事，連「刻意不做的部分」與「尚未完成的部分」也一併列出，請詳細閱讀。",
 		note: "【請注意】下列幾項尚未以真實帳號實測，文中將個別標明：綠界金流與電子發票依公開文件實作但未經沙盒驗證、寄信服務未經真實服務商驗證、折讓尚未對外傳送、稽核鏈之外部見證端點尚未接上。",
 		tocAria: "功能分類導覽",
@@ -532,7 +532,7 @@ const zhHant = {
 		ctaStart: "免費註冊",
 	},
 	pricing: {
-		h1: "依照公司發展階段選擇方案，不必一開始就全部購足",
+		h1: "依照公司|發展階段|選擇方案，不必|一開始|就全部購足",
 		leadA: "三個方案的差別只在",
 		leadQuota: "額度",
 		leadAnd: "與",
@@ -633,7 +633,7 @@ const en: CooContent = {
 		lead: "Quotations, orders, inventory, e-invoicing and VAT filing, all in one place. There is no need for three separate systems and a pile of spreadsheets, and no need to learn accounting just to record one transaction.",
 		ctaFree: "Sign up free",
 		ctaFeatures: "Complete Product Features Introduction",
-		heroShotAlt: "The Company of One operations overview: invoices issued this month, total receivables, overdue receivables, quotes to follow up, items with negative stock and the countdown to the Form 401 filing, with the feature menu on the left.",
+		heroShotAlt: "The Company of One operations overview: invoices issued this month, total receivables, overdue receivables, quotes to follow up, items with negative stock and the countdown to the Form 401 filing.",
 		whyTitle: "Background to the Development of This System",
 		whyBody: "What usually kills a one-person company is getting paid late or never, and losing the hours meant for billable work to admin. Quotes that go out and are never chased, goods shipped without knowing how much is still owed, a filing deadline that arrives before you start digging through receipts: trying harder does not fix any of them. They need a system that remembers for you.",
 		quote: {
