@@ -9,6 +9,7 @@ import BaseHead from "../components/BaseHead.astro";
 import MourningNotice from "../components/MourningNotice.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import Phrase from "../components/Phrase.astro";
 import { COMPANY, LOCALE_HOME_PATH, SOCIAL, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { home } from "../i18n/home";
@@ -70,7 +71,7 @@ const no = (i: number) => String(i).padStart(2, "0");
 		<main id="main">
 			<section class="hero">
 				<div class="wrap grid">
-					<h1 class="hero-title">{c.hero.h1}</h1>
+					<h1 class="hero-title"><Phrase text={c.hero.h1} /></h1>
 					<p class="lead measure hero-lead">{c.hero.lead}</p>
 					<div class="actions hero-lead">
 						<a class="btn btn-primary" href={contactHref}>{c.hero.ctaPrimary}</a>
@@ -156,10 +157,10 @@ const no = (i: number) => String(i).padStart(2, "0");
 						<!-- Company of One 的營運總覽，與 CoO 產品首頁開頭同一張截圖。 -->
 						<img
 							class="shot"
-							src="/coo/dashboard.png"
+							src="/coo/dashboard-overview.png"
 							alt={coo[locale].home.heroShotAlt}
-							width="2557"
-							height="1226"
+							width="1374"
+							height="470"
 							loading="lazy"
 							decoding="async"
 						/>

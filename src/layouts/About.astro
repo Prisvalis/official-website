@@ -8,6 +8,7 @@ import BaseHead from "../components/BaseHead.astro";
 import MourningNotice from "../components/MourningNotice.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import Phrase from "../components/Phrase.astro";
 import { SITE, LOCALE_HOME_PATH, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { cooUrl, COO_NAME } from "../i18n/coo";
@@ -61,7 +62,7 @@ const no = (i: number) => String(i).padStart(2, "0");
 		<main id="main">
 			<header class="page-head">
 				<div class="wrap grid">
-					<h1>{c.h1}</h1>
+					<h1><Phrase text={c.h1} /></h1>
 					<p class="lead measure after-title">{c.lead}</p>
 					<ul class="toc after-title">
 						{

@@ -1,5 +1,6 @@
 ---
 import CoO from "../../layouts/CoO.astro";
+import Phrase from "../Phrase.astro";
 import type { Locale } from "../../consts";
 import { coo, cooUrl, APP_URL } from "../../i18n/coo";
 
@@ -14,7 +15,7 @@ const c = coo[locale].features;
 <CoO locale={locale} page="features">
 	<section class="hero">
 		<div class="wrap cols">
-			<h1 class="rise">{c.h1}</h1>
+			<h1 class="rise"><Phrase text={c.h1} /></h1>
 			<div class="hero-body">
 				<p class="lead">{c.lead}</p>
 				<div class="note">
