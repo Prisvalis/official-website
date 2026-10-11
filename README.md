@@ -4,7 +4,7 @@
 
 - 繁體中文在 `/`，英文在 `/en/`。
 - 內容：公司首頁、公司沿革（`/about`）、聯絡表單（`/contact`），以及自有產品 Company of One 的介紹頁（`/CoO/`、功能、方案）。
-- 視覺與版面一律依照「華國美學」Skill，規則見 [CLAUDE.md](CLAUDE.md)。
+- 視覺與版面一律依照 `web-design-engineer` Skill，設計定案寫在 `docs/brand-spec.md`，規則見 [CLAUDE.md](CLAUDE.md)。
 
 ## 技術架構
 
@@ -24,7 +24,7 @@
 | `src/data/plans.json` | Company of One 的方案內容 |
 | `src/i18n/mourning.ts` | 追悼日清單與選取標準；這幾天全站以台灣時間轉為黑白 |
 | `src/styles/` | `global.css` 為全站樣式，`coo.css` 為產品頁樣式 |
-| `.claude/skills/roc-aesthetic/` | 「華國美學」Skill 的本機副本，更新方式見 CLAUDE.md |
+| `.claude/skills/web-design-engineer/` | `web-design-engineer` Skill 的本機副本，更新方式見 CLAUDE.md |
 
 ## 指令
 
@@ -62,4 +62,4 @@ net2 上的 Node 由 nvm 安裝，以非互動方式執行時要經過登入 she
 
 ## 授權
 
-程式碼版權屬算力有限公司所有。`.claude/skills/roc-aesthetic/` 來自 [maylogger/roc-aesthetic](https://github.com/maylogger/roc-aesthetic)，依 MIT 授權使用。
+程式碼版權屬算力有限公司所有。`.claude/skills/web-design-engineer/` 來自 [ConardLi/web-design-skill](https://github.com/ConardLi/web-design-skill)，依 MIT 授權使用。
