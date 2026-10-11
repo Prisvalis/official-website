@@ -8,14 +8,17 @@ export const COMPANY = {
 	nameZh: "算力有限公司",
 	nameEn: "Prisvalis LTD.",
 	shortEn: "Prisvalis",
-	// Public contact address shown on the Coming Soon page. Update if needed.
+	// 公開聯絡信箱，首頁、聯絡頁與結構化資料共用。
 	email: "support@mail.prisvalis.com",
 	// 聯絡頁會自動把它變成可直接撥號的 tel: 連結。
 	phone: "+886-4-2369-7788",
-	// LINE 官方帳號。
+	// LINE 官方帳號。lineUrl 是官方頁，與 @ 帳號分開記。
 	lineId: "@prisvalis",
+	lineUrl: "https://page.line.me/prisvalis",
 	// 統一編號（台灣的營利事業統一編號），頁尾與結構化資料共用同一個來源。
 	taxId: "62010947",
+	// 核准設立日期（臺中市政府，中華民國 115 年 9 月 3 日）。結構化資料的 foundingDate 用這個。
+	founded: "2026-09-03",
 } as const;
 
 // 網站聯絡表單。這裡只放公開值 —— Turnstile 的 secret key 走 Worker secret
