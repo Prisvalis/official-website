@@ -101,7 +101,7 @@ export const home: Record<Locale, HomeContent> = {
 				},
 				{
 					title: "第四步：交付內容包含部署",
-					body: "上線方式將於報價前與您共同確認；監控與後續維護是否納入，亦會明確載明於報價之中，以維護您的相關權益。",
+					body: "上線方式將於報價前與您共同確認；監測與後續維護是否納入，亦會明確載明於報價之中，以維護您的相關權益。",
 				},
 			],
 		},
@@ -111,7 +111,7 @@ export const home: Record<Locale, HomeContent> = {
 			body: [
 				"本公司主要承接項目為系統與後端開發，以及網站建置與部署上線作業，範圍涵蓋資料模型設計、後端 API 開發，一直到正式部署上線為止。",
 				"AI 導入、資料分析、GPU 運算環境及雲端主機等項目，亦在可洽詢討論之範圍內。惟上述項目目前尚無可公開提供參考之案例，請先來信說明您的需求，本公司將再回覆是否適合承接。",
-				"已經使用 AI 做出可執行雛形、但卡在上線之前的個人朋友，可以只委託本公司補足缺少的部分，例如資料庫設計、部署作業或安全檢查。中小企業如流程仍在 Excel、紙本與 LINE 之間往返，本公司將先了解您目前實際的作業方式；有時只需調整流程即可，不一定需要撰寫程式。",
+				"已經使用 AI 做出可執行雛形、但卡在上線之前的個人創作者，可以只委託本公司補足缺少的部分，例如資料庫設計、部署作業或安全檢查。中小企業如流程仍在 Excel、紙本與 LINE 之間往返，本公司將先了解您目前實際的作業方式；有時只需調整流程即可，不一定需要撰寫程式。",
 			],
 		},
 
@@ -191,7 +191,7 @@ export const home: Record<Locale, HomeContent> = {
 			body: [
 				"The principal services of this Company are systems and backend development, together with website construction and deployment, covering data model design and backend API development all the way to formal launch.",
 				"AI integration, data analysis, GPU compute environments and cloud hosting are also within the scope of enquiry and discussion. However, there are at present no public cases available for reference in these areas. Please first write to describe your requirements, and this Company will reply as to whether they can be undertaken.",
-				"Individuals who have already built a working prototype with AI but are stuck before launch may entrust this Company with only the missing part, such as database design, deployment work or a security check. Where a small or medium business's workflow still moves between spreadsheets, paper and LINE messages, this Company will first understand how you actually work at present; sometimes adjusting the workflow is sufficient and no programming is required.",
+				"Individual creators who have already built a working prototype with AI but are stuck before launch may entrust this Company with only the missing part, such as database design, deployment work or a security check. Where a small or medium business's workflow still moves between spreadsheets, paper and LINE messages, this Company will first understand how you actually work at present; sometimes adjusting the workflow is sufficient and no programming is required.",
 			],
 		},
 

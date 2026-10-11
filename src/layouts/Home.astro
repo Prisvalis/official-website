@@ -3,7 +3,7 @@
 //
 // 設計依 docs/brand-spec.md（Linear recipe）。各區塊刻意用不同的形式，避免整頁都是
 // 「標題＋卡片列」的模板節奏：開頭是左大右小的不對稱構圖、作品是左欄標題右欄表格、
-// 流程是橫向編號、承接範圍是單欄散文、聯絡是左文右清單。
+// 流程是橫向編號、承接範圍是左欄標題右欄散文、聯絡是左文右清單。
 // 共用樣式在 styles/global.css，頁首與頁尾在 SiteHeader、SiteFooter。
 import BaseHead from "../components/BaseHead.astro";
 import MourningNotice from "../components/MourningNotice.astro";
@@ -188,9 +188,9 @@ const nav = [
 			</section>
 
 			<section class="section" id="scope">
-				<div class="wrap">
-					<h2>{c.scope.title}</h2>
-					<div class="prose measure">
+				<div class="wrap split">
+					<header class="split-head"><h2>{c.scope.title}</h2></header>
+					<div class="split-body prose measure">
 						{c.scope.body.map((para) => <p>{para}</p>)}
 					</div>
 				</div>
@@ -380,11 +380,9 @@ const nav = [
 				font-size: 0.9375rem;
 			}
 
-			/* --- 承接範圍：單欄散文 --- */
+			/* --- 承接範圍：左欄標題、右欄散文 --- */
 			.prose {
-				display: grid;
 				gap: var(--s-4);
-				margin-top: var(--s-5);
 				font-size: 1.0625rem;
 			}
 
