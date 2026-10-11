@@ -158,7 +158,7 @@ Design Read:
 
 h1 與內文的比例是 4 倍，落在 Skill 建議的 4～6 倍之間。中文內文一行最寬 40em（約 38 個中文字）。
 
-**中文換行**：標題、導言、按鈕、標籤等短文字只在標點與空白處換行（`word-break: keep-all`），一段沒有標點、整段放不下時才退回逐字斷行（`overflow-wrap: anywhere`）。長篇內文維持逐字換行，不用 `text-wrap: pretty`，它為了避免孤行會讓前一行提早結束。
+**中文換行**：標題、按鈕、標籤等短文字只在標點與空白處換行（`word-break: keep-all`），一段沒有標點、整段放不下時才退回逐字斷行（`overflow-wrap: anywhere`）。頁面開頭的導言逐字換行、各行平均分配（`text-wrap: balance`）並左右對齊。長篇內文維持逐字換行，不用 `text-wrap: pretty`，它為了避免孤行會讓前一行提早結束。
 
 ## 5. 間距與版面
 
