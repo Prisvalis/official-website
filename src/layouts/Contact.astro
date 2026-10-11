@@ -363,6 +363,10 @@ const nav = [
 				background: var(--accent);
 				transform: translateY(-2px);
 			}
+			/* 成功：綠色記號。紅色是品牌色也是錯誤色，放在成功訊息上會被看成寄送失敗。 */
+			.banner-ok::before {
+				background: var(--success);
+			}
 			/* 錯誤：強調色外框，文字本身說明發生什麼事，不只靠顏色。 */
 			.banner-err {
 				border-color: var(--accent);

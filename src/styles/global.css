@@ -23,6 +23,8 @@
 	--text-3: #767b84;
 	--accent: #b8322a;
 	--on-accent: #ffffff;
+	/* 只用於「成功」狀態（例如表單已送出），不得當裝飾或強調色使用。 */
+	--success: #2f7d4f;
 	--shadow: 0 1px 2px rgb(27 30 35 / 0.06);
 	--glow: rgb(184 50 42 / 0.06);
 
@@ -64,6 +66,7 @@
 	--text-3: #80858e;
 	--accent: #e45f53;
 	--on-accent: #111316;
+	--success: #4caf78;
 	--shadow: 0 1px 2px rgb(0 0 0 / 0.3);
 	--glow: rgb(228 95 83 / 0.06);
 	color-scheme: dark;
