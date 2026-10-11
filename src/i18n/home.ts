@@ -123,7 +123,8 @@ export const home: Record<Locale, HomeContent> = {
 
 	en: {
 		hero: {
-			h1: "Bespoke System Development,^with One Person from Enquiry to Launch",
+			// \u00a0 是不換行空格：「with One Person」是一個詞組，不要在中間斷開。
+			h1: "Bespoke System Development,^with\u00a0One\u00a0Person from Enquiry to Launch",
 			lead: "This Company is a one-person company: the person who discusses your requirements is the very same person who writes the code, with no intermediaries of any kind. This Company does not rent out a ready-made platform. Instead, the system architecture is designed and the quotation is prepared afresh according to your actual problem. Both systems development and deployment fall within the service scope of this Company.",
 			ctaPrimary: "Enquire online",
 			ctaSecondary: "Company of One Product Information Section",
