@@ -2,7 +2,7 @@
 
 本站前端工作的設計依據，規則見 [CLAUDE.md](../CLAUDE.md)。改版計畫見 issue #34。
 
-> **狀態：草案，等待站方確認（檢查點 1，#26）。** 這是 `dev` 分支上的 Vignelli／瑞士風版本，與 `redesign/linear` 分支上的 Linear 版本互為比較。確認前不要依本文件動版面。
+> **狀態：站方已確認（2026-10-11，#26 檢查點 1）。** 這是 `dev` 分支（dev 環境）的設計依據；`main` 分支（prod 環境）採用 Linear 版本。兩條分支長期並存，不互相合併。
 
 ## 1. Design Read
 
@@ -89,16 +89,16 @@ Recipe 規定全站只用 Helvetica，依字級而非字重分層。
 
 | 角色 | 字體 | 字重 |
 | :-- | :-- | :-- |
-| 拉丁字母（全站） | Helvetica Neue／Helvetica；不存在時用替代字體（見下） | 400、500、700，不用斜體 |
+| 拉丁字母（全站） | Helvetica Neue／Helvetica；不存在時用 Arimo，`@fontsource-variable/arimo@5.3.0` | 400、500、700，不用斜體 |
 | 中文（全站） | Noto Sans TC（思源黑體），`@fontsource-variable/noto-sans-tc@5.3.0` | 400、500、700 |
 
 ```css
---font-sans: "Helvetica Neue", Helvetica, <替代字體>, "Noto Sans TC Variable", "PingFang TC", "Microsoft JhengHei", sans-serif;
+--font-sans: "Helvetica Neue", Helvetica, "Arimo Variable", "Noto Sans TC Variable", "PingFang TC", "Microsoft JhengHei", sans-serif;
 ```
 
 `noto-sans-tc` 的 5.3.1 在 2026-10-11 才發布，太新，固定用 5.3.0。Noto Sans TC 依 `unicode-range` 切成多個分片，瀏覽器只下載用到的分片。全站不使用等寬字體與襯線字體。
 
-### 需要站方決定：Helvetica 的替代字體
+### Helvetica 的替代字體（站方已選 A）
 
 Apple 裝置內建 Helvetica Neue，但 Windows 與 Android 沒有。Helvetica 是商業字體，不能放在網站上免費散布。替代方案：
 
@@ -214,7 +214,7 @@ Apple 裝置內建 Helvetica Neue，但 Windows 與 Android 沒有。Helvetica �
 - 每個能力宣稱都要有可指向的公開佐證，沒有就不寫。
 - 詳見 #27。
 
-## 14. 待站方確認
+## 14. 站方決定紀錄
 
-1. 整份設計系統（檢查點 1）。
-2. Helvetica 的替代字體：A（Arimo，建議）、B（TeX Gyre Heros）或 C（不載入）。
+1. 整份設計系統（檢查點 1）：已確認（2026-10-11）。
+2. Helvetica 的替代字體：已選 A（Arimo）。
