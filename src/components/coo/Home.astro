@@ -1,9 +1,10 @@
 ---
 // Company of One 產品首頁。文案在 src/i18n/coo.ts，樣式在 styles/coo.css。
 //
-// 產品頁的主角是產品本身（brand-spec §9-5），但站上還沒有真實截圖，
-// 所以畫面一律放標明的佔位，不用 HTML 拼出假介面、不放虛構的金額。
-// 佔位的標題沿用 coo.ts 裡原本示意畫面的名稱，截圖到了直接換成 <img>。
+// 產品頁的主角是產品本身（brand-spec §9-5）。開頭放的是站方提供的真實截圖
+// （public/coo/dashboard.png，營運總覽）；其他畫面還沒有截圖，放標明的佔位，
+// 不用 HTML 拼出假介面、不放虛構的金額。佔位的標題沿用 coo.ts 裡原本示意畫面的名稱，
+// 截圖到了把 src、width、height 傳給 Shot 即可。
 import CoO from "../../layouts/CoO.astro";
 import Shot from "./Shot.astro";
 import type { Locale } from "../../consts";
@@ -30,7 +31,15 @@ const c = coo[locale].home;
 					</div>
 				</div>
 			</div>
-			<Shot class="hero-shot" locale={locale} label={COO_NAME} />
+			<Shot
+				class="hero-shot"
+				locale={locale}
+				label={COO_NAME}
+				aria={c.heroShotAlt}
+				src="/coo/dashboard.png"
+				width={2557}
+				height={1226}
+			/>
 		</div>
 	</section>
 
