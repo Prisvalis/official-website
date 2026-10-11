@@ -106,10 +106,9 @@ const { locale, homeHref, switchHref, nav, navLabel, brandText, back, cta } = As
 		align-items: center;
 		column-gap: var(--s-5);
 	}
-	/* 導覽文字沿用各區塊標題，偏長。中文在 1200px 以上放得進同一行；英文六項加起來
-	   比內容區最寬的 1200px 還寬，一律留在第二行。 */
+	/* 1200px 以上，logo、導覽與工具放在同一行。 */
 	@media (min-width: 1200px) {
-		:global(:root:lang(zh)) .bar {
+		.bar {
 			grid-template-columns: auto minmax(0, 1fr) auto;
 			grid-template-areas: "brand nav tools";
 			height: 64px;
@@ -157,7 +156,7 @@ const { locale, homeHref, switchHref, nav, navLabel, brandText, back, cta } = As
 		padding: 0 0 var(--s-2);
 		list-style: none;
 	}
-	/* 平板以上：導覽放不下一行時折成兩行，不用橫向捲動（英文的導覽比內容區還寬）。 */
+	/* 平板以上：導覽放不下一行時折成兩行，不用橫向捲動。 */
 	@media (min-width: 760px) {
 		.nav {
 			overflow-x: visible;
@@ -167,12 +166,12 @@ const { locale, homeHref, switchHref, nav, navLabel, brandText, back, cta } = As
 		}
 	}
 	@media (min-width: 1200px) {
-		:global(:root:lang(zh)) .nav {
+		.nav {
 			margin: 0;
 			padding: 0;
 		}
 		/* 用 margin 置中而不用 justify-content：放不下時會退回靠左，仍可捲動到第一項。 */
-		:global(:root:lang(zh)) .nav ul {
+		.nav ul {
 			width: max-content;
 			margin-inline: auto;
 			padding: 0;

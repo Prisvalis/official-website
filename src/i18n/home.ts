@@ -50,7 +50,7 @@ export const home: Record<Locale, HomeContent> = {
 		},
 
 		work: {
-			title: "作品成果展示專區",
+			title: "作品",
 			lead: "Company of One 為本公司自行開發之一人公司營運管理平台，涵蓋報價、訂單、進銷存、電子發票及營業稅申報，並設有測試站，可自行註冊試用。",
 			caption: "Company of One 主要技術決策一覽表",
 			columns: { area: "項目類別", approach: "實施做法", reason: "採用原因" },
@@ -85,7 +85,7 @@ export const home: Record<Locale, HomeContent> = {
 		},
 
 		process: {
-			title: "合作流程說明",
+			title: "合作流程",
 			steps: [
 				{
 					title: "第一步：先行確認需求範圍",
@@ -107,7 +107,7 @@ export const home: Record<Locale, HomeContent> = {
 		},
 
 		scope: {
-			title: "服務承接範圍說明",
+			title: "服務範圍",
 			body: [
 				"本公司主要承接項目為系統與後端開發，以及網站建置與部署上線作業，範圍涵蓋資料模型設計、後端 API 開發，一直到正式部署上線為止。",
 				"AI 導入、資料分析、GPU 運算環境及雲端主機等項目，亦在可洽詢討論之範圍內。惟上述項目目前尚無可公開提供參考之案例，請先來信說明您的需求，本公司將再回覆是否適合承接。",
@@ -116,7 +116,7 @@ export const home: Record<Locale, HomeContent> = {
 		},
 
 		contact: {
-			title: "聯絡資訊與服務窗口",
+			title: "聯絡",
 			body: "洽詢請使用下方所列之服務電話、電子郵件信箱或 LINE 官方帳號，亦可前往線上聯絡頁填寫表單。不需要事先撰寫規格文件。請將目前的狀況說明清楚，本公司將直接回覆是否可行、大約的規模與費用，也包括「這項工作您自行處理會比較快」這類的答案。",
 		},
 	},
@@ -131,7 +131,7 @@ export const home: Record<Locale, HomeContent> = {
 		},
 
 		work: {
-			title: "Work Results Exhibition Section",
+			title: "Work",
 			lead: "Company of One is an operations management platform for one-person companies, developed in-house by this Company. It covers quotations, orders, inventory, e-invoicing and VAT filing, and a test site is available to register and try.",
 			caption: "Table of Principal Technical Decisions in Company of One",
 			columns: { area: "Item Category", approach: "Method of Implementation", reason: "Reason for Adoption" },
@@ -166,7 +166,7 @@ export const home: Record<Locale, HomeContent> = {
 		},
 
 		process: {
-			title: "Cooperation Procedure Explanation",
+			title: "Process",
 			steps: [
 				{
 					title: "Step 1: Confirmation of Requirement Scope",
@@ -188,7 +188,7 @@ export const home: Record<Locale, HomeContent> = {
 		},
 
 		scope: {
-			title: "Service Scope Explanation",
+			title: "Services",
 			body: [
 				"The principal services of this Company are systems and backend development, together with website construction and deployment, covering data model design and backend API development all the way to formal launch.",
 				"AI integration, data analysis, GPU compute environments and cloud hosting are also within the scope of enquiry and discussion. However, there are at present no public cases available for reference in these areas. Please first write to describe your requirements, and this Company will reply as to whether they can be undertaken.",
@@ -197,7 +197,7 @@ export const home: Record<Locale, HomeContent> = {
 		},
 
 		contact: {
-			title: "Contact Information and Service Window",
+			title: "Contact",
 			body: "Please enquire by the service telephone, email address or LINE Official Account listed below, or use the form on the contact page. No written specification is required in advance. Simply describe your present situation clearly, and this Company will reply directly as to feasibility, approximate scale and cost, including answers such as “this work would be quicker for you to handle yourself”.",
 		},
 	},
