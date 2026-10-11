@@ -9,6 +9,7 @@ import BaseHead from "../components/BaseHead.astro";
 import MourningNotice from "../components/MourningNotice.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import Phrase from "../components/Phrase.astro";
 import { COMPANY, LOCALE_HOME_PATH, SOCIAL, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { home } from "../i18n/home";
@@ -69,7 +70,7 @@ const nav = [
 			<section class="hero">
 				<div class="wrap hero-grid">
 					<div class="hero-main">
-						<h1 class="rise">{c.hero.h1}</h1>
+						<h1 class="rise"><Phrase text={c.hero.h1} /></h1>
 						<p class="lead measure rise rise-2">{c.hero.lead}</p>
 						<div class="actions rise rise-3">
 							<a class="btn btn-primary" href={contactHref}>{c.hero.ctaPrimary}</a>
