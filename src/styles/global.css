@@ -94,8 +94,10 @@ h4 {
 	font-weight: 700;
 	text-align: left;
 }
+/* 手機上最小 36px：一段沒有標點的九個中文字（例如「公司沿革與發展願景」）
+   要能放進 375px 寬的一行，不在最後留下一個孤字。 */
 h1 {
-	font-size: clamp(2.5rem, 6vw, 4.5rem);
+	font-size: clamp(2.25rem, 6vw, 4.5rem);
 	line-height: 1.1;
 }
 h2 {
@@ -108,6 +110,41 @@ h3 {
 }
 :lang(en) :is(h1, h2) {
 	letter-spacing: -0.01em;
+}
+
+/* 中文換行。瀏覽器預設在任意兩個字之間換行，短文字因此會把詞語拆開、或在下一行
+ * 只留一兩個字。標題、導言、按鈕與標籤這類短文字改成只在標點與空白處換行
+ * （keep-all）；某一段沒有標點、整段放不下時，才由 overflow-wrap 退回逐字斷行。
+ * 長篇內文維持逐字換行，這是中文排版的常規；但不用 text-wrap: pretty，
+ * 它為了避免孤行會把前一行提早結束，中文看起來反而像斷錯行。 */
+:lang(zh) body {
+	text-wrap: wrap;
+}
+:lang(zh)
+	:is(
+		h1,
+		h2,
+		h3,
+		h4,
+		.lead,
+		.btn,
+		.toc,
+		nav,
+		caption,
+		thead th,
+		tbody th,
+		dt,
+		label,
+		.hint,
+		.banner,
+		summary,
+		.tag,
+		.plan-name,
+		.slogan,
+		.section-no
+	) {
+	word-break: keep-all;
+	overflow-wrap: anywhere;
 }
 
 p {
