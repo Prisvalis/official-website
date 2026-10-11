@@ -127,7 +127,8 @@ Apple 裝置內建 Helvetica Neue，但 Windows 與 Android 沒有。Helvetica �
 - h1 在手機上最小 36px，讓九個沒有標點的中文字放進 375px 寬的一行（2026-10-11 調整）。
 - 英文 h1 最大 56px（`clamp(2.25rem, 5vw, 3.5rem)`）：Arimo 粗體很寬，72px 時英文標題會被拆成四行（2026-10-11 調整）。
 - 標題（h1～h3）使用 `text-wrap: balance`，大標題占滿 12 欄。
-- **中文換行**：標題、導言、按鈕、標籤等短文字只在標點與空白處換行（`word-break: keep-all`），一段沒有標點、整段放不下時才退回逐字斷行（`overflow-wrap: anywhere`）。長篇內文維持逐字換行，不用 `text-wrap: pretty`。
+- **中文換行**：標題、按鈕、標籤等短文字只在標點與空白處換行（`word-break: keep-all`），一段沒有標點、整段放不下時才退回逐字斷行（`overflow-wrap: anywhere`）。頁面開頭的導言逐字換行、各行平均分配（`text-wrap: balance`）並左右對齊。長篇內文維持逐字換行，不用 `text-wrap: pretty`。
+- 頁面開頭的導言與按鈕從第 1 欄開始，與大標題左緣對齊（2026-10-11 調整）。
 - 中文內文一行最寬 36em（約 34 個中文字），英文約 65 個字元。
 - 拉丁標題字距 -0.01em；中文不調整字距。
 - 使用 `text-wrap: pretty`。

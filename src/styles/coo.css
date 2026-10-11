@@ -56,13 +56,13 @@ main.coo:focus {
 		padding-block: var(--s-7) var(--s-6);
 	}
 }
-/* 開頭不分左右欄：大標題占滿 12 欄，導言從第 3 欄開始，與官網子頁一致。 */
+/* 開頭不分左右欄：大標題占滿 12 欄，導言與按鈕也從第 1 欄開始，與標題左緣對齊。 */
 @media (min-width: 960px) {
 	.coo .hero .cols > :first-child {
 		grid-column: 1 / -1;
 	}
 	.coo .hero .cols > .hero-body {
-		grid-column: 3 / -1;
+		grid-column: 1 / -1;
 	}
 }
 .hero-body {
