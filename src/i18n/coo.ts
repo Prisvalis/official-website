@@ -1042,7 +1042,7 @@ const en: CooContent = {
 		ctaStart: "Sign up free",
 	},
 	pricing: {
-		h1: "Choose According to Your Company's Stage, with No Need to Buy Everything at Once",
+		h1: "Choose According to Your Company's Stage,^with No Need to Buy Everything at Once",
 		leadA: "The three plans differ only in ",
 		leadQuota: "quotas",
 		leadAnd: " and ",

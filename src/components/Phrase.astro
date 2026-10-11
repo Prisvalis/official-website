@@ -4,12 +4,28 @@
 // word-break: keep-all，中文標題就只會在標點或這些位置換行，不會把詞拆開、
 // 也不會在最後留下一個孤字。沒有「|」的文字（例如英文）原樣輸出。
 //
-// 「|」只能出現在只拿來當標題的字串裡；會被用在 <title> 或 meta 的字串不要加。
+// 「^」標出寬螢幕上要換行的位置（例如英文標題的逗號後面）：輸出一個空格加上
+// 只在 760px 以上顯示的 <br>；手機上 <br> 隱藏，留下的空格照常讓瀏覽器自行換行。
+//
+// 「|」與「^」只能出現在只拿來當標題的字串裡；會被用在 <title> 或 meta 的字串不要加。
 interface Props {
 	text: string;
 }
 
-const parts = Astro.props.text.split("|");
+const lines = Astro.props.text.split("^");
 ---
 
-{parts.map((part, i) => (i === 0 ? part : [<wbr />, part]))}
+{
+	lines.map((line, li) => [
+		li > 0 && [" ", <br class="br-wide" />],
+		line.split("|").map((part, i) => (i === 0 ? part : [<wbr />, part])),
+	])
+}
+
+<style>
+	@media (max-width: 759.98px) {
+		.br-wide {
+			display: none;
+		}
+	}
+</style>

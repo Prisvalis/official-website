@@ -215,7 +215,7 @@ export const about: Record<Locale, AboutContent> = {
 		metaDescription:
 			"The Company History Section of Prisvalis LTD. (算力有限公司): founding background, vision, chronicle of events, and the company and tax registration profile. This Company was approved for incorporation by the Taichung City Government on 3 September 2026.",
 		navLabel: "Company History",
-		h1: "Prisvalis LTD., Company History and Development Vision",
+		h1: "Prisvalis LTD.,^Company History and Development Vision",
 		lead: "This page brings together the founding background, development vision, chronicle of events and registration profile of this Company. Should any information change, the official public records of the competent authorities shall prevail.",
 
 		origin: {
