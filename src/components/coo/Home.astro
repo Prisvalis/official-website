@@ -1,8 +1,13 @@
 ---
+// Company of One 產品首頁。文案在 src/i18n/coo.ts，樣式在 styles/coo.css。
+//
+// 產品頁的主角是產品本身（brand-spec §9-5），但站上還沒有真實截圖，
+// 所以畫面一律放標明的佔位，不用 HTML 拼出假介面、不放虛構的金額。
+// 佔位的標題沿用 coo.ts 裡原本示意畫面的名稱，截圖到了直接換成 <img>。
 import CoO from "../../layouts/CoO.astro";
-import WordArt from "../WordArt.astro";
+import Shot from "./Shot.astro";
 import type { Locale } from "../../consts";
-import { coo, cooUrl, APP_URL } from "../../i18n/coo";
+import { coo, cooUrl, APP_URL, COO_NAME } from "../../i18n/coo";
 
 interface Props {
 	locale: Locale;
@@ -14,15 +19,18 @@ const c = coo[locale].home;
 
 <CoO locale={locale} page="home">
 	<section class="hero">
-		<div class="wrap cols">
-			<WordArt text={c.h1} />
-			<div class="hero-body">
-				<p class="lead">{c.lead}</p>
-				<div class="actions">
-					<a class="btn btn-primary" href={APP_URL}>{c.ctaFree}</a>
-					<a class="btn" href={cooUrl(locale, "/features")}>{c.ctaFeatures}</a>
+		<div class="wrap">
+			<div class="cols">
+				<h1 class="rise">{c.h1}</h1>
+				<div class="hero-body">
+					<p class="lead rise rise-2">{c.lead}</p>
+					<div class="actions rise rise-3">
+						<a class="btn btn-primary" href={APP_URL}>{c.ctaFree}</a>
+						<a class="btn" href={cooUrl(locale, "/features")}>{c.ctaFeatures}</a>
+					</div>
 				</div>
 			</div>
+			<Shot class="hero-shot" locale={locale} label={COO_NAME} />
 		</div>
 	</section>
 
@@ -42,29 +50,7 @@ const c = coo[locale].home;
 				<ul class="ticks">
 					{c.quote.ticks.map((tick) => <li>{tick.a}{tick.b && <strong>{tick.b}</strong>}{tick.c}</li>)}
 				</ul>
-				<div class="mock" role="img" aria-label={c.quote.mockAria}>
-					<div class="mock-title">
-						<span>{c.quote.mockTitle}</span>
-						<span class="tag">{c.quote.mockTag}</span>
-					</div>
-					{
-						c.quote.rows.map((row) => (
-							<div class="mock-row">
-								<span class="label">{row.label}</span>
-								<span class="value">{row.value}</span>
-							</div>
-						))
-					}
-					<div class="mock-row">
-						<span class="label"><strong>{c.quote.totalLabel}</strong></span>
-						<span class="value">{c.quote.totalValue}</span>
-					</div>
-					<div class="mock-actions" aria-hidden="true">
-						<span class="mock-btn mock-btn-solid">{c.quote.accept}</span>
-						<span class="mock-btn">{c.quote.decline}</span>
-					</div>
-					<p class="mock-note">{c.quote.mockNote}</p>
-				</div>
+				<Shot locale={locale} label={c.quote.mockTitle} aria={c.quote.mockAria} />
 			</div>
 		</div>
 	</section>
@@ -77,24 +63,7 @@ const c = coo[locale].home;
 				<ul class="ticks">
 					{c.cash.ticks.map((tick) => <li>{tick}</li>)}
 				</ul>
-				<div class="mock" role="img" aria-label={c.cash.mockAria}>
-					<div class="mock-title">
-						<span>{c.cash.mockTitle}</span>
-						<span class="secondary">{c.cash.mockDate}</span>
-					</div>
-					{
-						c.cash.rows.map((row) => (
-							<div class:list={["mock-row", row.warn && "mock-row-warn"]}>
-								<span class="label">{row.label}</span>
-								<span class="value">{row.value}</span>
-							</div>
-						))
-					}
-					<div class="mock-row">
-						<span class="label"><strong>{c.cash.totalLabel}</strong></span>
-						<span class="value">{c.cash.totalValue}</span>
-					</div>
-				</div>
+				<Shot locale={locale} label={c.cash.mockTitle} aria={c.cash.mockAria} />
 			</div>
 		</div>
 	</section>
@@ -107,24 +76,7 @@ const c = coo[locale].home;
 				<ul class="ticks">
 					{c.tax.ticks.map((tick) => <li>{tick}</li>)}
 				</ul>
-				<div class="mock" role="img" aria-label={c.tax.mockAria}>
-					<div class="mock-title">
-						<span>{c.tax.mockTitle}</span>
-						<span class="secondary">{c.tax.mockPeriod}</span>
-					</div>
-					{
-						c.tax.rows.map((row) => (
-							<div class="mock-row">
-								<span class="label">{row.label}</span>
-								<span class="value">{row.value}</span>
-							</div>
-						))
-					}
-					<div class="mock-row">
-						<span class="label"><strong>{c.tax.totalLabel}</strong></span>
-						<span class="value">{c.tax.totalValue}</span>
-					</div>
-				</div>
+				<Shot locale={locale} label={c.tax.mockTitle} aria={c.tax.mockAria} />
 			</div>
 		</div>
 	</section>
@@ -152,17 +104,7 @@ const c = coo[locale].home;
 				<p>{c.trust.adminA}<strong>{c.trust.adminStrong}</strong>{c.trust.adminB}</p>
 				<p>{c.trust.adminP2}</p>
 				<p><a href={cooUrl(locale, "/features#security")}>{c.trust.adminLink}</a></p>
-				<div class="mock" role="img" aria-label={c.trust.noticeAria}>
-					<div class="mock-title">
-						<span>{c.trust.noticeTitle}</span>
-						<span class="tag tag-warn">{c.trust.noticeTag}</span>
-					</div>
-					<p><strong>{c.trust.noticeHead}</strong></p>
-					<p class="mock-note">
-						{c.trust.noticeLine1}<br />
-						{c.trust.noticeLine2}
-					</p>
-				</div>
+				<Shot locale={locale} label={c.trust.noticeTitle} aria={c.trust.noticeAria} />
 			</div>
 		</div>
 	</section>
@@ -198,7 +140,7 @@ const c = coo[locale].home;
 	</section>
 
 	<section class="section">
-		<div class="wrap cols cols-head">
+		<div class="wrap cols">
 			<h2>{c.finalTitle}</h2>
 			<div class="stack">
 				<p class="secondary">{c.finalBody}</p>

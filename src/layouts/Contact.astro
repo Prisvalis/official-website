@@ -2,13 +2,13 @@
 // 聯絡。頁面本身是靜態的（會進 sitemap、走 CDN），
 // 送出後由 /api/contact 處理，再轉址回來帶上狀態參數。
 //
-// 版面沿用首頁的入口網站外框（styles/global.css）：表單放在有標題列的框裡，
-// 其他聯絡方式放在左側欄。
+// 設計依 docs/brand-spec.md（Linear recipe）：左欄是其他聯絡方式，右欄是表單。
+// 表單是受保護契約（CLAUDE.md）：欄位的 name、順序、必填與驗證規則、送出目標與
+// Turnstile 都不得更動，改版只動外觀。共用樣式在 styles/global.css。
 import BaseHead from "../components/BaseHead.astro";
 import MourningNotice from "../components/MourningNotice.astro";
-import PortalHeader from "../components/PortalHeader.astro";
-import PortalFooter from "../components/PortalFooter.astro";
-import WordArt from "../components/WordArt.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 import { COMPANY, CONTACT, CONTACT_CATEGORIES, SITE, SOCIAL, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { cooUrl, COO_NAME } from "../i18n/coo";
@@ -57,222 +57,215 @@ const nav = [
 	</head>
 	<body>
 		<MourningNotice locale={locale} />
+		<SiteHeader locale={locale} homeHref={homeHref} switchHref={PATHS[otherLocale]} nav={nav} />
 
-		<div class="portal">
-			<PortalHeader
-				locale={locale}
-				homeHref={homeHref}
-				name={COMPANY.nameZh}
-				switchHref={PATHS[otherLocale]}
-				nav={nav}
-			/>
-
-			<div class="portal-body">
-			<main class="portal-main">
-			<div class="contact-head">
-				<WordArt text={t(locale, "contact.heading")} />
-				<p class="lead">{t(locale, "contact.lead")}</p>
-			</div>
-
-			{/* 四種狀態都先渲染好再由 script 打開對應的那個。
-			    比起用 JS 組字串，這樣文案仍然只有一份，也不會有版面跳動。 */}
-			<div class="banners" aria-live="polite">
-				<div class="banner banner-ok" data-status="sent" hidden>
-					<strong>{t(locale, "contact.sent.title")}</strong>
-					<span>{t(locale, "contact.sent.body")}</span>
+		<main id="main">
+			<header class="page-head">
+				<div class="wrap">
+					<h1 class="rise">{t(locale, "contact.heading")}</h1>
+					<p class="lead measure rise rise-2">{t(locale, "contact.lead")}</p>
 				</div>
-				<div class="banner banner-err" data-status="invalid" hidden>
-					<span>{t(locale, "contact.error.invalid")}</span>
+			</header>
+
+			<section class="section">
+				<div class="wrap split">
+					<aside class="split-head">
+						<h2 class="info-title">{t(locale, "contact.info.title")}</h2>
+						<dl class="info">
+							<div>
+								<dt>{t(locale, "contact.info.phone")}</dt>
+								<dd>
+									{
+										hasPhone ? (
+											<a href={telHref}>{COMPANY.phone}</a>
+										) : (
+											<span class="empty">
+												{COMPANY.phone}
+												<span class="sr-only">{t(locale, "contact.info.pending")}</span>
+											</span>
+										)
+									}
+								</dd>
+							</div>
+							<div>
+								<dt>{t(locale, "contact.info.email")}</dt>
+								<dd><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></dd>
+							</div>
+							<div>
+								<dt>{t(locale, "contact.info.line")}</dt>
+								<dd>
+									{
+										hasLine ? (
+											<a href={COMPANY.lineUrl} target="_blank" rel="noopener noreferrer">
+												{COMPANY.lineId}
+												<span class="sr-only">{t(locale, "link.external")}</span>
+											</a>
+										) : (
+											<span class="empty">
+												{COMPANY.lineId}
+												<span class="sr-only">{t(locale, "contact.info.pending")}</span>
+											</span>
+										)
+									}
+								</dd>
+							</div>
+							<div>
+								<dt>{t(locale, "contact.info.instagram")}</dt>
+								<dd>
+									<a href={SOCIAL.instagram} rel="me noopener" target="_blank">{instagramHandle}</a>
+								</dd>
+							</div>
+							<div>
+								<dt>{t(locale, "contact.info.reply")}</dt>
+								<dd>{t(locale, "contact.info.replyValue")}</dd>
+							</div>
+						</dl>
+					</aside>
+
+					<div class="split-body" id="form">
+						{/* 四種狀態都先渲染好再由 script 打開對應的那個。
+						    比起用 JS 組字串，這樣文案仍然只有一份，也不會有版面跳動。 */}
+						<div class="banners" aria-live="polite">
+							<div class="banner banner-ok" data-status="sent" hidden>
+								<strong>{t(locale, "contact.sent.title")}</strong>
+								<span>{t(locale, "contact.sent.body")}</span>
+							</div>
+							<div class="banner banner-err" data-status="invalid" hidden>
+								<span>{t(locale, "contact.error.invalid")}</span>
+							</div>
+							<div class="banner banner-err" data-status="captcha" hidden>
+								<span>{t(locale, "contact.error.captcha")}</span>
+							</div>
+							<div class="banner banner-err" data-status="failed" hidden>
+								<span>{t(locale, "contact.error.failed")}</span>
+								<a href={`mailto:${COMPANY.email}`}>{t(locale, "contact.error.mailto")}</a>
+							</div>
+						</div>
+
+						<form class="form" method="post" action="/api/contact">
+							<h2 class="form-title">{t(locale, "contact.form.title")}</h2>
+
+							<input type="hidden" name="locale" value={locale} />
+
+							{/* 蜜罐。真人看不到也 tab 不到，填了就是機器人。
+							    欄位名稱刻意避開表單真正使用的名字（company 已經是公司名稱了）。 */}
+							<div class="hp" aria-hidden="true">
+								<label for="website">Website</label>
+								<input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+							</div>
+
+							<div class="row">
+								<div class="field">
+									<label for="name">{t(locale, "contact.name")}</label>
+									<input
+										id="name"
+										name="name"
+										type="text"
+										required
+										maxlength="100"
+										autocomplete="name"
+										placeholder={t(locale, "contact.namePlaceholder")}
+									/>
+								</div>
+
+								<div class="field">
+									<label for="email">{t(locale, "contact.email")}</label>
+									<input
+										id="email"
+										name="email"
+										type="email"
+										required
+										maxlength="254"
+										autocomplete="email"
+										aria-describedby="email-hint"
+										placeholder="you@example.com"
+									/>
+								</div>
+							</div>
+
+							<p id="email-hint" class="hint">{t(locale, "contact.emailHint")}</p>
+
+							<div class="row">
+								<div class="field">
+									<label for="phone">
+										{t(locale, "contact.phone")}
+										<span class="optional">· {t(locale, "contact.optional")}</span>
+									</label>
+									<input
+										id="phone"
+										name="phone"
+										type="tel"
+										maxlength="40"
+										autocomplete="tel"
+										placeholder={t(locale, "contact.phonePlaceholder")}
+									/>
+								</div>
+
+								<div class="field">
+									<label for="company">
+										{t(locale, "contact.company")}
+										<span class="optional">· {t(locale, "contact.optional")}</span>
+									</label>
+									<input
+										id="company"
+										name="company"
+										type="text"
+										maxlength="120"
+										autocomplete="organization"
+										placeholder={t(locale, "contact.companyPlaceholder")}
+									/>
+								</div>
+							</div>
+
+							<div class="field">
+								<label for="category">{t(locale, "contact.category")}</label>
+								<div class="select-wrap">
+									<select id="category" name="category" required>
+										<option value="" disabled selected>
+											{t(locale, "contact.categoryPlaceholder")}
+										</option>
+										{
+											CONTACT_CATEGORIES.map((category) => (
+												<option value={category}>{t(locale, `contact.category.${category}`)}</option>
+											))
+										}
+									</select>
+								</div>
+							</div>
+
+							<div class="field">
+								<label for="message">{t(locale, "contact.message")}</label>
+								<textarea
+									id="message"
+									name="message"
+									required
+									minlength="10"
+									maxlength="5000"
+									rows="7"
+									placeholder={t(locale, "contact.messagePlaceholder")}></textarea>
+							</div>
+
+							<div class="cf-turnstile" data-sitekey={CONTACT.turnstileSiteKey}></div>
+
+							<button class="btn btn-primary submit" type="submit" data-busy={t(locale, "contact.submitting")}>
+								{t(locale, "contact.submit")}
+							</button>
+
+							<p class="hint">{t(locale, "contact.privacy")}</p>
+						</form>
+					</div>
 				</div>
-				<div class="banner banner-err" data-status="captcha" hidden>
-					<span>{t(locale, "contact.error.captcha")}</span>
-				</div>
-				<div class="banner banner-err" data-status="failed" hidden>
-					<span>{t(locale, "contact.error.failed")}</span>
-					<a href={`mailto:${COMPANY.email}`}>{t(locale, "contact.error.mailto")}</a>
-				</div>
-			</div>
+			</section>
+		</main>
 
-			
-				<section class="box" id="form">
-					<h2 class="box-title">{t(locale, "contact.form.title")}</h2>
-				<form class="form box-body" method="post" action="/api/contact">
-
-					<input type="hidden" name="locale" value={locale} />
-
-					{/* 蜜罐。真人看不到也 tab 不到，填了就是機器人。
-					    欄位名稱刻意避開表單真正使用的名字（company 已經是公司名稱了）。 */}
-					<div class="hp" aria-hidden="true">
-						<label for="website">Website</label>
-						<input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
-					</div>
-
-					<div class="row">
-						<div class="field">
-							<label for="name">{t(locale, "contact.name")}</label>
-							<input
-								id="name"
-								name="name"
-								type="text"
-								required
-								maxlength="100"
-								autocomplete="name"
-								placeholder={t(locale, "contact.namePlaceholder")}
-							/>
-						</div>
-
-						<div class="field">
-							<label for="email">{t(locale, "contact.email")}</label>
-							<input
-								id="email"
-								name="email"
-								type="email"
-								required
-								maxlength="254"
-								autocomplete="email"
-								aria-describedby="email-hint"
-								placeholder="you@example.com"
-							/>
-						</div>
-					</div>
-
-					<p id="email-hint" class="hint">{t(locale, "contact.emailHint")}</p>
-
-					<div class="row">
-						<div class="field">
-							<label for="phone">
-								{t(locale, "contact.phone")}
-								<span class="optional">· {t(locale, "contact.optional")}</span>
-							</label>
-							<input
-								id="phone"
-								name="phone"
-								type="tel"
-								maxlength="40"
-								autocomplete="tel"
-								placeholder={t(locale, "contact.phonePlaceholder")}
-							/>
-						</div>
-
-						<div class="field">
-							<label for="company">
-								{t(locale, "contact.company")}
-								<span class="optional">· {t(locale, "contact.optional")}</span>
-							</label>
-							<input
-								id="company"
-								name="company"
-								type="text"
-								maxlength="120"
-								autocomplete="organization"
-								placeholder={t(locale, "contact.companyPlaceholder")}
-							/>
-						</div>
-					</div>
-
-					<div class="field">
-						<label for="category">{t(locale, "contact.category")}</label>
-						<div class="select-wrap">
-							<select id="category" name="category" required>
-								<option value="" disabled selected>
-									{t(locale, "contact.categoryPlaceholder")}
-								</option>
-								{
-									CONTACT_CATEGORIES.map((category) => (
-										<option value={category}>{t(locale, `contact.category.${category}`)}</option>
-									))
-								}
-							</select>
-						</div>
-					</div>
-
-					<div class="field">
-						<label for="message">{t(locale, "contact.message")}</label>
-						<textarea
-							id="message"
-							name="message"
-							required
-							minlength="10"
-							maxlength="5000"
-							rows="7"
-							placeholder={t(locale, "contact.messagePlaceholder")}></textarea>
-					</div>
-
-					<div class="cf-turnstile" data-sitekey={CONTACT.turnstileSiteKey}></div>
-
-					<button class="btn btn-primary submit" type="submit">{t(locale, "contact.submit")}</button>
-
-					<p class="hint">{t(locale, "contact.privacy")}</p>
-				</form>
-				</section>
-
-			<p class="back">
-				<a href={homeHref}>{t(locale, "contact.back")}</a>
-			</p>
-			</main>
-				<aside class="portal-side">
-				<section class="side-box info">
-					<h2 class="side-box-title">{t(locale, "contact.info.title")}</h2>
-
-					<dl class="info-list">
-						<div class="info-item">
-							<dt>{t(locale, "contact.info.phone")}</dt>
-							<dd>
-								{
-									hasPhone ? (
-										<a href={telHref}>{COMPANY.phone}</a>
-									) : (
-										<span class="empty">
-											{COMPANY.phone}
-											<span class="sr-only">{t(locale, "contact.info.pending")}</span>
-										</span>
-									)
-								}
-							</dd>
-						</div>
-
-						<div class="info-item">
-							<dt>{t(locale, "contact.info.email")}</dt>
-							<dd><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></dd>
-						</div>
-
-						<div class="info-item">
-							<dt>{t(locale, "contact.info.line")}</dt>
-							<dd>
-								{
-									hasLine ? (
-										<a href={COMPANY.lineUrl} target="_blank" rel="noopener noreferrer">
-											{COMPANY.lineId}
-											<span class="sr-only">{t(locale, "link.external")}</span>
-										</a>
-									) : (
-										<span class="empty">
-											{COMPANY.lineId}
-											<span class="sr-only">{t(locale, "contact.info.pending")}</span>
-										</span>
-									)
-								}
-							</dd>
-						</div>
-
-						<div class="info-item">
-							<dt>{t(locale, "contact.info.instagram")}</dt>
-							<dd>
-								<a href={SOCIAL.instagram} rel="me noopener" target="_blank">{instagramHandle}</a>
-							</dd>
-						</div>
-
-						<div class="info-item">
-							<dt>{t(locale, "contact.info.reply")}</dt>
-							<dd>{t(locale, "contact.info.replyValue")}</dd>
-						</div>
-					</dl>
-				</section>
-				</aside>
-			</div>
-
-			<PortalFooter locale={locale} />
-		</div>
+		<SiteFooter
+			locale={locale}
+			links={[
+				{ href: homeHref, label: t(locale, "contact.back") },
+				{ href: ABOUT_PATH[locale], label: about[locale].navLabel },
+				{ href: cooUrl(locale, "/"), label: COO_NAME },
+			]}
+		/>
 
 		<script
 			src="https://challenges.cloudflare.com/turnstile/v0/api.js"
@@ -287,104 +280,58 @@ const nav = [
 				var params = new URLSearchParams(location.search);
 				var status = params.get("sent") === "1" ? "sent" : params.get("error");
 				var allowed = ["sent", "invalid", "captcha", "failed"];
-				if (allowed.indexOf(status) === -1) return;
-
-				var banner = document.querySelector('[data-status="' + status + '"]');
-				if (banner) banner.hidden = false;
-				if (status === "sent") {
-					var form = document.querySelector("form");
-					if (form) form.reset();
+				if (allowed.indexOf(status) !== -1) {
+					var banner = document.querySelector('[data-status="' + status + '"]');
+					if (banner) banner.hidden = false;
+					if (status === "sent") {
+						var sentForm = document.querySelector("form");
+						if (sentForm) sentForm.reset();
+					}
+					// 把參數從網址上抹掉，重新整理就不會又看到同一條訊息。
+					history.replaceState(null, "", location.pathname);
 				}
-				// 把參數從網址上抹掉，重新整理就不會又看到同一條訊息。
-				history.replaceState(null, "", location.pathname);
+
+				// 送出中：通過瀏覽器驗證、真的要送出時才停用按鈕，避免重複送出。
+				// 頁面從上一頁快取回來時（pageshow persisted）要恢復原狀。
+				var form = document.querySelector("form.form");
+				var button = form && form.querySelector(".submit");
+				if (!form || !button) return;
+				var idle = button.textContent;
+				form.addEventListener("submit", function () {
+					button.disabled = true;
+					button.setAttribute("aria-busy", "true");
+					button.textContent = button.dataset.busy;
+				});
+				window.addEventListener("pageshow", function (e) {
+					if (!e.persisted) return;
+					button.disabled = false;
+					button.removeAttribute("aria-busy");
+					button.textContent = idle;
+				});
 			})();
 		</script>
 
 		<style>
-			/* 頁首框：與首頁的大框同一種金色雙線，但內距各自不同。 */
-			.contact-head {
-				position: relative;
-				overflow: hidden;
-				padding: 12.2px 14.6px 13.4px 13px;
-				border: 3px double #b8860b;
-				background: hsl(220 58% 97.4%);
+			/* --- 左欄：其他聯絡方式 --- */
+			.info-title {
+				font-size: 1.25rem;
+				line-height: 1.4;
 			}
-			:global(:root[data-theme="dark"]) .contact-head {
-				border-color: #e0b43a;
-				background: hsl(228 42% 14%);
+			.info {
+				margin: var(--s-4) 0 0;
+				border-top: 1px solid var(--hairline);
 			}
-			.lead {
-				position: relative;
-				margin-top: 8.4px;
-				/* 行寬用 em：中日韓字元約是「0」的兩倍寬，ch 會讓中文導言被擠斷行。 */
-				max-width: 44em;
-				font-size: 15.4px;
+			.info > div {
+				padding-block: var(--s-3);
+				border-bottom: 1px solid var(--hairline);
 			}
-
-			.banners:not(:empty) {
-				display: block;
-			}
-			.banner {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 3px 8px;
-				align-items: baseline;
-				padding: 7.2px 10px 7.8px 9.4px;
-				border: 2px solid #3a8a2a;
-				background: hsl(110 60% 92%);
-				color: #151515;
-				font-weight: bold;
-			}
-			/* display:flex 的優先權高過瀏覽器內建的 [hidden]{display:none}，
-			   沒有這條的話四種狀態會同時出現在畫面上。 */
-			.banner[hidden] {
-				display: none;
-			}
-			.banner-ok::before {
-				content: "◎ " / "";
-				color: #1f6a12;
-			}
-			/* 錯誤：紅框黃底，文字本身說明發生什麼事，不只靠顏色。 */
-			.banner-err {
-				border-color: #c8001a;
-				background: hsl(52 94% 80%);
-			}
-			.banner-err::before {
-				content: "※ " / "";
-				color: #c8001a;
-			}
-			.banner a,
-			.banner a:visited {
-				color: #0033cc;
-			}
-
-			/* 其他聯絡方式：側欄裡的欄位清單，標籤小字、值粗體。 */
-			.info-list {
-				margin: 0;
-				padding: 4.6px 7px 6.2px 7.6px;
-			}
-			.info-item {
-				padding: 4.2px 0 4.6px;
-				border-bottom: 1px dashed var(--border);
-			}
-			.info-item:last-child {
-				border-bottom: 0;
-			}
-			.info-item dt {
+			.info dt {
 				color: var(--text-2);
-				font-family: var(--font-hei);
-				font-size: 12.6px;
+				font-size: 0.8125rem;
 			}
-			.info-item dt::before {
-				content: "◆ " / "";
-				color: var(--red);
-				font-size: 10px;
-			}
-			.info-item dd {
-				margin: 0.6px 0 0;
-				font-family: var(--font-ui);
-				font-size: 13.8px;
-				font-weight: bold;
+			.info dd {
+				margin: var(--s-1) 0 0;
+				font-weight: 500;
 				overflow-wrap: anywhere;
 			}
 			/* 還沒開通的欄位。視覺上淡化，但螢幕閱讀器仍會唸出 .sr-only 的說明。 */
@@ -392,17 +339,59 @@ const nav = [
 				color: var(--text-2);
 			}
 
-			/* 表單：欄位標籤在上、灰色凹陷的輸入框，像老系統的申請表。 */
+			/* --- 狀態訊息：不用第二個顏色，靠文字與記號說明（brand-spec §10）--- */
+			.banner {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: baseline;
+				gap: var(--s-1) var(--s-2);
+				padding: var(--s-4) var(--s-5);
+				border: 1px solid var(--hairline);
+				border-radius: var(--radius-m);
+				background: var(--surface-1);
+			}
+			/* display:flex 的優先權高過瀏覽器內建的 [hidden]{display:none}，
+			   沒有這條的話四種狀態會同時出現在畫面上。 */
+			.banner[hidden] {
+				display: none;
+			}
+			.banner::before {
+				content: "";
+				flex: none;
+				width: 6px;
+				height: 6px;
+				background: var(--accent);
+				transform: translateY(-2px);
+			}
+			/* 錯誤：強調色外框，文字本身說明發生什麼事，不只靠顏色。 */
+			.banner-err {
+				border-color: var(--accent);
+			}
+
+			/* --- 表單 --- */
 			.form {
 				display: grid;
-				gap: 9.4px;
+				grid-template-columns: minmax(0, 1fr);
+				gap: var(--s-5);
+				padding: var(--s-5);
+				border: 1px solid var(--hairline);
+				border-radius: var(--radius-l);
+				background: var(--surface-1);
+				box-shadow: var(--shadow);
 			}
-			.form > * + * {
-				margin-top: 0;
+			@media (min-width: 760px) {
+				.form {
+					padding: var(--s-6);
+				}
+			}
+			.form-title {
+				font-size: 1.25rem;
+				line-height: 1.4;
 			}
 			.row {
 				display: grid;
-				gap: 9.4px 12.2px;
+				grid-template-columns: minmax(0, 1fr);
+				gap: var(--s-5);
 			}
 			@media (min-width: 34rem) {
 				.row {
@@ -411,22 +400,21 @@ const nav = [
 			}
 			.field {
 				display: grid;
-				gap: 3px;
+				gap: var(--s-2);
 				min-width: 0;
 			}
 			label {
-				font-family: var(--font-hei);
-				font-size: 14px;
-				font-weight: bold;
+				font-size: 0.875rem;
+				font-weight: 500;
 			}
-			/* 必填欄位的標籤前加紅色星號。 */
-			.field:has(:required) > label::before {
-				content: "＊" / "";
-				color: #c8001a;
+			/* 必填欄位：標籤後面加強調色記號，螢幕閱讀器從 required 屬性得知。 */
+			.field:has(:required) > label::after {
+				content: " *" / "";
+				color: var(--accent);
 			}
 			.optional {
 				color: var(--text-2);
-				font-weight: normal;
+				font-weight: 400;
 			}
 			input[type="text"],
 			input[type="email"],
@@ -434,41 +422,31 @@ const nav = [
 			select,
 			textarea {
 				width: 100%;
-				padding: 4.6px 6px 5px;
-				border: 2px inset #b9c1d1;
-				border-radius: 0;
-				background: #ffffff;
-				color: #151515;
-				font-family: var(--font-body);
-				font-size: 15px;
+				min-height: 40px;
+				padding: var(--s-2) var(--s-3);
+				border: 1px solid var(--hairline);
+				border-radius: var(--radius-s);
+				background: var(--ground);
+				color: var(--text);
+				font: inherit;
+				font-size: 0.9375rem;
+				transition: border-color 150ms ease-out;
 			}
-			:global(:root[data-theme="dark"]) input[type="text"],
-			:global(:root[data-theme="dark"]) input[type="email"],
-			:global(:root[data-theme="dark"]) input[type="tel"],
-			:global(:root[data-theme="dark"]) select,
-			:global(:root[data-theme="dark"]) textarea {
-				border-color: #5a6a99;
-				background: #0b1126;
-				color: #eef1f8;
+			input:hover,
+			select:hover,
+			textarea:hover {
+				border-color: color-mix(in srgb, var(--text) 24%, transparent);
 			}
 			input::placeholder,
 			textarea::placeholder {
-				color: #6b7285;
+				color: var(--text-2);
 				opacity: 1;
 			}
-			:global(:root[data-theme="dark"]) input::placeholder,
-			:global(:root[data-theme="dark"]) textarea::placeholder {
-				color: #9aa4c2;
-			}
-			input:focus,
-			select:focus,
-			textarea:focus {
-				background: hsl(52 100% 95%);
-			}
-			:global(:root[data-theme="dark"]) input:focus,
-			:global(:root[data-theme="dark"]) select:focus,
-			:global(:root[data-theme="dark"]) textarea:focus {
-				background: #141d3d;
+			input:focus-visible,
+			select:focus-visible,
+			textarea:focus-visible {
+				border-color: var(--accent);
+				outline-offset: 0;
 			}
 
 			.select-wrap {
@@ -476,107 +454,46 @@ const nav = [
 			}
 			select {
 				appearance: none;
-				padding-right: 28px;
+				padding-right: var(--s-6);
 				cursor: pointer;
 			}
-			/* 自繪的下拉箭頭：右邊一格灰色浮雕小按鈕，裡面一個三角形。 */
+			/* 下拉箭頭：一個細線 V 字。 */
 			.select-wrap::after {
-				content: "▼" / "";
+				content: "";
 				position: absolute;
-				right: 2px;
-				top: 2px;
-				bottom: 2px;
-				width: 20px;
-				display: grid;
-				place-items: center;
-				border-left: 1px solid #8f9bb3;
-				background: linear-gradient(180deg, #ffffff, #d5dae5);
-				color: #151515;
-				font-size: 9px;
+				right: var(--s-4);
+				top: 50%;
+				width: 7px;
+				height: 7px;
+				border-right: 1.5px solid var(--text-2);
+				border-bottom: 1.5px solid var(--text-2);
+				transform: translateY(-70%) rotate(45deg);
 				pointer-events: none;
 			}
 			/* 尚未選擇時，顯示文字比照 placeholder 淡化 */
 			select:invalid {
-				color: #6b7285;
-			}
-
-			/* 展開後的選項清單。支援 customizable select 的瀏覽器改用 base-select 畫面板；
-			   不支援的會整段忽略 @supports，落回上面的 appearance:none + 自繪箭頭。
-			   元素始終是真正的 <select>，鍵盤操作與表單驗證不受影響。 */
-			@supports (appearance: base-select) {
-				select,
-				select::picker(select) {
-					appearance: base-select;
-				}
-				select {
-					padding-right: 6px;
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-					gap: 6px;
-				}
-				.select-wrap::after {
-					display: none;
-				}
-				select::picker(select) {
-					border: 1px solid #000;
-					border-radius: 0;
-					background: #ffffff;
-					color: #151515;
-					padding: 1px;
-					box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
-					max-height: 20rem;
-					overflow-y: auto;
-				}
-				option {
-					position: relative;
-					display: flex;
-					align-items: center;
-					/* 左側留出打勾的欄位，未選中的列才不會跟選中的列對不齊。 */
-					padding: 3px 8px 3px 24px;
-					color: #151515;
-					font-size: 15px;
-					cursor: pointer;
-				}
-				/* 反白：老系統的深藍底白字。 */
-				option:hover,
-				option:focus {
-					background: #000095;
-					color: #ffffff;
-				}
-				/* placeholder 雖然也是 :checked，但它不是一個「選擇」，不該被強調。 */
-				option:checked:not([value=""]) {
-					font-weight: bold;
-				}
-				option::checkmark {
-					position: absolute;
-					left: 7px;
-				}
-				option[value=""] {
-					color: #6b7285;
-				}
+				color: var(--text-2);
 			}
 
 			textarea {
 				resize: vertical;
-				min-height: 8rem;
+				min-height: 10rem;
 			}
-			/* 只在使用者動過之後才標記。紅框加粗、底色轉淡紅，
-			   而且標籤前本來就有必填記號，不只靠顏色。 */
+			/* 只在使用者動過之後才標記；標籤上本來就有必填記號，不只靠顏色。 */
 			input:user-invalid,
 			select:user-invalid,
 			textarea:user-invalid {
-				border: 2px solid #c8001a;
-				background: hsl(0 100% 97%);
+				border-color: var(--accent);
+				box-shadow: 0 0 0 1px var(--accent);
 			}
 			.hint {
+				margin-top: calc(-1 * var(--s-3));
 				color: var(--text-2);
-				font-size: 13px;
-				line-height: 1.5;
+				font-size: 0.8125rem;
+				line-height: 1.6;
 			}
-			.hint::before {
-				content: "※ " / "";
-				color: var(--red);
+			.form > .hint:last-child {
+				margin-top: 0;
 			}
 
 			/* 蜜罐。不用 display:none，有些機器人會跳過被隱藏的欄位。 */
@@ -590,18 +507,11 @@ const nav = [
 
 			.submit {
 				justify-self: start;
-				font-size: 16px;
-				transform: translateX(0.6px);
 			}
-
-			.back {
-				font-size: 14px;
+			.submit:disabled {
+				cursor: progress;
+				opacity: 0.7;
 			}
-			.back::before {
-				content: "→ " / "";
-				color: var(--red);
-			}
-
 			@media (max-width: 30rem) {
 				.submit {
 					justify-self: stretch;

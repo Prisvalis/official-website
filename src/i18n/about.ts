@@ -1,6 +1,6 @@
 // 公司沿革頁（/about 與 /en/about）的文案。
 //
-// 語氣依「華國美學」Skill 的 rules/copywriting.md。
+// 語氣：正式、就事論事，自稱「本公司」。不用「e化」、句尾不用驚嘆號（見 issue #27）。
 // 事實只寫有出處的：
 // - 登記資料取自經濟部商工登記公示資料與財政部稅籍登記資料公示查詢（2026-09 站方提供之截圖）。
 //   資料有異動時，這裡要跟著改，並以主管機關公示為準。
@@ -88,13 +88,13 @@ export const about: Record<Locale, AboutContent> = {
 			"算力有限公司（Prisvalis LTD.）公司沿革專區：創立緣起、發展願景、大事紀要，以及商工與稅籍登記基本資料。本公司於中華民國一一五年九月三日經臺中市政府核准設立。",
 		navLabel: "公司沿革",
 		h1: "算力有限公司，公司沿革與發展願景",
-		lead: "歡迎蒞臨本公司「公司沿革」專區！本專區彙整本公司之創立緣起、發展願景、大事紀要及登記基本資料，以供各界參考。資料如有異動，一律以主管機關公示資料為準，敬請見諒。",
+		lead: "本頁彙整本公司之創立緣起、發展願景、大事紀要及登記基本資料。資料如有異動，一律以主管機關公示資料為準。",
 
 		origin: {
 			title: "創立緣起說明",
 			body: [
 				"本公司之成立，係深受大學時期好友之影響。在好友的影響之下，創辦人決定投身資訊科技領域，並於中華民國一一五年九月三日經臺中市政府核准設立「算力有限公司」。",
-				"本公司目前為一人公司，由同一人負責需求洽談、系統開發與部署上線，請大家多多指教！",
+				"本公司目前為一人公司，由同一人負責需求洽談、系統開發與部署上線。",
 			],
 		},
 
@@ -103,7 +103,7 @@ export const about: Record<Locale, AboutContent> = {
 			zh: "中文名稱「算力」，取其「運算能力」之意。",
 			en: [
 				"英文名稱「Prisvalis」，由英文 pristine 與拉丁文 valere 兩個字根組合而成，希望能夠傳達「原初的價值」與「純粹的力量」之信念。",
-				"在資訊科技飛速發展的現在，本公司希望透過這個名稱，找回大家對於資訊科技最原始的期盼以及信念！",
+				"在資訊科技飛速發展的現在，本公司希望透過這個名稱，找回大家對於資訊科技最原始的期盼以及信念。",
 			],
 			caption: "英文名稱 Prisvalis 字根說明一覽表",
 			colRoot: "字根",
@@ -117,11 +117,11 @@ export const about: Record<Locale, AboutContent> = {
 
 		vision: {
 			title: "發展願景與使命",
-			lead: "本公司致力推動資訊科技之發展，並期盼未來能夠站上世界的舞台！",
+			lead: "本公司致力推動資訊科技之發展，並期盼未來能夠站上世界的舞台。",
 			points: [
-				"致力推動資訊科技之發展，落實服務e化",
+				"致力推動資訊科技之發展，以實際可用的系統服務客戶",
 				"以踏實可用之系統，陪伴客戶一步一步邁向數位化",
-				"期盼未來能夠站上世界的舞台，一起加油！",
+				"期盼未來能夠站上世界的舞台",
 			],
 		},
 
@@ -141,7 +141,7 @@ export const about: Record<Locale, AboutContent> = {
 				},
 				{
 					label: "迄今",
-					value: "持續營運中，承接系統開發與部署服務，並持續開發一人公司營運管理e化平台 Company of One。",
+					value: "持續營運中，承接系統開發與部署服務，並持續開發一人公司營運管理平台 Company of One。",
 				},
 			],
 		},
@@ -172,7 +172,7 @@ export const about: Record<Locale, AboutContent> = {
 			captionTax: "稅籍登記營業項目（共 4 項）",
 			colCode: "代碼",
 			colName: "項目名稱",
-			note: "稅籍登記之營業項目受稅務法令與登錄欄位限制，與商工登記所營事業項目不盡相同，此為正常情形，請大家不要擔心喔！",
+			note: "稅籍登記之營業項目受稅務法令與登錄欄位限制，與商工登記所營事業項目不盡相同，此為正常情形。",
 			company: withCodes(COMPANY_CODES, [
 				"管理顧問業",
 				"其他顧問服務業",
@@ -210,13 +210,13 @@ export const about: Record<Locale, AboutContent> = {
 			"The Company History Section of Prisvalis LTD. (算力有限公司): founding background, vision, chronicle of events, and the company and tax registration profile. This Company was approved for incorporation by the Taichung City Government on 3 September 2026.",
 		navLabel: "Company History",
 		h1: "Prisvalis LTD., Company History and Development Vision",
-		lead: "Welcome to the Company History Section of this Company! This section brings together the founding background, development vision, chronicle of events and registration profile of this Company for the reference of all. Should any information change, the official public records of the competent authorities shall prevail. Your kind understanding is respectfully requested.",
+		lead: "This page brings together the founding background, development vision, chronicle of events and registration profile of this Company. Should any information change, the official public records of the competent authorities shall prevail.",
 
 		origin: {
 			title: "Founding Background",
 			body: [
 				"This Company was founded under the deep influence of close friends from university. Under that influence, the founder decided to take up the field of information technology, and Prisvalis LTD. (算力有限公司) was approved for incorporation by the Taichung City Government on 3 September 2026.",
-				"This Company is at present a one-person company: one and the same person handles requirement discussions, system development and deployment. Your kind guidance is warmly welcomed!",
+				"This Company is at present a one-person company: one and the same person handles requirement discussions, system development and deployment.",
 			],
 		},
 
@@ -225,7 +225,7 @@ export const about: Record<Locale, AboutContent> = {
 			zh: "The Chinese name 算力 means “computing power”.",
 			en: [
 				"The English name “Prisvalis” combines two roots, the English word pristine and the Latin verb valere, and is intended to convey the belief in “original value” and “pure strength”.",
-				"At a time when information technology is advancing at great speed, this Company hopes through this name to recover the original hopes and beliefs that everyone once held for information technology!",
+				"At a time when information technology is advancing at great speed, this Company hopes through this name to recover the original hopes and beliefs that everyone once held for information technology.",
 			],
 			caption: "Table of the roots of the English name Prisvalis",
 			colRoot: "Root",
@@ -239,11 +239,11 @@ export const about: Record<Locale, AboutContent> = {
 
 		vision: {
 			title: "Development Vision and Mission",
-			lead: "This Company is committed to advancing the development of information technology, and hopes one day to stand on the world stage!",
+			lead: "This Company is committed to advancing the development of information technology, and hopes one day to stand on the world stage.",
 			points: [
-				"Committed to advancing information technology and realising e-services",
+				"Committed to advancing information technology and serving clients with systems that work",
 				"Accompanying clients step by step towards digitalisation with practical, working systems",
-				"Hoping one day to stand on the world stage. Let us all work hard together!",
+				"Hoping one day to stand on the world stage",
 			],
 		},
 
@@ -263,7 +263,7 @@ export const about: Record<Locale, AboutContent> = {
 				},
 				{
 					label: "To date",
-					value: "In continuous operation, undertaking system development and deployment services, and continuing to develop Company of One, the e-platform for one-person company operations management.",
+					value: "In continuous operation, undertaking system development and deployment services, and continuing to develop Company of One, an operations management platform for one-person companies.",
 				},
 			],
 		},
@@ -294,7 +294,7 @@ export const about: Record<Locale, AboutContent> = {
 			captionTax: "Business items in the tax registration (4 items)",
 			colCode: "Code",
 			colName: "Item",
-			note: "The English item names are translations provided for reference only; the Chinese registration is authoritative. Tax registration items are limited by tax regulations and registry fields and therefore differ from the company registration. This is normal, so please do not worry!",
+			note: "The English item names are translations provided for reference only; the Chinese registration is authoritative. Tax registration items are limited by tax regulations and registry fields and therefore differ from the company registration. This is normal.",
 			company: withCodes(COMPANY_CODES, [
 				"Management consulting",
 				"Other consulting services",

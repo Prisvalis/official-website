@@ -1,0 +1,237 @@
+---
+// 全站頁首：logo、主要導覽、語系切換與主題切換。固定在頂端，底色半透明加模糊，
+// 底部一條細框線（brand-spec §8）。導覽項目由各頁面傳入，連結目標不在這裡決定。
+//
+// Company of One 產品頁另外傳入 brandText（以文字取代公司 logo）、back（返回官網）
+// 與 cta（開始使用）。
+import ThemeToggle from "./ThemeToggle.astro";
+import { COMPANY, type Locale } from "../consts";
+import { t } from "../i18n/ui";
+
+interface NavItem {
+	href: string;
+	label: string;
+	current?: boolean;
+}
+
+interface Props {
+	locale: Locale;
+	homeHref: string;
+	switchHref: string;
+	nav: NavItem[];
+	navLabel?: string;
+	/** 以文字取代公司 logo（產品頁用產品名稱）。 */
+	brandText?: string;
+	/** 導覽最前面的返回連結（產品頁返回官網）。 */
+	back?: { href: string; label: string };
+	/** 工具列上的主要行動按鈕。 */
+	cta?: { href: string; label: string };
+}
+
+const { locale, homeHref, switchHref, nav, navLabel, brandText, back, cta } = Astro.props;
+---
+
+<header class="site-header">
+	<div class="wrap bar">
+		{
+			brandText ? (
+				<a class="brand brand-text" href={homeHref}>
+					{brandText}
+				</a>
+			) : (
+				<a class="brand" href={homeHref} aria-label={`${COMPANY.nameEn}｜${COMPANY.nameZh}`}>
+					<img class="logo logo-light" src="/logo.svg" alt="" width="297" height="46" />
+					<img class="logo logo-dark" src="/logo-dark.svg" alt="" width="297" height="46" />
+				</a>
+			)
+		}
+
+		<nav class="nav" aria-label={navLabel}>
+			<ul>
+				{
+					back && (
+						<li class="back">
+							<a href={back.href}>
+								<span aria-hidden="true">←</span>
+								{back.label}
+							</a>
+						</li>
+					)
+				}
+				{
+					nav.map((item) => (
+						<li>
+							<a href={item.href} aria-current={item.current ? "page" : undefined}>
+								{item.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+
+		<div class="tools">
+			<a class="chip lang" href={switchHref} aria-label={t(locale, "switch.aria")}>
+				{t(locale, "switch.to")}
+			</a>
+			<ThemeToggle locale={locale} />
+			{
+				cta && (
+					<a class="btn btn-primary cta" href={cta.href}>
+						{cta.label}
+					</a>
+				)
+			}
+		</div>
+	</div>
+</header>
+
+<style>
+	.site-header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		border-bottom: 1px solid var(--hairline);
+		background: color-mix(in srgb, var(--ground) 80%, transparent);
+		-webkit-backdrop-filter: blur(12px);
+		backdrop-filter: blur(12px);
+	}
+
+	.bar {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		grid-template-areas:
+			"brand tools"
+			"nav nav";
+		align-items: center;
+		column-gap: var(--s-5);
+	}
+	/* 導覽文字沿用各區塊標題，偏長，1200px 以上才放得進同一行。 */
+	@media (min-width: 1200px) {
+		.bar {
+			grid-template-columns: auto minmax(0, 1fr) auto;
+			grid-template-areas: "brand nav tools";
+			height: 64px;
+		}
+	}
+
+	.brand {
+		grid-area: brand;
+		display: flex;
+		align-items: center;
+		height: 56px;
+	}
+	.brand-text {
+		color: var(--text);
+		font-family: var(--font-display);
+		font-size: 1.0625rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		text-decoration: none;
+	}
+	.logo {
+		width: auto;
+		height: 22px;
+	}
+	.logo-dark,
+	:global(:root[data-theme="dark"]) .logo-light {
+		display: none;
+	}
+	:global(:root[data-theme="dark"]) .logo-dark {
+		display: block;
+	}
+
+	.nav {
+		grid-area: nav;
+		/* 手機上導覽排成第二行，項目多時可以橫向捲動。 */
+		margin-inline: calc(-1 * var(--gutter));
+		padding-inline: var(--gutter);
+		overflow-x: auto;
+		scrollbar-width: none;
+	}
+	.nav ul {
+		display: flex;
+		gap: var(--s-1);
+		margin: 0;
+		padding: 0 0 var(--s-2);
+		list-style: none;
+	}
+	@media (min-width: 1200px) {
+		.nav {
+			margin: 0;
+			padding: 0;
+		}
+		/* 用 margin 置中而不用 justify-content：放不下時會退回靠左，仍可捲動到第一項。 */
+		.nav ul {
+			width: max-content;
+			margin-inline: auto;
+			padding: 0;
+		}
+	}
+	.nav a {
+		display: inline-flex;
+		align-items: center;
+		height: 32px;
+		padding-inline: var(--s-3);
+		border-radius: var(--radius-s);
+		color: var(--text-2);
+		font-size: 0.875rem;
+		font-weight: 500;
+		text-decoration: none;
+		white-space: nowrap;
+		transition:
+			color 150ms ease-out,
+			background-color 150ms ease-out;
+	}
+	.nav a:hover {
+		background: var(--surface-2);
+		color: var(--text);
+	}
+	/* 目前所在頁面：品牌方塊記號。 */
+	.nav a[aria-current="page"] {
+		color: var(--text);
+	}
+	.nav a[aria-current="page"]::before {
+		content: "";
+		width: 6px;
+		height: 6px;
+		margin-right: var(--s-2);
+		background: var(--accent);
+	}
+
+	/* 返回官網：與導覽同一列，用細線與其他項目隔開。 */
+	.back {
+		margin-right: var(--s-2);
+		padding-right: var(--s-2);
+		border-right: 1px solid var(--hairline);
+	}
+	.cta {
+		min-height: 32px;
+		padding: var(--s-1) var(--s-3);
+		font-size: 0.875rem;
+		white-space: nowrap;
+	}
+	/* 手機上頁首放不下；頁面開頭本來就有同一個按鈕。 */
+	@media (max-width: 479.98px) {
+		.cta {
+			display: none;
+		}
+	}
+
+	.tools {
+		grid-area: tools;
+		display: flex;
+		align-items: center;
+		gap: var(--s-2);
+	}
+	.lang {
+		text-decoration: none;
+		transition:
+			color 150ms ease-out,
+			border-color 150ms ease-out;
+	}
+	.lang:hover {
+		border-color: color-mix(in srgb, var(--text) 24%, transparent);
+		color: var(--text);
+	}
+</style>

@@ -1,14 +1,14 @@
 ---
 // 首頁。文案全部在 src/i18n/home.ts，這裡只負責結構與版面。
 //
-// 版面依「華國美學」Skill：固定寬度的入口網站外框、三層頁首、左側欄重複導覽、
-// 主欄是一格一格有標題列的框，作品用行政表格，限制用黃底公告。
-// 共用樣式在 styles/global.css。
+// 設計依 docs/brand-spec.md（Linear recipe）。各區塊刻意用不同的形式，避免整頁都是
+// 「標題＋卡片列」的模板節奏：開頭是左大右小的不對稱構圖、作品是左欄標題右欄表格、
+// 流程是橫向編號、承接範圍是單欄散文、聯絡是左文右清單。
+// 共用樣式在 styles/global.css，頁首與頁尾在 SiteHeader、SiteFooter。
 import BaseHead from "../components/BaseHead.astro";
 import MourningNotice from "../components/MourningNotice.astro";
-import PortalHeader from "../components/PortalHeader.astro";
-import PortalFooter from "../components/PortalFooter.astro";
-import WordArt from "../components/WordArt.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 import { COMPANY, LOCALE_HOME_PATH, SOCIAL, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { home } from "../i18n/home";
@@ -35,6 +35,11 @@ const statusHref = cooUrl(locale, "/#status");
 const external = t(locale, "link.external");
 
 const c = home[locale];
+const a = about[locale];
+
+// 開頭右欄的公司資料，直接取自沿革頁的登記資料表（統一編號、公司所在地、核准設立日期），
+// 不另外寫一份。沿革頁的表格順序改了，這裡的索引要跟著改。
+const facts = [0, 7, 9].map((i) => a.profile.rows[i]);
 
 const sections = [
 	{ id: "work", label: c.work.title },
@@ -45,7 +50,7 @@ const sections = [
 
 const nav = [
 	...sections.slice(0, 3).map((s) => ({ href: `#${s.id}`, label: s.label })),
-	{ href: ABOUT_PATH[locale], label: about[locale].navLabel },
+	{ href: ABOUT_PATH[locale], label: a.navLabel },
 	{ href: cooHref, label: COO_NAME },
 	{ href: contactHref, label: t(locale, "nav.contact") },
 ];
@@ -58,172 +63,42 @@ const nav = [
 	</head>
 	<body>
 		<MourningNotice locale={locale} />
+		<SiteHeader locale={locale} homeHref={LOCALE_HOME_PATH[locale]} switchHref={switchHref} nav={nav} />
 
-		<div class="portal">
-			<PortalHeader
-				locale={locale}
-				homeHref={LOCALE_HOME_PATH[locale]}
-				name={COMPANY.nameZh}
-				switchHref={switchHref}
-				nav={nav}
-			/>
-
-			<div class="portal-body">
-				<main class="portal-main">
-					<section class="hero-box">
-						<WordArt text={c.hero.h1} />
-						<p class="hero-lead">{c.hero.lead}</p>
-						<div class="actions">
+		<main id="main">
+			<section class="hero">
+				<div class="wrap hero-grid">
+					<div class="hero-main">
+						<h1 class="rise">{c.hero.h1}</h1>
+						<p class="lead measure rise rise-2">{c.hero.lead}</p>
+						<div class="actions rise rise-3">
 							<a class="btn btn-primary" href={contactHref}>{c.hero.ctaPrimary}</a>
 							<a class="btn" href={cooHref}>{c.hero.ctaSecondary}</a>
 						</div>
-					</section>
+					</div>
 
-					<section class="box" id="work">
-						<h2 class="box-title">{c.work.title}</h2>
-						<div class="box-body">
-							<p>{c.work.lead}</p>
-
-							<div class="table-scroll">
-								<table>
-									<caption>{c.work.caption}</caption>
-									<thead>
-										<tr>
-											<th scope="col">{c.work.columns.area}</th>
-											<th scope="col">{c.work.columns.approach}</th>
-											<th scope="col">{c.work.columns.reason}</th>
-										</tr>
-									</thead>
-									<tbody>
-										{
-											c.work.rows.map((row) => (
-												<tr>
-													<th scope="row">{row.area}</th>
-													<td>{row.approach}</td>
-													<td>{row.reason}</td>
-												</tr>
-											))
-										}
-									</tbody>
-								</table>
-							</div>
-
-							<div class="notice">
-								<p>
-									{c.work.limits}
-									<a href={statusHref}>{c.work.links.status}</a>
-								</p>
-							</div>
-						</div>
-					</section>
-
-					<section class="box" id="process">
-						<h2 class="box-title">{c.process.title}</h2>
-						<div class="box-body">
-							<ol class="steps">
-								{
-									c.process.steps.map((step) => (
-										<li>
-											<h3>{step.title}</h3>
-											<p>{step.body}</p>
-										</li>
-									))
-								}
-							</ol>
-						</div>
-					</section>
-
-					<section class="box" id="scope">
-						<h2 class="box-title">{c.scope.title}</h2>
-						<div class="box-body scope">
-							{c.scope.body.map((para) => <p>{para}</p>)}
-						</div>
-					</section>
-
-					<section class="box" id="contact">
-						<h2 class="box-title">{c.contact.title}</h2>
-						<div class="box-body">
-							<p>{c.contact.body}</p>
-							<dl class="info-list">
-								<div class="info-item">
-									<dt>{t(locale, "contact.info.phone")}</dt>
-									<dd>
-										{
-											hasPhone ? (
-												<a href={telHref}>{COMPANY.phone}</a>
-											) : (
-												<span class="empty">
-													{COMPANY.phone}
-													<span class="sr-only">{t(locale, "contact.info.pending")}</span>
-												</span>
-											)
-										}
-									</dd>
-								</div>
-								<div class="info-item">
-									<dt>{t(locale, "contact.info.email")}</dt>
-									<dd><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></dd>
-								</div>
-								<div class="info-item">
-									<dt>{t(locale, "contact.info.line")}</dt>
-									<dd>
-										{
-											hasLine ? (
-												<a href={lineHref} target="_blank" rel="noopener noreferrer">
-													{COMPANY.lineId}
-													<span class="sr-only">{external}</span>
-												</a>
-											) : (
-												<span class="empty">
-													{COMPANY.lineId}
-													<span class="sr-only">{t(locale, "contact.info.pending")}</span>
-												</span>
-											)
-										}
-									</dd>
-								</div>
-								<div class="info-item">
-									<dt>{t(locale, "contact.info.instagram")}</dt>
-									<dd>
-										<a href={SOCIAL.instagram} target="_blank" rel="me noopener noreferrer">
-											{instagramHandle}
-											<span class="sr-only">{external}</span>
-										</a>
-									</dd>
-								</div>
-								<div class="info-item">
-									<dt>{t(locale, "contact.info.reply")}</dt>
-									<dd>{t(locale, "contact.info.replyValue")}</dd>
-								</div>
-							</dl>
-							<p class="section-entry">
-								<a href={contactHref}>{t(locale, "contact.heading")}</a>
-							</p>
-							<p class="section-entry">
-								<a href={`${contactHref}#form`}>{t(locale, "contact.form.title")}</a>
-							</p>
-						</div>
-					</section>
-				</main>
-
-				<aside class="portal-side">
-					<section class="side-box">
-						<h2 class="side-box-title">{COMPANY.nameZh}</h2>
-						<ul>
+					<aside class="facts rise rise-3" aria-label={a.profile.title}>
+						<dl>
 							{
-								sections.map((s) => (
-									<li>
-										<a href={`#${s.id}`}>{s.label}</a>
-									</li>
+								facts.map((f, i) => (
+									<div>
+										<dt>{f.label}</dt>
+										<dd>{i === 0 ? <span class="chip">{f.value}</span> : f.value}</dd>
+									</div>
 								))
 							}
-							<li><a href={ABOUT_PATH[locale]}>{about[locale].navLabel}</a></li>
-						</ul>
-					</section>
+						</dl>
+						<a class="facts-more" href={ABOUT_PATH[locale]}>{a.navLabel}</a>
+					</aside>
+				</div>
+			</section>
 
-					<section class="side-box">
-						<h2 class="side-box-title">{COO_NAME}</h2>
-						<ul>
+			<section class="section" id="work">
+				<div class="wrap split">
+					<header class="split-head">
+						<h2>{c.work.title}</h2>
+						<p class="lead">{c.work.lead}</p>
+						<ul class="mark-list work-links">
 							<li><a href={cooHref}>{c.work.links.product}</a></li>
 							<li>
 								<a href={APP_URL} target="_blank" rel="noopener noreferrer">
@@ -236,199 +111,299 @@ const nav = [
 										aria-hidden="true"
 										fill="none"
 										stroke="currentColor"
-										stroke-width="2.4"
+										stroke-width="2.2"
 										stroke-linecap="round"
 										stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg
 									>
 									<span class="sr-only">{external}</span>
 								</a>
 							</li>
-							<li><a href={statusHref}>{c.work.links.status}</a></li>
 						</ul>
-					</section>
+					</header>
 
-					<section class="side-box">
-						<h2 class="side-box-title">{c.contact.title}</h2>
-						<dl class="info-list">
-							<div class="info-item">
-								<dt>{t(locale, "contact.info.phone")}</dt>
-								<dd>
-									{hasPhone ? <a href={telHref}>{COMPANY.phone}</a> : <span class="empty">{COMPANY.phone}</span>}
-								</dd>
-							</div>
-							<div class="info-item">
-								<dt>{t(locale, "contact.info.email")}</dt>
-								<dd><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></dd>
-							</div>
-							<div class="info-item">
-								<dt>{t(locale, "contact.info.line")}</dt>
-								<dd>
+					<div class="split-body">
+						<div class="table-scroll">
+							<table>
+								<caption>{c.work.caption}</caption>
+								<thead>
+									<tr>
+										<th scope="col">{c.work.columns.area}</th>
+										<th scope="col">{c.work.columns.approach}</th>
+										<th scope="col">{c.work.columns.reason}</th>
+									</tr>
+								</thead>
+								<tbody>
 									{
-										hasLine ? (
-											<a href={lineHref} target="_blank" rel="noopener noreferrer">{COMPANY.lineId}</a>
-										) : (
-											<span class="empty">{COMPANY.lineId}</span>
-										)
+										c.work.rows.map((row) => (
+											<tr>
+												<th scope="row">{row.area}</th>
+												<td>{row.approach}</td>
+												<td>{row.reason}</td>
+											</tr>
+										))
 									}
-								</dd>
-							</div>
-							<div class="info-item">
-								<dt>{t(locale, "contact.info.reply")}</dt>
-								<dd>{t(locale, "contact.info.replyValue")}</dd>
-							</div>
-						</dl>
-						<p class="section-entry">
-							<a href={contactHref}>{t(locale, "contact.heading")}</a>
-						</p>
-						<p class="section-entry">
-							<a href={`${contactHref}#form`}>{t(locale, "contact.form.title")}</a>
-						</p>
-					</section>
-				</aside>
-			</div>
+								</tbody>
+							</table>
+						</div>
 
-			<PortalFooter locale={locale} social />
-		</div>
+						<div class="notice">
+							<p>
+								{c.work.limits}
+								<a href={statusHref}>{c.work.links.status}</a>
+							</p>
+						</div>
+
+						<!-- v0 佔位：Company of One 的真實介面截圖由站方提供（#26 素材清單）。 -->
+						<div class="placeholder" role="img" aria-label={COO_NAME}>
+							{locale === "en" ? "[Company of One screenshot, 16:9]" : "[Company of One 介面截圖 16:9]"}
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="section" id="process">
+				<div class="wrap">
+					<h2>{c.process.title}</h2>
+					<ol class="steps">
+						{
+							c.process.steps.map((step, i) => (
+								<li>
+									<span class="step-no" aria-hidden="true">
+										{String(i + 1).padStart(2, "0")}
+									</span>
+									<h3>{step.title}</h3>
+									<p>{step.body}</p>
+								</li>
+							))
+						}
+					</ol>
+				</div>
+			</section>
+
+			<section class="section" id="scope">
+				<div class="wrap">
+					<h2>{c.scope.title}</h2>
+					<div class="prose measure">
+						{c.scope.body.map((para) => <p>{para}</p>)}
+					</div>
+				</div>
+			</section>
+
+			<section class="section" id="contact">
+				<div class="wrap split">
+					<header class="split-head">
+						<h2>{c.contact.title}</h2>
+						<p class="lead">{c.contact.body}</p>
+						<div class="actions contact-actions">
+							<a class="btn" href={`${contactHref}#form`}>{t(locale, "contact.form.title")}</a>
+						</div>
+					</header>
+
+					<dl class="info split-body">
+						<div>
+							<dt>{t(locale, "contact.info.phone")}</dt>
+							<dd>
+								{
+									hasPhone ? (
+										<a href={telHref}>{COMPANY.phone}</a>
+									) : (
+										<span class="empty">
+											{COMPANY.phone}
+											<span class="sr-only">{t(locale, "contact.info.pending")}</span>
+										</span>
+									)
+								}
+							</dd>
+						</div>
+						<div>
+							<dt>{t(locale, "contact.info.email")}</dt>
+							<dd><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></dd>
+						</div>
+						<div>
+							<dt>{t(locale, "contact.info.line")}</dt>
+							<dd>
+								{
+									hasLine ? (
+										<a href={lineHref} target="_blank" rel="noopener noreferrer">
+											{COMPANY.lineId}
+											<span class="sr-only">{external}</span>
+										</a>
+									) : (
+										<span class="empty">
+											{COMPANY.lineId}
+											<span class="sr-only">{t(locale, "contact.info.pending")}</span>
+										</span>
+									)
+								}
+							</dd>
+						</div>
+						<div>
+							<dt>{t(locale, "contact.info.instagram")}</dt>
+							<dd>
+								<a href={SOCIAL.instagram} target="_blank" rel="me noopener noreferrer">
+									{instagramHandle}
+									<span class="sr-only">{external}</span>
+								</a>
+							</dd>
+						</div>
+						<div>
+							<dt>{t(locale, "contact.info.reply")}</dt>
+							<dd>{t(locale, "contact.info.replyValue")}</dd>
+						</div>
+					</dl>
+				</div>
+			</section>
+		</main>
+
+		<SiteFooter
+			locale={locale}
+			links={[
+				{ href: ABOUT_PATH[locale], label: a.navLabel },
+				{ href: cooHref, label: COO_NAME },
+				{ href: contactHref, label: t(locale, "nav.contact") },
+			]}
+		/>
 
 		<style>
-			/* 首頁大框：金色雙線框、淡藍底，像簡報封面。 */
-			.hero-box {
+			/* --- 開頭：左大右小，頂端一層品牌紅微光（brand-spec §9-4）--- */
+			.hero {
 				position: relative;
-				overflow: hidden;
-				padding: 14.6px 16.2px 16px 15px;
-				border: 3px double #b8860b;
-				background: hsl(220 60% 97%);
+				padding-block: var(--s-7) var(--s-7);
+				background: radial-gradient(60% 120% at 20% 0%, var(--glow), transparent 70%);
 			}
-			:global(:root[data-theme="dark"]) .hero-box {
-				border-color: #e0b43a;
-				background: hsl(228 42% 14%);
+			@media (min-width: 760px) {
+				.hero {
+					padding-block: var(--s-8) var(--s-8);
+				}
 			}
-			.hero-lead {
-				position: relative;
-				margin-top: 12.4px;
-				max-width: 42em;
-				font-size: 15.6px;
-				line-height: 1.75;
+			.hero-grid {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr);
+				gap: var(--s-6);
 			}
-			.actions {
-				display: flex;
-				flex-wrap: wrap;
-				align-items: center;
-				gap: 8px 13px;
-				margin-top: 13.6px;
+			@media (min-width: 960px) {
+				.hero-grid {
+					grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+					align-items: end;
+					gap: var(--s-7);
+				}
+			}
+			.hero-main .lead {
+				margin-top: var(--s-5);
+			}
+			.hero .actions {
+				margin-top: var(--s-6);
 			}
 
-			/* 服務窗口欄位清單，標籤小字、值粗體，與聯絡頁側欄同一套。 */
-			.info-list {
-				margin: 2px 0 0;
-				padding: 1px 2px 0;
+			.facts {
+				padding: var(--s-5);
+				border: 1px solid var(--hairline);
+				border-radius: var(--radius-m);
+				background: var(--surface-1);
+				box-shadow: var(--shadow);
 			}
-			.side-box .info-list {
+			.facts dl {
+				display: grid;
+				gap: var(--s-4);
 				margin: 0;
-				padding: 5.6px 7px 6.4px 7.6px;
 			}
-			.info-item {
-				padding: 4.2px 0 4.6px;
-				border-bottom: 1px dashed var(--border);
-			}
-			.info-item:last-child {
-				border-bottom: 0;
-			}
-			.info-item dt {
+			.facts dt {
 				color: var(--text-2);
-				font-family: var(--font-hei);
-				font-size: 12.6px;
+				font-size: 0.8125rem;
 			}
-			.info-item dt::before {
-				content: "◆ " / "";
-				color: var(--red);
-				font-size: 10px;
+			.facts dd {
+				margin: var(--s-1) 0 0;
+				font-size: 0.9375rem;
 			}
-			.info-item dd {
-				margin: 0.6px 0 0;
-				font-family: var(--font-ui);
-				font-size: 13.8px;
-				font-weight: bold;
+			.facts-more {
+				display: inline-block;
+				margin-top: var(--s-5);
+				font-size: 0.875rem;
+			}
+
+			.work-links {
+				margin-top: var(--s-5);
+			}
+			.contact-actions {
+				margin-top: var(--s-5);
+			}
+
+			/* --- 流程：橫向編號 --- */
+			.steps {
+				display: grid;
+				gap: var(--s-6) var(--s-5);
+				margin: var(--s-6) 0 0;
+				padding: 0;
+				list-style: none;
+			}
+			@media (min-width: 760px) {
+				.steps {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
+			}
+			@media (min-width: 1100px) {
+				.steps {
+					grid-template-columns: repeat(4, minmax(0, 1fr));
+				}
+			}
+			.steps li {
+				padding-top: var(--s-4);
+				border-top: 1px solid var(--hairline);
+			}
+			.step-no {
+				display: flex;
+				align-items: center;
+				color: var(--text-2);
+				font-family: var(--font-mono);
+				font-size: 0.8125rem;
+			}
+			.step-no::before {
+				content: "";
+				width: 6px;
+				height: 6px;
+				margin-right: var(--s-2);
+				background: var(--accent);
+			}
+			.steps h3 {
+				margin-top: var(--s-3);
+			}
+			.steps p {
+				margin-top: var(--s-2);
+				color: var(--text-2);
+				font-size: 0.9375rem;
+			}
+
+			/* --- 承接範圍：單欄散文 --- */
+			.prose {
+				display: grid;
+				gap: var(--s-4);
+				margin-top: var(--s-5);
+				font-size: 1.0625rem;
+			}
+
+			/* --- 聯絡：細框線清單 --- */
+			.info {
+				margin: 0;
+				border-top: 1px solid var(--hairline);
+			}
+			.info > div {
+				display: grid;
+				grid-template-columns: minmax(7em, 1fr) 2fr;
+				gap: var(--s-4);
+				padding-block: var(--s-4);
+				border-bottom: 1px solid var(--hairline);
+			}
+			.info dt {
+				color: var(--text-2);
+				font-size: 0.875rem;
+			}
+			.info dd {
+				margin: 0;
+				font-weight: 500;
 				overflow-wrap: anywhere;
 			}
 			.empty {
 				color: var(--text-2);
-			}
-			.section-entry {
-				margin: 1px 2px 0;
-				font-family: var(--font-hei);
-				font-size: 14.2px;
-				font-weight: bold;
-			}
-			.section-entry::before {
-				content: "◆ " / "";
-				color: var(--red);
-				font-size: 10px;
-			}
-			.side-box .section-entry {
-				margin: 0;
-				padding: 4.2px 7px 6.4px 7.6px;
-				font-size: 13.6px;
-			}
-
-			.table-scroll {
-				position: relative;
-				overflow-x: auto;
-			}
-			.table-scroll table {
-				min-width: 30em;
-			}
-
-			/* 合作方式：一列一格的表格式清單，紅色編號。 */
-			.steps {
-				margin: 0;
-				padding: 0;
-				list-style: none;
-				counter-reset: step;
-				border: 1px solid var(--border);
-			}
-			.steps li {
-				counter-increment: step;
-				display: grid;
-				grid-template-columns: 2.6em minmax(0, 1fr);
-				gap: 1px 8px;
-				padding: 6.8px 9px 7.2px 6px;
-				border-top: 1px solid var(--border);
-			}
-			.steps li:first-child {
-				border-top: 0;
-			}
-			.steps li:nth-child(odd) {
-				background: var(--panel-alt);
-			}
-			.steps li::before {
-				content: counter(step, decimal-leading-zero) / "";
-				grid-row: span 2;
-				color: var(--red);
-				font-family: Arial, sans-serif;
-				font-size: 20px;
-				font-weight: bold;
-				font-style: italic;
-				line-height: 1.1;
-				text-align: center;
-				transform: translateY(0.6px);
-			}
-			.steps h3 {
-				color: var(--roc-blue);
-			}
-			:global(:root[data-theme="dark"]) .steps h3 {
-				color: #ffe45c;
-			}
-
-			/* 承接範圍：三段各一條底色，第二段與第一段只差一點亮度。 */
-			.scope p {
-				padding: 5.4px 7px 6px 8.2px;
-				border-left: 3px solid var(--blue);
-				background: var(--panel-alt);
-			}
-			.scope p:nth-child(2) {
-				background: var(--panel-alt-2);
-				border-left-color: var(--red);
 			}
 		</style>
 	</body>

@@ -4,8 +4,7 @@
 // 混在一起會讓共用字串表變得難找。兩個語系的物件形狀必須完全一樣，
 // 由下面的 HomeContent 介面約束，少一個 key 是型別錯誤。
 //
-// 語氣依「華國美學」Skill 的 rules/copywriting.md：正式、公告式、過度說明、
-// 自稱「本公司」、經常強調「e化」、句尾常用驚嘆號。
+// 語氣：正式、就事論事，自稱「本公司」。不用「e化」、句尾不用驚嘆號（見 issue #27）。
 // 但語氣再熱情，事實不得誇大：
 // - 目前站上唯一有可開啟的測試站的是 Company of One。它的原始碼 repo 為私有，
 //   不得寫成公開。AI、GPU 與雲端主機沒有可公開的案例，只能寫「可洽詢」。
@@ -44,15 +43,15 @@ interface HomeContent {
 export const home: Record<Locale, HomeContent> = {
 	"zh-Hant": {
 		hero: {
-			h1: "量身訂做系統開發e化服務，從需求洽談到正式上線全程專人負責！",
-			lead: "歡迎蒞臨算力有限公司官方網站！本公司為一人公司，與您洽談需求之人員，即為實際撰寫程式之人員，中間沒有任何轉手。本公司並非出租現成平台，而是依照您的實際問題，重新設計系統架構、重新評估報價。系統開發與部署上線作業，均在本公司服務範圍之內，誠摯歡迎多加利用。",
-			ctaPrimary: "e化線上需求諮詢申請",
+			h1: "量身訂做系統開發，從需求洽談到正式上線由同一人負責",
+			lead: "本公司為一人公司，與您洽談需求之人員，即為實際撰寫程式之人員，中間沒有任何轉手。本公司並非出租現成平台，而是依照您的實際問題，重新設計系統架構、重新評估報價。系統開發與部署上線作業，均在本公司服務範圍之內。",
+			ctaPrimary: "線上洽詢需求",
 			ctaSecondary: "Company of One 產品介紹專區",
 		},
 
 		work: {
 			title: "作品成果展示專區",
-			lead: "Company of One 為本公司自行開發之一人公司營運管理e化平台，涵蓋報價、訂單、進銷存、電子發票及營業稅申報等各項作業，並設有測試站，歡迎實際註冊體驗！",
+			lead: "Company of One 為本公司自行開發之一人公司營運管理平台，涵蓋報價、訂單、進銷存、電子發票及營業稅申報，並設有測試站，可自行註冊試用。",
 			caption: "Company of One 主要技術決策一覽表",
 			columns: { area: "項目類別", approach: "實施做法", reason: "採用原因" },
 			rows: [
@@ -77,10 +76,10 @@ export const home: Record<Locale, HomeContent> = {
 					reason: "不會發生兩個數字互相矛盾之情況",
 				},
 			],
-			limits: "【重要提醒】本系統目前仍為測試站，敬請特別留意！綠界金流與電子發票係依公開文件實作，尚未於沙盒環境以真實交易進行驗證；稽核鏈之外部見證端點尚未接上；目前亦尚無監控與告警機制。造成不便之處，敬請見諒。",
+			limits: "【重要提醒】本系統目前仍為測試站。綠界金流與電子發票係依公開文件實作，尚未於沙盒環境以真實交易進行驗證；稽核鏈之外部見證端點尚未接上；目前亦尚無監控與告警機制。",
 			links: {
 				product: "產品介紹資訊專區",
-				demo: "e化測試站",
+				demo: "測試站",
 				status: "系統完整現況說明",
 			},
 		},
@@ -90,7 +89,7 @@ export const home: Record<Locale, HomeContent> = {
 			steps: [
 				{
 					title: "第一步：先行確認需求範圍",
-					body: "請您先說明目前的現況，本公司將協助您釐清真正需要解決的問題，再決定開發的規模。不必要的功能，本公司會主動建議刪減，不會包進報價裡湊金額，請大家放心！",
+					body: "請您先說明目前的現況，本公司將協助您釐清真正需要解決的問題，再決定開發的規模。不必要的功能，本公司會主動建議刪減，不會包進報價裡湊金額。",
 				},
 				{
 					title: "第二步：範圍確認後始行報價",
@@ -111,28 +110,28 @@ export const home: Record<Locale, HomeContent> = {
 			title: "服務承接範圍說明",
 			body: [
 				"本公司主要承接項目為系統與後端開發，以及網站建置與部署上線作業，範圍涵蓋資料模型設計、後端 API 開發，一直到正式部署上線為止。",
-				"AI 導入、資料分析、GPU 運算環境及雲端主機等項目，亦在可洽詢討論之範圍內。惟上述項目目前尚無可公開提供參考之案例，請先來信說明您的需求，本公司將再回覆是否適合承接，敬請見諒。",
-				"已經使用 AI 做出可執行雛形、但卡在上線之前的個人朋友，可以只委託本公司補足缺少的部分，例如資料庫設計、部署作業或安全檢查。中小企業如流程仍在 Excel、紙本與 LINE 之間往返，本公司將先了解您目前實際的作業方式；有時只需調整流程即可，不一定需要撰寫程式，請不要擔心！",
+				"AI 導入、資料分析、GPU 運算環境及雲端主機等項目，亦在可洽詢討論之範圍內。惟上述項目目前尚無可公開提供參考之案例，請先來信說明您的需求，本公司將再回覆是否適合承接。",
+				"已經使用 AI 做出可執行雛形、但卡在上線之前的個人朋友，可以只委託本公司補足缺少的部分，例如資料庫設計、部署作業或安全檢查。中小企業如流程仍在 Excel、紙本與 LINE 之間往返，本公司將先了解您目前實際的作業方式；有時只需調整流程即可，不一定需要撰寫程式。",
 			],
 		},
 
 		contact: {
 			title: "聯絡資訊與服務窗口",
-			body: "洽詢請使用下方所列之服務電話、電子郵件信箱或 LINE 官方帳號，亦可前往e化線上聯絡服務專區填寫表單。不需要事先撰寫規格文件。請將目前的狀況說明清楚，本公司將直接回覆是否可行、大約的規模與費用，也包括「這項工作您自行處理會比較快」這類的答案。如有任何疑問，歡迎隨時洽詢本公司服務窗口，誠摯為您服務！",
+			body: "洽詢請使用下方所列之服務電話、電子郵件信箱或 LINE 官方帳號，亦可前往線上聯絡頁填寫表單。不需要事先撰寫規格文件。請將目前的狀況說明清楚，本公司將直接回覆是否可行、大約的規模與費用，也包括「這項工作您自行處理會比較快」這類的答案。",
 		},
 	},
 
 	en: {
 		hero: {
-			h1: "Bespoke System Development e-Services, with One Dedicated Person from Enquiry to Launch!",
-			lead: "Welcome to the Official Website of Prisvalis LTD.! This Company is a one-person company: the person who discusses your requirements is the very same person who writes the code, with no intermediaries of any kind. This Company does not rent out a ready-made platform. Instead, the system architecture is designed and the quotation is prepared afresh according to your actual problem. Both systems development and deployment fall within the service scope of this Company. You are warmly welcome to make use of them.",
-			ctaPrimary: "Online e-Enquiry Application",
+			h1: "Bespoke System Development, with One Person from Enquiry to Launch",
+			lead: "This Company is a one-person company: the person who discusses your requirements is the very same person who writes the code, with no intermediaries of any kind. This Company does not rent out a ready-made platform. Instead, the system architecture is designed and the quotation is prepared afresh according to your actual problem. Both systems development and deployment fall within the service scope of this Company.",
+			ctaPrimary: "Enquire online",
 			ctaSecondary: "Company of One Product Information Section",
 		},
 
 		work: {
 			title: "Work Results Exhibition Section",
-			lead: "Company of One is an e-platform for one-person company operations management, developed in-house by this Company. It covers quotations, orders, inventory, e-invoicing and VAT filing, and a test site is provided. You are warmly welcome to register and try it!",
+			lead: "Company of One is an operations management platform for one-person companies, developed in-house by this Company. It covers quotations, orders, inventory, e-invoicing and VAT filing, and a test site is available to register and try.",
 			caption: "Table of Principal Technical Decisions in Company of One",
 			columns: { area: "Item Category", approach: "Method of Implementation", reason: "Reason for Adoption" },
 			rows: [
@@ -157,10 +156,10 @@ export const home: Record<Locale, HomeContent> = {
 					reason: "Two contradictory figures will not arise",
 				},
 			],
-			limits: "IMPORTANT NOTICE: This system is currently a test site. Please take particular note! The ECPay payment and e-invoice integrations are implemented according to the public documentation and have not yet been verified with real transactions in the sandbox; the audit chain's external witness endpoint is not yet connected; and there is at present no monitoring or alerting mechanism. This Company sincerely apologises for any inconvenience caused.",
+			limits: "IMPORTANT NOTICE: This system is currently a test site. The ECPay payment and e-invoice integrations are implemented according to the public documentation and have not yet been verified with real transactions in the sandbox; the audit chain's external witness endpoint is not yet connected; and there is at present no monitoring or alerting mechanism.",
 			links: {
 				product: "Product Information Section",
-				demo: "e-Test Site",
+				demo: "Test site",
 				status: "Complete System Status Statement",
 			},
 		},
@@ -170,7 +169,7 @@ export const home: Record<Locale, HomeContent> = {
 			steps: [
 				{
 					title: "Step 1: Confirmation of Requirement Scope",
-					body: "Please first describe your present situation. This Company will assist you in clarifying the problem that truly needs solving before deciding the scale of development. Unnecessary features will be proactively recommended for removal and will not be padded into the quotation. Please rest assured!",
+					body: "Please first describe your present situation. This Company will assist you in clarifying the problem that truly needs solving before deciding the scale of development. Unnecessary features will be proactively recommended for removal and will not be padded into the quotation.",
 				},
 				{
 					title: "Step 2: Quotation after Scope Confirmation",
@@ -191,14 +190,14 @@ export const home: Record<Locale, HomeContent> = {
 			title: "Service Scope Explanation",
 			body: [
 				"The principal services of this Company are systems and backend development, together with website construction and deployment, covering data model design and backend API development all the way to formal launch.",
-				"AI integration, data analysis, GPU compute environments and cloud hosting are also within the scope of enquiry and discussion. However, there are at present no public cases available for reference in these areas. Please first write to describe your requirements, and this Company will reply as to whether they can be undertaken. Your kind understanding is respectfully requested.",
-				"Individuals who have already built a working prototype with AI but are stuck before launch may entrust this Company with only the missing part, such as database design, deployment work or a security check. Where a small or medium business's workflow still moves between spreadsheets, paper and LINE messages, this Company will first understand how you actually work at present; sometimes adjusting the workflow is sufficient and no programming is required. Please do not worry!",
+				"AI integration, data analysis, GPU compute environments and cloud hosting are also within the scope of enquiry and discussion. However, there are at present no public cases available for reference in these areas. Please first write to describe your requirements, and this Company will reply as to whether they can be undertaken.",
+				"Individuals who have already built a working prototype with AI but are stuck before launch may entrust this Company with only the missing part, such as database design, deployment work or a security check. Where a small or medium business's workflow still moves between spreadsheets, paper and LINE messages, this Company will first understand how you actually work at present; sometimes adjusting the workflow is sufficient and no programming is required.",
 			],
 		},
 
 		contact: {
 			title: "Contact Information and Service Window",
-			body: "Please enquire by the service telephone, email address or LINE Official Account listed below, or proceed to the Online e-Contact Service Section to complete the form. No written specification is required in advance. Simply describe your present situation clearly, and this Company will reply directly as to feasibility, approximate scale and cost, including answers such as “this work would be quicker for you to handle yourself”. Should you have any questions, you are welcome to contact the Service Window of this Company at any time!",
+			body: "Please enquire by the service telephone, email address or LINE Official Account listed below, or use the form on the contact page. No written specification is required in advance. Simply describe your present situation clearly, and this Company will reply directly as to feasibility, approximate scale and cost, including answers such as “this work would be quicker for you to handle yourself”.",
 		},
 	},
 };
