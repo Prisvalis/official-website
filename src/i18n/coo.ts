@@ -123,6 +123,7 @@ const zhHant = {
 		lead: "報價、訂單、進銷存、電子發票、營業稅申報，全部在同一個地方完成。不需要三套系統與一堆 Excel，也不需要為了記一筆帳而先學會會計。",
 		ctaFree: "免費註冊",
 		ctaFeatures: "產品功能完整介紹",
+		heroShotAlt: "Company of One 的營運總覽畫面：本月開立發票、未收款總額、逾期未收、待跟進報價、負庫存商品與 401 申報倒數，左側是各功能的選單。",
 		whyTitle: "本系統開發緣起說明",
 		whyBody: "一人公司最常見的困境，是收不到錢，以及被行政瑣事佔去本來應該用來接案的時間。報價寄出去沒有人追蹤、貨出了不知道客戶還欠多少、申報期限到了才開始翻找單據，這些光靠「認真一點」是解決不了的，需要由系統替您記得。",
 		quote: {
@@ -632,6 +633,7 @@ const en: CooContent = {
 		lead: "Quotations, orders, inventory, e-invoicing and VAT filing, all in one place. There is no need for three separate systems and a pile of spreadsheets, and no need to learn accounting just to record one transaction.",
 		ctaFree: "Sign up free",
 		ctaFeatures: "Complete Product Features Introduction",
+		heroShotAlt: "The Company of One operations overview: invoices issued this month, total receivables, overdue receivables, quotes to follow up, items with negative stock and the countdown to the Form 401 filing, with the feature menu on the left.",
 		whyTitle: "Background to the Development of This System",
 		whyBody: "What usually kills a one-person company is getting paid late or never, and losing the hours meant for billable work to admin. Quotes that go out and are never chased, goods shipped without knowing how much is still owed, a filing deadline that arrives before you start digging through receipts: trying harder does not fix any of them. They need a system that remembers for you.",
 		quote: {

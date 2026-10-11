@@ -11,16 +11,19 @@ interface Props {
 	aria?: string;
 	/** 真實截圖的路徑（public/coo/ 底下）。 */
 	src?: string;
+	/** 截圖的原始尺寸，讓瀏覽器先保留位置，載入時版面不跳動。 */
+	width?: number;
+	height?: number;
 	class?: string;
 }
 
-const { locale, label, aria = label, src, class: className } = Astro.props;
+const { locale, label, aria = label, src, width, height, class: className } = Astro.props;
 const text = locale === "en" ? `[${label} screenshot, 16:9]` : `[${label} 截圖 16:9]`;
 ---
 
 {
 	src ? (
-		<img class:list={["shot", className]} src={src} alt={aria} loading="lazy" />
+		<img class:list={["shot", className]} src={src} alt={aria} width={width} height={height} decoding="async" />
 	) : (
 		<div class:list={["placeholder", className]} role="img" aria-label={aria}>
 			{text}

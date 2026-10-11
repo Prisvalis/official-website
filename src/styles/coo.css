@@ -78,6 +78,9 @@ main.coo:focus {
 .hero-shot {
 	margin-top: var(--s-7);
 	aspect-ratio: 16 / 7;
+	/* 截圖比 16:7 高，裁掉下方而不是拉伸，像被下一個區塊截斷。 */
+	object-fit: cover;
+	object-position: left top;
 	border-bottom: 0;
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
