@@ -109,8 +109,10 @@ h4 {
 	font-weight: 600;
 	text-wrap: balance;
 }
+/* 手機上最小 36px：一段沒有標點的九個中文字（例如「公司沿革與發展願景」）
+   要能放進 375px 寬的一行，不在最後留下一個孤字。 */
 h1 {
-	font-size: clamp(2.5rem, 6vw, 4rem);
+	font-size: clamp(2.25rem, 6vw, 4rem);
 	line-height: 1.15;
 }
 h2 {
