@@ -251,12 +251,3 @@ details .answer {
 	padding-bottom: var(--s-2);
 	color: var(--text-2);
 }
-
-/* --- 截圖 ------------------------------------------------------------ */
-
-.shot {
-	display: block;
-	width: 100%;
-	height: auto;
-	border: var(--rule-thin) solid var(--rule);
-}

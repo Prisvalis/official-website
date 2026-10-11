@@ -116,7 +116,9 @@ h3 {
  * 只留一兩個字。標題、導言、按鈕與標籤這類短文字改成只在標點與空白處換行
  * （keep-all）；某一段沒有標點、整段放不下時，才由 overflow-wrap 退回逐字斷行。
  * 長篇內文維持逐字換行，這是中文排版的常規；但不用 text-wrap: pretty，
- * 它為了避免孤行會把前一行提早結束，中文看起來反而像斷錯行。 */
+ * 它為了避免孤行會把前一行提早結束，中文看起來反而像斷錯行。
+ * 導言只對寬欄的頁面開頭套用；窄欄裡較長的導言若也只在標點換行，
+ * 會在中英文之間的空格提早斷開。 */
 :lang(zh) body {
 	text-wrap: wrap;
 }
@@ -126,7 +128,8 @@ h3 {
 		h2,
 		h3,
 		h4,
-		.lead,
+		.page-head .lead,
+		.hero .lead,
 		.btn,
 		.toc,
 		nav,
@@ -394,6 +397,14 @@ tbody th {
 	border: 2px solid var(--rule);
 	font-size: 0.875rem;
 	line-height: 1.71;
+}
+
+/* 產品截圖：只放真實截圖（brand-spec §11）。 */
+.shot {
+	display: block;
+	width: 100%;
+	height: auto;
+	border: var(--rule-thin) solid var(--rule);
 }
 
 /* 缺真實素材時的佔位。不得用 CSS 或 SVG 畫假圖代替。 */
