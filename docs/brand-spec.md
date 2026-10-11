@@ -223,7 +223,7 @@ h1 與內文的比例是 4 倍，落在 Skill 建議的 4～6 倍之間。中文
 | Logo（亮底用） | `public/logo.svg` | 已有 |
 | Logo（暗底用） | `public/logo-dark.svg` | 已有 |
 | Favicon | `public/favicon.svg`、`favicon-32.png`、`favicon-180.png` | 已有；favicon 自帶 12px 圓角的墨色底，維持原樣 |
-| 社群分享圖 | `public/og.svg`、`public/og.png` | 華國美學版本，#33 重做 |
+| 社群分享圖 | `public/og.svg`、`public/og.png` | 已依本規格重做（#33）；改 SVG 後要重新輸出 1200×630 的 PNG |
 | CoO 介面截圖 | 預計放 `public/coo/` | **缺，需站方提供** |
 | GPU 機器實拍 | 未定 | **缺，需站方提供** |
 | 具體案例 | — | **缺，需站方提供** |
