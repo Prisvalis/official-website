@@ -111,6 +111,15 @@ h3 {
 :lang(en) :is(h1, h2) {
 	letter-spacing: -0.01em;
 }
+/* 英文的 Arimo 粗體很寬，72px 時連「Bespoke System Development,」都放不進一行，
+   最大改為 56px。中文維持 72px。 */
+:lang(en) h1 {
+	font-size: clamp(2.25rem, 5vw, 3.5rem);
+}
+/* 標題平均分行，不在最後一行只留一個詞。 */
+:is(h1, h2, h3) {
+	text-wrap: balance;
+}
 
 /* 中文換行。瀏覽器預設在任意兩個字之間換行，短文字因此會把詞語拆開、或在下一行
  * 只留一兩個字。標題、導言、按鈕與標籤這類短文字改成只在標點與空白處換行
@@ -282,7 +291,7 @@ tbody th {
 		padding-block: var(--s-7) var(--s-6);
 	}
 	.page-head h1 {
-		grid-column: 1 / span 10;
+		grid-column: 1 / -1;
 	}
 	.page-head .after-title {
 		grid-column: 3 / -1;
