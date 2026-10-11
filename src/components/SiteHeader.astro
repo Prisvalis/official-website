@@ -75,7 +75,8 @@ const { locale, homeHref, switchHref, nav, navLabel } = Astro.props;
 		align-items: center;
 		column-gap: var(--s-5);
 	}
-	@media (min-width: 960px) {
+	/* 導覽文字沿用各區塊標題，偏長，1200px 以上才放得進同一行。 */
+	@media (min-width: 1200px) {
 		.bar {
 			grid-template-areas: "brand nav tools";
 			height: 64px;
@@ -115,13 +116,15 @@ const { locale, homeHref, switchHref, nav, navLabel } = Astro.props;
 		padding: 0 0 var(--s-2);
 		list-style: none;
 	}
-	@media (min-width: 960px) {
+	@media (min-width: 1200px) {
 		.nav {
 			margin: 0;
 			padding: 0;
 		}
+		/* 用 margin 置中而不用 justify-content：放不下時會退回靠左，仍可捲動到第一項。 */
 		.nav ul {
-			justify-content: center;
+			width: max-content;
+			margin-inline: auto;
 			padding: 0;
 		}
 	}
