@@ -3,8 +3,8 @@
 // 三個頁面各有中英兩份，兩邊的物件形狀必須完全一樣 —— 元件是用 coo[locale]
 // 取值後直接渲染的，少一個 key 只會在該語系的頁面上安靜地少一段內容。
 //
-// 語氣依「華國美學」Skill 的 rules/copywriting.md：正式、公告式、自稱「本公司」、
-// 強調「e化」。事實不得因此誇大：測試站、未驗證的串接與已知缺口都要照實寫。
+// 語氣：正式、就事論事，自稱「本公司」。不用「e化」、句尾不用驚嘆號（見 issue #27）。
+// 事實不得誇大：測試站、未驗證的串接與已知缺口都要照實寫。
 // 示意圖（mock*、notice*、rows）裡的字樣是產品畫面本身，不套用官腔。
 
 import type { Locale } from "../consts";
@@ -83,7 +83,7 @@ export const QUOTA_LABELS_EN: Record<string, string> = {
 };
 
 const zhHant = {
-	tagline: "一人公司營運管理e化平台",
+	tagline: "一人公司營運管理平台",
 	colon: "：",
 	nav: {
 		home: "產品首頁",
@@ -95,19 +95,19 @@ const zhHant = {
 	start: "立即申辦使用",
 	backToSite: "返回算力有限公司官網首頁",
 	footer: {
-		blurb: "一人公司營運管理e化平台，從報價到報稅，一次到位！",
+		blurb: "一人公司營運管理平台，從報價到報稅都在同一個地方",
 		product: "產品資訊服務專區",
-		begin: "e化申辦服務",
+		begin: "開始使用",
 		featuresAll: "產品功能總覽",
 		pricingAll: "方案與資費說明",
 		security: "資訊安全與稽核機制說明",
 		signin: "會員身分驗證登入／註冊系統",
-		note: "本系統目前為測試站運作中，功能與資費仍可能調整，敬請見諒。",
+		note: "本系統目前為測試站運作中，功能與資費仍可能調整。",
 	},
 	meta: {
 		home: {
 			title: "",
-			description: "Company of One 一人公司營運管理e化平台：報價、訂單、進銷存、電子發票與營業稅申報，一個人即可完成。客戶線上確認報價，決定寫入環環相扣之稽核鏈，任何事後修改都會留下痕跡。本系統目前為測試站。",
+			description: "Company of One 一人公司營運管理平台：報價、訂單、進銷存、電子發票與營業稅申報，一個人即可完成。客戶線上確認報價，決定寫入環環相扣之稽核鏈，任何事後修改都會留下痕跡。本系統目前為測試站。",
 		},
 		features: {
 			title: "產品功能介紹",
@@ -119,17 +119,17 @@ const zhHant = {
 		},
 	},
 	home: {
-		h1: "一個人的公司，也要有一間公司該有的e化後台！",
-		lead: "報價、訂單、進銷存、電子發票、營業稅申報，全部在同一個地方辦理完成！不需要三套系統與一堆 Excel，也不需要為了記一筆帳而先學會會計，誠摯歡迎一人公司的朋友們多加利用。",
-		ctaFree: "免費e化申辦",
+		h1: "一個人的公司，也要有一間公司該有的後台",
+		lead: "報價、訂單、進銷存、電子發票、營業稅申報，全部在同一個地方完成。不需要三套系統與一堆 Excel，也不需要為了記一筆帳而先學會會計。",
+		ctaFree: "免費註冊",
 		ctaFeatures: "產品功能完整介紹",
 		whyTitle: "本系統開發緣起說明",
-		whyBody: "一人公司最常見的困境，是收不到錢，以及被行政瑣事佔去本來應該用來接案的時間。報價寄出去沒有人追蹤、貨出了不知道客戶還欠多少、申報期限到了才開始翻找單據，這些光靠「認真一點」是解決不了的，需要由系統替您記得。請大家一起來推動營運e化！",
+		whyBody: "一人公司最常見的困境，是收不到錢，以及被行政瑣事佔去本來應該用來接案的時間。報價寄出去沒有人追蹤、貨出了不知道客戶還欠多少、申報期限到了才開始翻找單據，這些光靠「認真一點」是解決不了的，需要由系統替您記得。",
 		quote: {
 			title: "報價與成交作業流程",
 			p1: "多數系統裡的「已接受」，是您自己在後台按下的。客戶事後表示沒有同意這個價格時，您將拿不出任何憑據。",
 			p2a: "這裡的報價單可以產生一條免登入連結寄給客戶。客戶開啟、看到完整內容、自己按下接受或婉拒，還能附上一句話。那個決定帶著時間與來源 IP 寫進稽核紀錄，而稽核紀錄是環環相扣的雜湊鏈，",
-			p2strong: "任何事後的修改都會留下痕跡！",
+			p2strong: "任何事後的修改都會留下痕跡。",
 			p2b: "。",
 			ticks: [
 				{
@@ -256,14 +256,14 @@ const zhHant = {
 				},
 				{
 					title: "驗證結果自行查核",
-					a: "操作紀錄頁直接顯示驗證結果，以及最近一次錨定的時間與它是否真的送達外部。這件事的重點，就是您不必相信本公司的說法，請自行查核！",
+					a: "操作紀錄頁直接顯示驗證結果，以及最近一次錨定的時間與它是否真的送達外部。這件事的重點，就是您不必相信本公司的說法，可以自行查核。",
 					strong: "",
 					b: "",
 				},
 			],
 			adminTitle: "「誰看過您的資料」亦將完整留下紀錄",
 			adminA: "平台管理員只能管帳號與公司基本資料，不得存取任何業務表。真的需要調閱內容時（例如法院調閱），必須填寫事由，這次取用本身會寫成一筆稽核紀錄，",
-			adminStrong: "而且您會收到通知！",
+			adminStrong: "而且您會收到通知。",
 			adminB: "。",
 			adminP2: "保護來自「您會知道」與「有人要負責」，並非靠把事情藏起來。",
 			adminLink: "資訊安全與稽核機制完整說明",
@@ -316,18 +316,18 @@ const zhHant = {
 		],
 		status: {
 			title: "系統目前現況說明",
-			head: "【重要公告】本產品目前仍在開發中，敬請特別留意！",
+			head: "【重要公告】本產品目前仍在開發中",
 			bodyA: "目前運作於測試站，功能皆已實作，並有數百項自動化測試在 SQLite 與 PostgreSQL 上各跑一次。但有幾項尚未以真實帳號實測：綠界金流與電子發票的串接依公開文件實作但未經沙盒驗證、寄信服務未經真實服務商驗證、折讓尚未對外傳送給財政部、稽核鏈的外部見證端點尚未接上。計費機制也還沒啟用，而且目前",
 			bodyStrong: "沒有監控與告警機制",
 			bodyB: "，測試站曾發生過數天的停機。",
-			bodyC: "將上述事項公告於此，是因為您有權利在投入之前事先知道。造成不便之處，敬請見諒。",
+			bodyC: "將上述事項公告於此，是因為您有權利在投入之前事先知道。",
 		},
-		finalTitle: "請先以免費方案開出您的第一張報價單！",
+		finalTitle: "先用免費方案開出第一張報價單",
 		finalBody: "不需要信用卡，計費機制也尚未上線。各方案的差別僅在額度與功能範圍，請安心申辦。",
 		finalCompare: "各方案比較一覽",
 	},
 	features: {
-		h1: "一間公司會用到的功能，本系統一應俱全！",
+		h1: "一間公司會用到的功能",
 		lead: "以下為各項功能之實際內容說明。所寫的都是系統確實做得到的事，連「刻意不做的部分」與「尚未完成的部分」也一併列出，請詳細閱讀。",
 		note: "【請注意】下列幾項尚未以真實帳號實測，文中將個別標明：綠界金流與電子發票依公開文件實作但未經沙盒驗證、寄信服務未經真實服務商驗證、折讓尚未對外傳送、稽核鏈之外部見證端點尚未接上。",
 		tocAria: "功能分類導覽",
@@ -528,16 +528,16 @@ const zhHant = {
 		ctaTitle: "各方案包含功能查詢",
 		ctaBody: "三個方案的差別僅在額度與功能範圍，計費機制目前尚未上線，敬請留意。",
 		ctaCompare: "各方案比較一覽",
-		ctaStart: "立即e化申辦",
+		ctaStart: "免費註冊",
 	},
 	pricing: {
-		h1: "依照公司發展階段選擇方案，不必一開始就全部購足！",
+		h1: "依照公司發展階段選擇方案，不必一開始就全部購足",
 		leadA: "三個方案的差別只在",
 		leadQuota: "額度",
 		leadAnd: "與",
 		leadScope: "功能範圍",
 		leadB: "，不影響資料的所有權。額度限制只作用在「新增」，既有資料一律看得到。",
-		noteHead: "【重要公告】計費機制尚未上線，目前所有方案一律免費！",
+		noteHead: "【重要公告】計費機制尚未上線，目前所有方案一律免費",
 		noteA: "新註冊的公司會直接拿到功能最完整的",
 		noteStrong: "專業方案",
 		noteB: "。下方列出的是各方案之實際結構與額度（與系統中之設定完全一致），價格將於開始收費前另行公告，敬請留意。",
@@ -560,7 +560,7 @@ const zhHant = {
 		faqs: [
 			{
 				q: "現在註冊需要付費嗎？",
-				a: "不需要！計費機制尚未上線，目前所有新註冊的公司都會拿到功能最完整的專業方案。開始收費之前將先行公告，不會直接從您的帳戶扣款，請安心使用。",
+				a: "不需要。計費機制尚未上線，目前所有新註冊的公司都會拿到功能最完整的專業方案。開始收費之前將先行公告，不會直接從您的帳戶扣款，請安心使用。",
 			},
 			{
 				q: "超過額度時會發生什麼情形？",
@@ -568,7 +568,7 @@ const zhHant = {
 			},
 			{
 				q: "可以將資料帶走嗎？",
-				a: "營業稅 401 之申報資料可匯出 CSV（需方案包含營業稅申報功能）。其餘資料目前尚無一鍵整包匯出之功能，此為本公司已知之缺口，日後將會補上，造成不便敬請見諒。操作紀錄可於畫面上查閱與篩選。",
+				a: "營業稅 401 之申報資料可匯出 CSV（需方案包含營業稅申報功能）。其餘資料目前尚無一鍵整包匯出之功能，此為本公司已知之缺口，日後將會補上。操作紀錄可於畫面上查閱與篩選。",
 			},
 			{
 				q: "會計師是否需要另外計算一名成員？",
@@ -583,7 +583,7 @@ const zhHant = {
 				a: "多幣別本身不另外收費，只要方案包含報價單或訂單就能使用。外幣單據會存下開單當時的匯率，日後匯率變動不影響已開立的單據。",
 			},
 		],
-		ctaTitle: "不確定要選哪個方案嗎？請先從免費方案開始！",
+		ctaTitle: "不確定要選哪個方案？先從免費方案開始",
 		ctaBody: "計費上線前不必做任何決定。日後調整方案，不會影響您既有的資料，請安心使用。",
 		ctaFeatures: "先行查看產品功能",
 	},
@@ -592,7 +592,7 @@ const zhHant = {
 type CooContent = typeof zhHant;
 
 const en: CooContent = {
-	tagline: "The e-Platform for One-Person Company Operations Management",
+	tagline: "Operations Management for One-Person Companies",
 	colon: ": ",
 	nav: {
 		home: "Product Home",
@@ -604,14 +604,14 @@ const en: CooContent = {
 	start: "Apply Now",
 	backToSite: "Return to the Prisvalis LTD. Home Page",
 	footer: {
-		blurb: "The e-platform for one-person company operations management, from quotation to tax filing, all in one place!",
+		blurb: "Operations management for one-person companies, from quotation to tax filing in one place",
 		product: "Product Information Service Section",
-		begin: "e-Application Services",
+		begin: "Get started",
 		featuresAll: "Product Features Overview",
 		pricingAll: "Plans and Fees Explanation",
 		security: "Information Security and Audit Mechanism Explanation",
 		signin: "Member Identity Verification Login / Registration System",
-		note: "This system is currently operating as a test site; features and fees may still change. Your kind understanding is respectfully requested.",
+		note: "This system is currently operating as a test site; features and fees may still change.",
 	},
 	meta: {
 		home: {
@@ -628,9 +628,9 @@ const en: CooContent = {
 		},
 	},
 	home: {
-		h1: "A One-Person Company, Too, Deserves a Proper e-Back Office!",
-		lead: "Quotations, orders, inventory, e-invoicing and VAT filing, all completed in one single place! There is no need for three separate systems and a pile of spreadsheets, and no need to learn accounting just to record one transaction. Friends running one-person companies are warmly welcome to make use of it.",
-		ctaFree: "Free e-Application",
+		h1: "A One-Person Company Deserves a Proper Back Office Too",
+		lead: "Quotations, orders, inventory, e-invoicing and VAT filing, all in one place. There is no need for three separate systems and a pile of spreadsheets, and no need to learn accounting just to record one transaction.",
+		ctaFree: "Sign up free",
 		ctaFeatures: "Complete Product Features Introduction",
 		whyTitle: "Background to the Development of This System",
 		whyBody: "What usually kills a one-person company is getting paid late or never, and losing the hours meant for billable work to admin. Quotes that go out and are never chased, goods shipped without knowing how much is still owed, a filing deadline that arrives before you start digging through receipts: trying harder does not fix any of them. They need a system that remembers for you.",
@@ -638,7 +638,7 @@ const en: CooContent = {
 			title: "Quotation and Transaction Procedure",
 			p1: "In most systems, “accepted” is a status you set yourself in your own back office. When a client later says they never agreed to that price, you have nothing to show.",
 			p2a: "Here a quote can produce a login-free link you email to the client. They open it, see the full document, and accept or decline themselves, with a note if they want. That decision enters the audit trail with its timestamp and source IP, and the audit trail is a chain of hashes, ",
-			p2strong: "any later modification leaves a trace!",
+			p2strong: "any later modification leaves a trace.",
 			p2b: ".",
 			ticks: [
 				{
@@ -765,14 +765,14 @@ const en: CooContent = {
 				},
 				{
 					title: "Verification Results Checked by Yourself",
-					a: "The activity log shows the verification result directly, along with when the last anchor was made and whether it actually reached the outside. The whole point is that you do not have to take this Company's word for it. Please check for yourself!",
+					a: "The activity log shows the verification result directly, along with when the last anchor was made and whether it actually reached the outside. The whole point is that you do not have to take this Company's word for it. You can check for yourself.",
 					strong: "",
 					b: "",
 				},
 			],
 			adminTitle: "“Who Has Viewed Your Data” Is Also Fully Recorded",
 			adminA: "Platform administrators can only manage accounts and company profiles; they may not access any business table. When content genuinely has to be retrieved (a court order, say), a reason must be entered, the access itself becomes an audit record, ",
-			adminStrong: "and you are notified!",
+			adminStrong: "and you are notified.",
 			adminB: ".",
 			adminP2: "The protection comes from you knowing and someone being accountable, not from hiding things.",
 			adminLink: "Complete Explanation of Information Security and Audit Mechanisms",
@@ -825,18 +825,18 @@ const en: CooContent = {
 		],
 		status: {
 			title: "Current System Status Explanation",
-			head: "IMPORTANT NOTICE: This product is still under development. Please take particular note!",
+			head: "IMPORTANT NOTICE: This product is still under development",
 			bodyA: "It runs on a staging deployment. Every feature is implemented and covered by several hundred automated tests, run against both SQLite and PostgreSQL. But a few things have not been tried with real accounts: the ECPay payment and e-invoice integrations follow the public documentation but are unverified in the sandbox, the mail service is unverified against a real provider, allowances are not yet transmitted to the tax authority, and the audit chain's external witness endpoint is not connected. Billing is not live either, and there is currently ",
 			bodyStrong: "no monitoring or alerting",
 			bodyB: ", and the staging deployment has been down for days at a time before.",
-			bodyC: "This is announced here because you have the right to know before you invest in it. This Company sincerely apologises for any inconvenience caused.",
+			bodyC: "This is announced here because you have the right to know before you invest in it.",
 		},
-		finalTitle: "Please Issue Your First Quotation on the Free Plan!",
+		finalTitle: "Issue Your First Quotation on the Free Plan",
 		finalBody: "No credit card is required, and billing is not yet live. The plans differ only in quotas and feature scope. Please apply with confidence.",
 		finalCompare: "Plan Comparison Table",
 	},
 	features: {
-		h1: "Every Feature a Company Uses, This System Provides in Full!",
+		h1: "Every Feature a Company Uses",
 		lead: "Below is the actual content of each feature. It describes only what the system genuinely can do, and also lists “what is deliberately not built” and “what is not yet finished”. Please read carefully.",
 		note: "PLEASE NOTE: The following have not been tried with real accounts and are flagged individually below: the ECPay payment and e-invoice integrations follow the public documentation but are unverified in the sandbox, the mail service is unverified against a real provider, allowances are not yet transmitted externally, and the audit chain's external witness endpoint is not connected.",
 		tocAria: "Feature Category Navigation",
@@ -1037,16 +1037,16 @@ const en: CooContent = {
 		ctaTitle: "Features Included in Each Plan",
 		ctaBody: "The three plans differ only in quotas and feature scope, and billing is not yet live. Please take note.",
 		ctaCompare: "Plan Comparison Table",
-		ctaStart: "Apply Now for e-Services",
+		ctaStart: "Sign up free",
 	},
 	pricing: {
-		h1: "Choose According to Your Company's Stage, with No Need to Buy Everything at Once!",
+		h1: "Choose According to Your Company's Stage, with No Need to Buy Everything at Once",
 		leadA: "The three plans differ only in ",
 		leadQuota: "quotas",
 		leadAnd: " and ",
 		leadScope: "feature scope",
 		leadB: "; none of it affects who owns your data. Quotas apply only to creating new records, and everything already there stays visible.",
-		noteHead: "IMPORTANT NOTICE: Billing is not yet live, so every plan is currently free of charge!",
+		noteHead: "IMPORTANT NOTICE: Billing is not yet live, so every plan is currently free of charge",
 		noteA: "Newly registered companies go straight onto the fully featured ",
 		noteStrong: "Pro plan",
 		noteB: ". What's listed below is the real structure and quotas (identical to the settings in the system); prices will be announced before charging begins.",
@@ -1069,7 +1069,7 @@ const en: CooContent = {
 		faqs: [
 			{
 				q: "Is payment required to register at present?",
-				a: "No! Billing is not yet live, and every newly registered company currently receives the fully featured Pro plan. An announcement will be made before charging begins, and nothing will be deducted from your account without notice. Please use it with confidence.",
+				a: "No. Billing is not yet live, and every newly registered company currently receives the fully featured Pro plan. An announcement will be made before charging begins, and nothing will be deducted from your account without notice. Please use it with confidence.",
 			},
 			{
 				q: "What happens when a quota is exceeded?",
@@ -1077,7 +1077,7 @@ const en: CooContent = {
 			},
 			{
 				q: "Can data be taken away?",
-				a: "VAT Form 401 filing data can be exported as CSV (on plans that include VAT filing). Other data cannot yet be exported in one click. This is a known gap of this Company and will be closed in future; this Company apologises for the inconvenience. The activity log can be browsed and filtered on screen.",
+				a: "VAT Form 401 filing data can be exported as CSV (on plans that include VAT filing). Other data cannot yet be exported in one click. This is a known gap of this Company and will be closed in future. The activity log can be browsed and filtered on screen.",
 			},
 			{
 				q: "Does an accountant count as an additional member?",
@@ -1092,7 +1092,7 @@ const en: CooContent = {
 				a: "Multi-currency is not charged separately; it works on any plan that includes quotes or orders. Foreign-currency documents store the rate at the time of issue, so later rate moves don't change an issued document.",
 			},
 		],
-		ctaTitle: "Not Sure Which Plan to Choose? Please Start with the Free Plan!",
+		ctaTitle: "Not Sure Which Plan to Choose? Start with the Free Plan",
 		ctaBody: "No decision is needed before billing goes live. Changing plans later will not affect your existing data. Please use it with confidence.",
 		ctaFeatures: "View Product Features First",
 	},
