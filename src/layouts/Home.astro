@@ -2,8 +2,8 @@
 // 首頁。文案全部在 src/i18n/home.ts，這裡只負責結構與版面。
 //
 // 設計依 docs/brand-spec.md（Linear recipe）。各區塊刻意用不同的形式，避免整頁都是
-// 「標題＋卡片列」的模板節奏：開頭是左大右小的不對稱構圖、作品是左欄標題右欄表格、
-// 流程是橫向編號、承接範圍是單欄散文、聯絡是左文右清單。
+// 「標題＋卡片列」的模板節奏：開頭是整行大標題、下方左導言右公司資料，作品是左欄標題右欄表格、
+// 流程是橫向編號、承接範圍是左欄標題右欄散文、聯絡是左文右清單。
 // 共用樣式在 styles/global.css，頁首與頁尾在 SiteHeader、SiteFooter。
 import BaseHead from "../components/BaseHead.astro";
 import MourningNotice from "../components/MourningNotice.astro";
@@ -69,8 +69,8 @@ const nav = [
 		<main id="main">
 			<section class="hero">
 				<div class="wrap hero-grid">
+					<h1 class="hero-title rise"><Phrase text={c.hero.h1} /></h1>
 					<div class="hero-main">
-						<h1 class="rise"><Phrase text={c.hero.h1} /></h1>
 						<p class="lead measure rise rise-2">{c.hero.lead}</p>
 						<div class="actions rise rise-3">
 							<a class="btn btn-primary" href={contactHref}>{c.hero.ctaPrimary}</a>
@@ -188,9 +188,9 @@ const nav = [
 			</section>
 
 			<section class="section" id="scope">
-				<div class="wrap">
-					<h2>{c.scope.title}</h2>
-					<div class="prose measure">
+				<div class="wrap split">
+					<header class="split-head"><h2>{c.scope.title}</h2></header>
+					<div class="split-body prose">
 						{c.scope.body.map((para) => <p>{para}</p>)}
 					</div>
 				</div>
@@ -272,7 +272,7 @@ const nav = [
 		/>
 
 		<style>
-			/* --- 開頭：左大右小，頂端一層品牌紅微光（brand-spec §9-4）--- */
+			/* --- 開頭：整行大標題，下方左導言右公司資料，頂端一層品牌紅微光（brand-spec §9-4）--- */
 			.hero {
 				position: relative;
 				padding-block: var(--s-7) var(--s-7);
@@ -292,11 +292,12 @@ const nav = [
 				.hero-grid {
 					grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
 					align-items: end;
-					gap: var(--s-7);
+					gap: var(--s-6) var(--s-7);
 				}
-			}
-			.hero-main .lead {
-				margin-top: var(--s-5);
+				/* 標題占整行：英文標題放在 8/12 的欄裡會被擠成四行，且在詞組中間斷開。 */
+				.hero-title {
+					grid-column: 1 / -1;
+				}
 			}
 			.hero .actions {
 				margin-top: var(--s-6);
@@ -380,11 +381,9 @@ const nav = [
 				font-size: 0.9375rem;
 			}
 
-			/* --- 承接範圍：單欄散文 --- */
+			/* --- 承接範圍：左欄標題、右欄散文 --- */
 			.prose {
-				display: grid;
 				gap: var(--s-4);
-				margin-top: var(--s-5);
 				font-size: 1.0625rem;
 			}
 

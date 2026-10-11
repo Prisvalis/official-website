@@ -64,7 +64,8 @@ main.coo:focus {
 	grid-template-columns: minmax(0, 1fr);
 	gap: var(--s-5);
 }
-.coo .hero h1 {
+/* 中文標題限制寬度，讓它在逗號附近分成兩行；英文字比較窄，不限制。 */
+.coo .hero h1:lang(zh) {
 	max-width: 16em;
 }
 .hero-body {
