@@ -79,7 +79,7 @@ const withCodes = <T extends readonly string[]>(codes: T, names: string[]): Code
 /** 公司沿革頁的站內路徑。站內連結一律用相對路徑，不要接上 SITE。 */
 export const ABOUT_PATH: Record<Locale, string> = { "zh-Hant": "/about/", en: "/en/about/" };
 
-// 直接連到本公司在經濟部商工登記公示資料的頁面，不必再自己輸入統一編號查詢。
+// 直接連到本公司在經濟部商工登記公示資料的頁面，不必再自己輸入統一編號查詢。
 export const FINDBIZ_URL = "https://findbiz.nat.gov.tw/fts/company/62010947";
 export const ETAX_URL = "https://www.etax.nat.gov.tw/etwmain/etw113w1/ban/query";
 
