@@ -82,7 +82,7 @@ export const ui = {
 		"contact.info.reply": "Case Reply Processing Time",
 		"contact.info.replyValue": "Within three business days",
 		"contact.info.pending": "not yet available",
-		"contact.form.title": "Online e-Enquiry Application Form",
+		"contact.form.title": "Enquiry form",
 		"contact.optional": "optional",
 		"contact.name": "Applicant Name",
 		"contact.namePlaceholder": "Jane Doe",
