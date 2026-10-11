@@ -157,6 +157,15 @@ const { locale, homeHref, switchHref, nav, navLabel, brandText, back, cta } = As
 		padding: 0 0 var(--s-2);
 		list-style: none;
 	}
+	/* 平板以上：導覽放不下一行時折成兩行，不用橫向捲動（英文的導覽比內容區還寬）。 */
+	@media (min-width: 760px) {
+		.nav {
+			overflow-x: visible;
+		}
+		.nav ul {
+			flex-wrap: wrap;
+		}
+	}
 	@media (min-width: 1200px) {
 		:global(:root:lang(zh)) .nav {
 			margin: 0;

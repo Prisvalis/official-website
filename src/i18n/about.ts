@@ -290,7 +290,7 @@ export const about: Record<Locale, AboutContent> = {
 				{ label: "Type of organisation", value: "Limited company" },
 				{ label: "Registration status", value: "Approved and incorporated (tax status: in operation)" },
 				{ label: "Total capital", value: "NT$20,000" },
-				{ label: "Representative", value: "王建葦" },
+				{ label: "Representative", value: "JIAN-WEI(ALBERT), WANG (王建葦)" },
 				{ label: "Registered address", value: "2F, No. 76, Sec. 3, Wenxin Rd., Xitun Dist., Taichung City" },
 				{ label: "Registration authority", value: "Taichung City Government" },
 				{ label: "Date of approved incorporation", value: "3 September 2026" },
