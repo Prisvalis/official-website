@@ -7,6 +7,7 @@
 // - 創立緣起、名稱由來與願景只寫站方交代的事：受大學好友影響而成立；Prisvalis 取自
 //   pristine + valere，寓意「原初的價值」「純粹的力量」；致力推動資訊科技並期盼站上世界舞台。
 //   不自行補寫人名、事件或日期。
+// - 2026-11-16 開始營業：站方於 2026-10-11 交代。
 // 兩個語系的物件形狀必須一致，由 AboutContent 介面約束。
 
 import type { Locale } from "../consts";
@@ -78,7 +79,8 @@ const withCodes = <T extends readonly string[]>(codes: T, names: string[]): Code
 /** 公司沿革頁的站內路徑。站內連結一律用相對路徑，不要接上 SITE。 */
 export const ABOUT_PATH: Record<Locale, string> = { "zh-Hant": "/about/", en: "/en/about/" };
 
-export const FINDBIZ_URL = "https://findbiz.nat.gov.tw/fts/query/QueryBar/queryInit.do";
+// 直接連到本公司在經濟部商工登記公示資料的頁面，不必再自己輸入統一編號查詢。
+export const FINDBIZ_URL = "https://findbiz.nat.gov.tw/fts/company/62010947";
 export const ETAX_URL = "https://www.etax.nat.gov.tw/etwmain/etw113w1/ban/query";
 
 export const about: Record<Locale, AboutContent> = {
@@ -138,6 +140,10 @@ export const about: Record<Locale, AboutContent> = {
 				{
 					label: "中華民國 115 年 09 月 03 日（2026-09-03）",
 					value: "完成稅籍登記設立，組織種類為有限公司，營業狀況為「營業中」。",
+				},
+				{
+					label: "中華民國 115 年 11 月 16 日（2026-11-16）",
+					value: "開始營業。",
 				},
 				{
 					label: "迄今",
@@ -260,6 +266,10 @@ export const about: Record<Locale, AboutContent> = {
 				{
 					label: "3 September 2026 (ROC year 115)",
 					value: "Tax registration established as a limited company, with business status “in operation”.",
+				},
+				{
+					label: "16 November 2026 (ROC year 115)",
+					value: "Commenced business.",
 				},
 				{
 					label: "To date",
