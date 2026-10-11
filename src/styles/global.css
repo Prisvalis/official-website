@@ -238,16 +238,16 @@ tbody th {
 .btn {
 	display: inline-flex;
 	align-items: center;
-	height: 48px;
-	padding-inline: var(--s-3);
+	/* 高度至少 48px；文字長時可以換行，手機上不撐出水平捲軸。 */
+	min-height: 48px;
+	padding: var(--s-1) var(--s-3);
 	border: 2px solid var(--text);
 	background: transparent;
 	color: var(--text);
 	font-size: 1rem;
 	font-weight: 700;
-	line-height: 1;
+	line-height: 1.25;
 	text-decoration: none;
-	white-space: nowrap;
 }
 .btn:hover {
 	background: var(--text);
