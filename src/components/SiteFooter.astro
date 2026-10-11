@@ -1,0 +1,104 @@
+---
+// 全站頁尾：公司名稱、統一編號、聯絡方式與社群連結，資料取自 consts.ts。
+// 細框線分隔、小字、連結多（brand-spec §8）。
+//
+// 改版過渡期間，首頁先用這個元件；其他頁面換過來後，舊的 PortalFooter 才會刪除。
+import { COMPANY, SOCIAL, type Locale } from "../consts";
+import { t } from "../i18n/ui";
+
+interface Props {
+	locale: Locale;
+	/** 頁尾的站內連結，由各頁面傳入。 */
+	links?: { href: string; label: string }[];
+}
+
+const { locale, links = [] } = Astro.props;
+const year = new Date().getFullYear();
+const external = t(locale, "link.external");
+---
+
+<footer class="site-footer">
+	<div class="wrap grid">
+		<div class="who">
+			<p class="name">{COMPANY.nameZh}　{COMPANY.nameEn}</p>
+			<p class="facts">
+				<span class="chip">{t(locale, "taxId")} {COMPANY.taxId}</span>
+			</p>
+		</div>
+
+		{
+			links.length > 0 && (
+				<ul class="links">
+					{links.map((l) => (
+						<li>
+							<a href={l.href}>{l.label}</a>
+						</li>
+					))}
+				</ul>
+			)
+		}
+
+		<ul class="links">
+			<li><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></li>
+			<li>
+				<a href={SOCIAL.instagram} target="_blank" rel="me noopener noreferrer">
+					Instagram<span class="sr-only">{external}</span>
+				</a>
+			</li>
+			<li>
+				<a href={SOCIAL.threads} target="_blank" rel="me noopener noreferrer">
+					Threads<span class="sr-only">{external}</span>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<div class="wrap">
+		<p class="copy">© {year} {COMPANY.nameEn} · {t(locale, "rights")}</p>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		padding-block: var(--s-6) var(--s-5);
+		border-top: 1px solid var(--hairline);
+		color: var(--text-2);
+		font-size: 0.875rem;
+		line-height: 1.6;
+	}
+	.grid {
+		display: grid;
+		gap: var(--s-5);
+	}
+	@media (min-width: 760px) {
+		.grid {
+			grid-template-columns: 2fr 1fr 1fr;
+		}
+	}
+	.name {
+		color: var(--text);
+		font-weight: 500;
+	}
+	.facts {
+		margin-top: var(--s-3);
+	}
+	.links {
+		display: grid;
+		gap: var(--s-2);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.links a {
+		color: var(--text-2);
+		text-decoration: none;
+	}
+	.links a:hover {
+		color: var(--text);
+		text-decoration: underline;
+	}
+	.copy {
+		margin-top: var(--s-6);
+		color: var(--text-2);
+		font-size: 0.8125rem;
+	}
+</style>

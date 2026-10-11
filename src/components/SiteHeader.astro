@@ -1,0 +1,175 @@
+---
+// 全站頁首：logo、主要導覽、語系切換與主題切換。固定在頂端，底色半透明加模糊，
+// 底部一條細框線（brand-spec §8）。導覽項目由各頁面傳入，連結目標不在這裡決定。
+//
+// 改版過渡期間，首頁先用這個元件；其他頁面在各自的改版階段（#31、#32）換過來後，
+// 舊的 PortalHeader 才會刪除。
+import ThemeToggle from "./ThemeToggle.astro";
+import { COMPANY, type Locale } from "../consts";
+import { t } from "../i18n/ui";
+
+interface NavItem {
+	href: string;
+	label: string;
+	current?: boolean;
+}
+
+interface Props {
+	locale: Locale;
+	homeHref: string;
+	switchHref: string;
+	nav: NavItem[];
+	navLabel?: string;
+}
+
+const { locale, homeHref, switchHref, nav, navLabel } = Astro.props;
+---
+
+<header class="site-header">
+	<div class="wrap bar">
+		<a class="brand" href={homeHref} aria-label={`${COMPANY.nameEn}｜${COMPANY.nameZh}`}>
+			<img class="logo logo-light" src="/logo.svg" alt="" width="297" height="46" />
+			<img class="logo logo-dark" src="/logo-dark.svg" alt="" width="297" height="46" />
+		</a>
+
+		<nav class="nav" aria-label={navLabel}>
+			<ul>
+				{
+					nav.map((item) => (
+						<li>
+							<a href={item.href} aria-current={item.current ? "page" : undefined}>
+								{item.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+
+		<div class="tools">
+			<a class="chip lang" href={switchHref} aria-label={t(locale, "switch.aria")}>
+				{t(locale, "switch.to")}
+			</a>
+			<ThemeToggle locale={locale} />
+		</div>
+	</div>
+</header>
+
+<style>
+	.site-header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		border-bottom: 1px solid var(--hairline);
+		background: color-mix(in srgb, var(--ground) 80%, transparent);
+		-webkit-backdrop-filter: blur(12px);
+		backdrop-filter: blur(12px);
+	}
+
+	.bar {
+		display: grid;
+		grid-template-columns: auto 1fr auto;
+		grid-template-areas:
+			"brand . tools"
+			"nav nav nav";
+		align-items: center;
+		column-gap: var(--s-5);
+	}
+	@media (min-width: 960px) {
+		.bar {
+			grid-template-areas: "brand nav tools";
+			height: 64px;
+		}
+	}
+
+	.brand {
+		grid-area: brand;
+		display: flex;
+		align-items: center;
+		height: 56px;
+	}
+	.logo {
+		width: auto;
+		height: 22px;
+	}
+	.logo-dark,
+	:global(:root[data-theme="dark"]) .logo-light {
+		display: none;
+	}
+	:global(:root[data-theme="dark"]) .logo-dark {
+		display: block;
+	}
+
+	.nav {
+		grid-area: nav;
+		/* 手機上導覽排成第二行，項目多時可以橫向捲動。 */
+		margin-inline: calc(-1 * var(--gutter));
+		padding-inline: var(--gutter);
+		overflow-x: auto;
+		scrollbar-width: none;
+	}
+	.nav ul {
+		display: flex;
+		gap: var(--s-1);
+		margin: 0;
+		padding: 0 0 var(--s-2);
+		list-style: none;
+	}
+	@media (min-width: 960px) {
+		.nav {
+			margin: 0;
+			padding: 0;
+		}
+		.nav ul {
+			justify-content: center;
+			padding: 0;
+		}
+	}
+	.nav a {
+		display: inline-flex;
+		align-items: center;
+		height: 32px;
+		padding-inline: var(--s-3);
+		border-radius: var(--radius-s);
+		color: var(--text-2);
+		font-size: 0.875rem;
+		font-weight: 500;
+		text-decoration: none;
+		white-space: nowrap;
+		transition:
+			color 150ms ease-out,
+			background-color 150ms ease-out;
+	}
+	.nav a:hover {
+		background: var(--surface-2);
+		color: var(--text);
+	}
+	/* 目前所在頁面：品牌方塊記號。 */
+	.nav a[aria-current="page"] {
+		color: var(--text);
+	}
+	.nav a[aria-current="page"]::before {
+		content: "";
+		width: 6px;
+		height: 6px;
+		margin-right: var(--s-2);
+		background: var(--accent);
+	}
+
+	.tools {
+		grid-area: tools;
+		display: flex;
+		align-items: center;
+		gap: var(--s-2);
+	}
+	.lang {
+		text-decoration: none;
+		transition:
+			color 150ms ease-out,
+			border-color 150ms ease-out;
+	}
+	.lang:hover {
+		border-color: color-mix(in srgb, var(--text) 24%, transparent);
+		color: var(--text);
+	}
+</style>
