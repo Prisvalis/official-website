@@ -136,8 +136,8 @@ h3 {
  * （keep-all）；某一段沒有標點、整段放不下時，才由 overflow-wrap 退回逐字斷行。
  * 長篇內文維持逐字換行，這是中文排版的常規；但不用 text-wrap: pretty，
  * 它為了避免孤行會把前一行提早結束，中文看起來反而像斷錯行。
- * 導言只對寬欄的頁面開頭套用；窄欄裡較長的導言若也只在標點換行，
- * 會在中英文之間的空格提早斷開。 */
+ * 導言等較長的段落不套用：每行都停在逗號會長短不一。開頭的導言改為逐字換行、
+ * 各行平均分配（balance）並左右對齊，右緣切齊、也不會留下很短的最後一行。 */
 :lang(zh) body {
 	text-wrap: wrap;
 }
@@ -147,8 +147,6 @@ h3 {
 		h2,
 		h3,
 		h4,
-		.page-head .lead,
-		.hero .lead,
 		.btn,
 		.chip,
 		.toc,
@@ -166,6 +164,10 @@ h3 {
 	) {
 	word-break: keep-all;
 	overflow-wrap: anywhere;
+}
+:lang(zh) :is(.page-head, .hero) .lead {
+	text-wrap: balance;
+	text-align: justify;
 }
 
 p {
