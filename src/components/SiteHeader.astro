@@ -2,8 +2,8 @@
 // 全站頁首：logo、主要導覽、語系切換與主題切換。固定在頂端，底色半透明加模糊，
 // 底部一條細框線（brand-spec §8）。導覽項目由各頁面傳入，連結目標不在這裡決定。
 //
-// 改版過渡期間，首頁先用這個元件；其他頁面在各自的改版階段（#31、#32）換過來後，
-// 舊的 PortalHeader 才會刪除。
+// Company of One 產品頁另外傳入 brandText（以文字取代公司 logo）、back（返回官網）
+// 與 cta（開始使用）。
 import ThemeToggle from "./ThemeToggle.astro";
 import { COMPANY, type Locale } from "../consts";
 import { t } from "../i18n/ui";
@@ -20,20 +20,44 @@ interface Props {
 	switchHref: string;
 	nav: NavItem[];
 	navLabel?: string;
+	/** 以文字取代公司 logo（產品頁用產品名稱）。 */
+	brandText?: string;
+	/** 導覽最前面的返回連結（產品頁返回官網）。 */
+	back?: { href: string; label: string };
+	/** 工具列上的主要行動按鈕。 */
+	cta?: { href: string; label: string };
 }
 
-const { locale, homeHref, switchHref, nav, navLabel } = Astro.props;
+const { locale, homeHref, switchHref, nav, navLabel, brandText, back, cta } = Astro.props;
 ---
 
 <header class="site-header">
 	<div class="wrap bar">
-		<a class="brand" href={homeHref} aria-label={`${COMPANY.nameEn}｜${COMPANY.nameZh}`}>
-			<img class="logo logo-light" src="/logo.svg" alt="" width="297" height="46" />
-			<img class="logo logo-dark" src="/logo-dark.svg" alt="" width="297" height="46" />
-		</a>
+		{
+			brandText ? (
+				<a class="brand brand-text" href={homeHref}>
+					{brandText}
+				</a>
+			) : (
+				<a class="brand" href={homeHref} aria-label={`${COMPANY.nameEn}｜${COMPANY.nameZh}`}>
+					<img class="logo logo-light" src="/logo.svg" alt="" width="297" height="46" />
+					<img class="logo logo-dark" src="/logo-dark.svg" alt="" width="297" height="46" />
+				</a>
+			)
+		}
 
 		<nav class="nav" aria-label={navLabel}>
 			<ul>
+				{
+					back && (
+						<li class="back">
+							<a href={back.href}>
+								<span aria-hidden="true">←</span>
+								{back.label}
+							</a>
+						</li>
+					)
+				}
 				{
 					nav.map((item) => (
 						<li>
@@ -51,6 +75,13 @@ const { locale, homeHref, switchHref, nav, navLabel } = Astro.props;
 				{t(locale, "switch.to")}
 			</a>
 			<ThemeToggle locale={locale} />
+			{
+				cta && (
+					<a class="btn btn-primary cta" href={cta.href}>
+						{cta.label}
+					</a>
+				)
+			}
 		</div>
 	</div>
 </header>
@@ -88,6 +119,14 @@ const { locale, homeHref, switchHref, nav, navLabel } = Astro.props;
 		display: flex;
 		align-items: center;
 		height: 56px;
+	}
+	.brand-text {
+		color: var(--text);
+		font-family: var(--font-display);
+		font-size: 1.0625rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		text-decoration: none;
 	}
 	.logo {
 		width: auto;
@@ -157,6 +196,18 @@ const { locale, homeHref, switchHref, nav, navLabel } = Astro.props;
 		height: 6px;
 		margin-right: var(--s-2);
 		background: var(--accent);
+	}
+
+	/* 返回官網：與導覽同一列，用細線與其他項目隔開。 */
+	.back {
+		margin-right: var(--s-2);
+		padding-right: var(--s-2);
+		border-right: 1px solid var(--hairline);
+	}
+	.cta {
+		height: 32px;
+		padding-inline: var(--s-3);
+		font-size: 0.875rem;
 	}
 
 	.tools {

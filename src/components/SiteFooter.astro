@@ -2,7 +2,6 @@
 // 全站頁尾：公司名稱、統一編號、聯絡方式與社群連結，資料取自 consts.ts。
 // 細框線分隔、小字、連結多（brand-spec §8）。
 //
-// 改版過渡期間，首頁先用這個元件；其他頁面換過來後，舊的 PortalFooter 才會刪除。
 import { COMPANY, SOCIAL, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 
@@ -10,9 +9,11 @@ interface Props {
 	locale: Locale;
 	/** 頁尾的站內連結，由各頁面傳入。 */
 	links?: { href: string; label: string }[];
+	/** 公司名稱下方的說明文字（產品頁放產品簡介）。 */
+	notes?: string[];
 }
 
-const { locale, links = [] } = Astro.props;
+const { locale, links = [], notes = [] } = Astro.props;
 const year = new Date().getFullYear();
 const external = t(locale, "link.external");
 ---
@@ -21,6 +22,7 @@ const external = t(locale, "link.external");
 	<div class="wrap grid">
 		<div class="who">
 			<p class="name">{COMPANY.nameZh}　{COMPANY.nameEn}</p>
+			{notes.map((n) => <p class="note">{n}</p>)}
 			<p class="facts">
 				<span class="chip">{t(locale, "taxId")} {COMPANY.taxId}</span>
 			</p>
@@ -77,6 +79,10 @@ const external = t(locale, "link.external");
 	.name {
 		color: var(--text);
 		font-weight: 500;
+	}
+	.note {
+		max-width: 36em;
+		margin-top: var(--s-2);
 	}
 	.facts {
 		margin-top: var(--s-3);

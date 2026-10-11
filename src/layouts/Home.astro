@@ -98,7 +98,7 @@ const nav = [
 					<header class="split-head">
 						<h2>{c.work.title}</h2>
 						<p class="lead">{c.work.lead}</p>
-						<ul class="work-links">
+						<ul class="mark-list work-links">
 							<li><a href={cooHref}>{c.work.links.product}</a></li>
 							<li>
 								<a href={APP_URL} target="_blank" rel="noopener noreferrer">
@@ -194,7 +194,7 @@ const nav = [
 					<header class="split-head">
 						<h2>{c.contact.title}</h2>
 						<p class="lead">{c.contact.body}</p>
-						<div class="actions">
+						<div class="actions contact-actions">
 							<a class="btn" href={`${contactHref}#form`}>{t(locale, "contact.form.title")}</a>
 						</div>
 					</header>
@@ -290,10 +290,7 @@ const nav = [
 			.hero-main .lead {
 				margin-top: var(--s-5);
 			}
-			.actions {
-				display: flex;
-				flex-wrap: wrap;
-				gap: var(--s-3);
+			.hero .actions {
 				margin-top: var(--s-6);
 			}
 
@@ -323,59 +320,11 @@ const nav = [
 				font-size: 0.875rem;
 			}
 
-			/* --- 左欄標題、右欄內容 --- */
-			.split {
-				display: grid;
-				gap: var(--s-6);
-			}
-			@media (min-width: 960px) {
-				.split {
-					grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-					gap: var(--s-7);
-				}
-				.split-head {
-					position: sticky;
-					top: 96px;
-					align-self: start;
-				}
-			}
-			.split-head .lead {
-				margin-top: var(--s-4);
-				font-size: 1rem;
-			}
-			.split-body {
-				display: grid;
-				gap: var(--s-5);
-				align-content: start;
-			}
-
 			.work-links {
-				display: grid;
-				gap: var(--s-2);
-				margin: var(--s-5) 0 0;
-				padding: 0;
-				list-style: none;
-				font-size: 0.9375rem;
+				margin-top: var(--s-5);
 			}
-			.work-links li {
-				display: flex;
-				align-items: baseline;
-			}
-			.work-links li::before {
-				content: "";
-				flex: none;
-				width: 6px;
-				height: 6px;
-				margin-right: var(--s-3);
-				background: var(--accent);
-				transform: translateY(-2px);
-			}
-
-			.table-scroll {
-				overflow-x: auto;
-			}
-			.table-scroll table {
-				min-width: 36em;
+			.contact-actions {
+				margin-top: var(--s-5);
 			}
 
 			/* --- 流程：橫向編號 --- */

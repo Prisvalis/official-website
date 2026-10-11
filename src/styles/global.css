@@ -220,6 +220,96 @@ tbody th {
 	line-height: 1.75;
 }
 
+/* 左欄標題、右欄內容。桌機上左欄跟著捲動停在頁首下方。 */
+.split {
+	display: grid;
+	gap: var(--s-6);
+}
+@media (min-width: 960px) {
+	.split {
+		grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+		gap: var(--s-7);
+	}
+	.split-head {
+		position: sticky;
+		top: 96px;
+		align-self: start;
+	}
+}
+.split-head .lead {
+	margin-top: var(--s-4);
+	font-size: 1rem;
+}
+.split-body {
+	display: grid;
+	gap: var(--s-5);
+	align-content: start;
+}
+
+/* 子頁開頭：標題、導言與頁內目錄。 */
+.page-head {
+	padding-block: var(--s-7) var(--s-6);
+}
+@media (min-width: 760px) {
+	.page-head {
+		padding-block: var(--s-8) var(--s-7);
+	}
+}
+.page-head .lead {
+	margin-top: var(--s-5);
+}
+.toc {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--s-2);
+	margin: var(--s-6) 0 0;
+	padding: 0;
+	list-style: none;
+}
+.toc a {
+	text-decoration: none;
+}
+.toc a:hover {
+	border-color: color-mix(in srgb, var(--text) 24%, transparent);
+	color: var(--text);
+}
+
+.actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--s-3);
+}
+
+/* 寬表格在窄螢幕上橫向捲動，不撐開頁面。 */
+.table-scroll {
+	overflow-x: auto;
+}
+.table-scroll table {
+	min-width: 36em;
+}
+
+/* 品牌方塊記號開頭的清單。 */
+.mark-list {
+	display: grid;
+	gap: var(--s-2);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.mark-list li {
+	display: flex;
+	align-items: baseline;
+}
+.mark-list li::before {
+	content: "";
+	flex: none;
+	width: 6px;
+	height: 6px;
+	margin-right: var(--s-3);
+	background: var(--accent);
+	transform: translateY(-2px);
+}
+
 /* --- 小元件 ---------------------------------------------------------- */
 
 .btn {

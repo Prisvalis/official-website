@@ -1,0 +1,29 @@
+---
+// 產品截圖的位置。站方提供真實截圖之前一律顯示標明的佔位（brand-spec §11），
+// 不用 HTML 或 CSS 拼出假介面。截圖到了之後，把 src 傳進來就會換成圖片。
+import type { Locale } from "../../consts";
+
+interface Props {
+	locale: Locale;
+	/** 畫面名稱，佔位上顯示「[名稱 截圖]」。 */
+	label: string;
+	/** 給螢幕閱讀器的畫面說明；不傳就用 label。 */
+	aria?: string;
+	/** 真實截圖的路徑（public/coo/ 底下）。 */
+	src?: string;
+	class?: string;
+}
+
+const { locale, label, aria = label, src, class: className } = Astro.props;
+const text = locale === "en" ? `[${label} screenshot, 16:9]` : `[${label} 截圖 16:9]`;
+---
+
+{
+	src ? (
+		<img class:list={["shot", className]} src={src} alt={aria} loading="lazy" />
+	) : (
+		<div class:list={["placeholder", className]} role="img" aria-label={aria}>
+			{text}
+		</div>
+	)
+}
