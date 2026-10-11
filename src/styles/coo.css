@@ -48,7 +48,8 @@ main.coo:focus {
 	font-size: 0.875rem;
 }
 
-/* --- 開頭：左大標題、右導言，底部一張被下一區塊截斷的產品截圖（brand-spec §9-5）--- */
+/* --- 開頭：大標題占整行、導言在下方，底部一張真實的產品截圖（brand-spec §9-5）---
+ * 標題不放進左欄：左欄只有 4/12 寬，大字級的中文標題會被拆得很碎。 */
 
 .coo .hero {
 	padding-top: var(--s-7);
@@ -59,11 +60,18 @@ main.coo:focus {
 		padding-top: var(--s-8);
 	}
 }
+.coo .hero .cols {
+	grid-template-columns: minmax(0, 1fr);
+	gap: var(--s-5);
+}
+.coo .hero h1 {
+	max-width: 16em;
+}
 .hero-body {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
 	gap: var(--s-5);
-	align-content: end;
+	max-width: 44em;
 }
 .hero-body .actions {
 	margin-top: var(--s-2);
@@ -75,12 +83,9 @@ main.coo:focus {
 .coo .hero:not(:has(.hero-shot)) {
 	padding-bottom: var(--s-7);
 }
+/* 截圖照原比例顯示；下緣不畫框線、不留圓角，像被下一個區塊截斷。 */
 .hero-shot {
 	margin-top: var(--s-7);
-	aspect-ratio: 16 / 7;
-	/* 截圖比 16:7 高，裁掉下方而不是拉伸，像被下一個區塊截斷。 */
-	object-fit: cover;
-	object-position: left top;
 	border-bottom: 0;
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
