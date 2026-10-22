@@ -136,8 +136,10 @@ h3 {
  * （keep-all）；某一段沒有標點、整段放不下時，才由 overflow-wrap 退回逐字斷行。
  * 長篇內文維持逐字換行，這是中文排版的常規；但不用 text-wrap: pretty，
  * 它為了避免孤行會把前一行提早結束，中文看起來反而像斷錯行。
- * 導言等較長的段落不套用：每行都停在逗號會長短不一。開頭的導言改為逐字換行、
- * 各行平均分配（balance）並左右對齊，右緣切齊、也不會留下很短的最後一行。 */
+ * 導言等較長的段落不套用：每行都停在逗號會長短不一。導言改為逐字換行、
+ * 各行平均分配（balance），不會留下很短的最後一行。不要再加 text-align: justify：
+ * balance 排出的行都比欄寬短，justify 會把最後一行以外的行拉到滿版，
+ * 字距變得前寬後窄。 */
 :lang(zh) body {
 	text-wrap: wrap;
 }
@@ -165,9 +167,8 @@ h3 {
 	word-break: keep-all;
 	overflow-wrap: anywhere;
 }
-:lang(zh) :is(.page-head, .hero) .lead {
+:lang(zh) .lead {
 	text-wrap: balance;
-	text-align: justify;
 }
 
 p {
