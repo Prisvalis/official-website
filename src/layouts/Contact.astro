@@ -13,6 +13,7 @@ import { COMPANY, CONTACT, CONTACT_CATEGORIES, SITE, SOCIAL, type Locale } from 
 import { t } from "../i18n/ui";
 import { cooUrl, COO_NAME } from "../i18n/coo";
 import { about, ABOUT_PATH } from "../i18n/about";
+import { news, NEWS_PATH } from "../i18n/news";
 
 interface Props {
 	locale: Locale;
@@ -40,6 +41,7 @@ const homeHref = locale === "en" ? "/en/" : "/";
 const nav = [
 	{ href: homeHref, label: t(locale, "contact.back") },
 	{ href: ABOUT_PATH[locale], label: about[locale].navLabel },
+	{ href: NEWS_PATH[locale], label: news[locale].navLabel },
 	{ href: cooUrl(locale, "/"), label: COO_NAME },
 	{ href: PATHS[locale], label: t(locale, "contact.heading"), current: true },
 ];
@@ -263,6 +265,7 @@ const nav = [
 			links={[
 				{ href: homeHref, label: t(locale, "contact.back") },
 				{ href: ABOUT_PATH[locale], label: about[locale].navLabel },
+				{ href: NEWS_PATH[locale], label: news[locale].navLabel },
 				{ href: cooUrl(locale, "/"), label: COO_NAME },
 			]}
 		/>

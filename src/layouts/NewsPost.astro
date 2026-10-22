@@ -1,0 +1,199 @@
+---
+// 新聞與公告內文。文章在 src/content/news/<語系>/<slug>.md。
+//
+// 設計依 docs/brand-spec.md（Linear recipe）：開頭是標題與導言（取自 description），
+// 之後是沿革頁同一套「左欄中繼資料、右欄內文」，參考資料用品牌方塊清單列在最後。
+import { render } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import MourningNotice from "../components/MourningNotice.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import { SITE, LOCALE_HOME_PATH, COMPANY, type Locale } from "../consts";
+import { t } from "../i18n/ui";
+import { cooUrl, COO_NAME } from "../i18n/coo";
+import { about, ABOUT_PATH } from "../i18n/about";
+import { news, NEWS_PATH } from "../i18n/news";
+import { slugOf, isoDate, type NewsEntry } from "../lib/news";
+
+interface Props {
+	locale: Locale;
+	entry: NewsEntry;
+}
+
+const { locale, entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, description, date, category, sources } = entry.data;
+
+const otherLocale: Locale = locale === "zh-Hant" ? "en" : "zh-Hant";
+const slug = slugOf(entry);
+const pathOf = (l: Locale) => `${NEWS_PATH[l]}${slug}/`;
+const alternates: Record<Locale, string> = {
+	"zh-Hant": new URL(pathOf("zh-Hant"), SITE).href,
+	en: new URL(pathOf("en"), SITE).href,
+};
+const homeHref = LOCALE_HOME_PATH[locale];
+const contactHref = locale === "en" ? "/en/contact/" : "/contact/";
+const external = t(locale, "link.external");
+const c = news[locale];
+const day = isoDate(date);
+
+const nav = [
+	{ href: homeHref, label: t(locale, "contact.back") },
+	{ href: ABOUT_PATH[locale], label: about[locale].navLabel },
+	{ href: NEWS_PATH[locale], label: c.navLabel, current: true },
+	{ href: cooUrl(locale, "/"), label: COO_NAME },
+	{ href: contactHref, label: t(locale, "nav.contact") },
+];
+
+const metaTitle = `${title}｜${locale === "en" ? COMPANY.nameEn : `${COMPANY.nameZh} ${COMPANY.shortEn}`}`;
+
+const articleLd = {
+	"@context": "https://schema.org",
+	"@type": "NewsArticle",
+	headline: title,
+	description,
+	datePublished: day,
+	inLanguage: t(locale, "html.lang"),
+	mainEntityOfPage: alternates[locale],
+	publisher: { "@type": "Organization", name: COMPANY.nameEn, url: SITE },
+};
+---
+
+<!doctype html>
+<html lang={t(locale, "html.lang")}>
+	<head>
+		<BaseHead locale={locale} title={metaTitle} description={description} alternates={alternates} />
+		<script type="application/ld+json" set:html={JSON.stringify(articleLd)} />
+	</head>
+	<body>
+		<MourningNotice locale={locale} />
+		<SiteHeader locale={locale} homeHref={homeHref} switchHref={pathOf(otherLocale)} nav={nav} />
+
+		<main id="main">
+			<article>
+				<header class="page-head">
+					<div class="wrap">
+						<h1 class="rise">{title}</h1>
+						<p class="lead measure rise rise-2">{description}</p>
+					</div>
+				</header>
+
+				<section class="section">
+					<div class="wrap split">
+						<aside class="split-head">
+							<dl class="meta">
+								<dt>{c.published}</dt>
+								<dd><time class="date" datetime={day}>{day}</time></dd>
+								<dt>{c.category}</dt>
+								<dd><span class="chip">{c.categories[category]}</span></dd>
+							</dl>
+							<p class="back"><a href={NEWS_PATH[locale]}>← {c.backToList}</a></p>
+						</aside>
+						<div class="split-body">
+							<div class="post measure">
+								<Content />
+							</div>
+							{
+								sources.length > 0 && (
+									<div class="sources measure">
+										<h2>{c.sources}</h2>
+										<ul class="mark-list">
+											{sources.map((s) => (
+												<li>
+													<a href={s.url} target="_blank" rel="noopener noreferrer">
+														{s.title}
+														<span class="sr-only">{external}</span>
+													</a>
+												</li>
+											))}
+										</ul>
+									</div>
+								)
+							}
+						</div>
+					</div>
+				</section>
+			</article>
+		</main>
+
+		<SiteFooter
+			locale={locale}
+			links={[
+				{ href: homeHref, label: t(locale, "contact.back") },
+				{ href: NEWS_PATH[locale], label: c.navLabel },
+				{ href: contactHref, label: t(locale, "nav.contact") },
+			]}
+		/>
+
+		<style>
+			.meta {
+				display: grid;
+				grid-template-columns: auto 1fr;
+				gap: var(--s-3) var(--s-4);
+				align-items: center;
+				margin: 0;
+				font-size: 0.875rem;
+			}
+			.meta dt {
+				color: var(--text-2);
+			}
+			.meta dd {
+				margin: 0;
+			}
+			.date {
+				font-family: var(--font-mono);
+			}
+			.back {
+				margin-top: var(--s-5);
+				font-size: 0.875rem;
+			}
+
+			/* Markdown 內文：元素沒有 scoped 屬性，要用 :global。
+			   內文的 h2 在語意上是第二層，字級用 h3 的大小，不跟頁面的 h2 一樣大。 */
+			.post {
+				display: grid;
+				gap: var(--s-4);
+				font-size: 1.0625rem;
+			}
+			.post :global(h2),
+			.sources h2 {
+				font-size: 1.25rem;
+				line-height: 1.4;
+				letter-spacing: 0;
+			}
+			.post :global(h2:not(:first-child)) {
+				margin-top: var(--s-5);
+			}
+			.post :global(ul) {
+				display: grid;
+				gap: var(--s-2);
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			.post :global(li) {
+				display: flex;
+				align-items: baseline;
+			}
+			/* 與 .mark-list 相同的品牌方塊記號。 */
+			.post :global(li)::before {
+				content: "";
+				flex: none;
+				width: 6px;
+				height: 6px;
+				margin-right: var(--s-3);
+				background: var(--accent);
+				transform: translateY(-2px);
+			}
+
+			.sources {
+				display: grid;
+				gap: var(--s-4);
+				padding-top: var(--s-5);
+				border-top: 1px solid var(--hairline);
+				color: var(--text-2);
+				font-size: 0.9375rem;
+			}
+		</style>
+	</body>
+</html>

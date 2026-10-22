@@ -1,0 +1,148 @@
+---
+// 新聞與公告列表。介面文字在 src/i18n/news.ts，文章在 src/content/news/。
+//
+// 設計依 docs/brand-spec.md（Linear recipe）：開頭與沿革頁同一套標題加導言，
+// 列表是只有橫向細框線的表格，日期用等寬字。不做卡片。
+import BaseHead from "../components/BaseHead.astro";
+import MourningNotice from "../components/MourningNotice.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import { SITE, LOCALE_HOME_PATH, type Locale } from "../consts";
+import { t } from "../i18n/ui";
+import { cooUrl, COO_NAME } from "../i18n/coo";
+import { about, ABOUT_PATH } from "../i18n/about";
+import { news, NEWS_PATH } from "../i18n/news";
+import { getNews, slugOf, isoDate } from "../lib/news";
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const otherLocale: Locale = locale === "zh-Hant" ? "en" : "zh-Hant";
+const alternates: Record<Locale, string> = {
+	"zh-Hant": new URL(NEWS_PATH["zh-Hant"], SITE).href,
+	en: new URL(NEWS_PATH.en, SITE).href,
+};
+const homeHref = LOCALE_HOME_PATH[locale];
+const contactHref = locale === "en" ? "/en/contact/" : "/contact/";
+
+const c = news[locale];
+const entries = await getNews(locale);
+
+const nav = [
+	{ href: homeHref, label: t(locale, "contact.back") },
+	{ href: ABOUT_PATH[locale], label: about[locale].navLabel },
+	{ href: NEWS_PATH[locale], label: c.navLabel, current: true },
+	{ href: cooUrl(locale, "/"), label: COO_NAME },
+	{ href: contactHref, label: t(locale, "nav.contact") },
+];
+---
+
+<!doctype html>
+<html lang={t(locale, "html.lang")}>
+	<head>
+		<BaseHead locale={locale} title={c.metaTitle} description={c.metaDescription} alternates={alternates} />
+	</head>
+	<body>
+		<MourningNotice locale={locale} />
+		<SiteHeader locale={locale} homeHref={homeHref} switchHref={NEWS_PATH[otherLocale]} nav={nav} />
+
+		<main id="main">
+			<header class="page-head">
+				<div class="wrap">
+					<h1 class="rise">{c.h1}</h1>
+					<p class="lead measure rise rise-2">{c.lead}</p>
+				</div>
+			</header>
+
+			<section class="section">
+				<div class="wrap">
+					{
+						entries.length === 0 ? (
+							<p class="lead">{c.empty}</p>
+						) : (
+							<div class="table-scroll">
+								<table>
+									<caption>{c.caption}</caption>
+									<thead>
+										<tr>
+											<th scope="col">{c.colDate}</th>
+											<th scope="col">{c.colCategory}</th>
+											<th scope="col">{c.colTitle}</th>
+										</tr>
+									</thead>
+									<tbody>
+										{entries.map((e) => (
+											<tr>
+												<td class="date">
+													<time datetime={isoDate(e.data.date)}>{isoDate(e.data.date)}</time>
+												</td>
+												<td class="cat">
+													<span class="chip">{c.categories[e.data.category]}</span>
+												</td>
+												<th scope="row">
+													<a href={`${NEWS_PATH[locale]}${slugOf(e)}/`}>{e.data.title}</a>
+												</th>
+											</tr>
+										))}
+									</tbody>
+								</table>
+							</div>
+						)
+					}
+				</div>
+			</section>
+		</main>
+
+		<SiteFooter
+			locale={locale}
+			links={[
+				{ href: homeHref, label: t(locale, "contact.back") },
+				{ href: ABOUT_PATH[locale], label: about[locale].navLabel },
+				{ href: cooUrl(locale, "/"), label: COO_NAME },
+				{ href: contactHref, label: t(locale, "nav.contact") },
+			]}
+		/>
+
+		<style>
+			/* 三欄都短，窄螢幕上不需要橫向捲動；標題欄自行換行。 */
+			.table-scroll table {
+				min-width: 0;
+			}
+			.date {
+				width: 8em;
+				color: var(--text-2);
+				font-family: var(--font-mono);
+				font-size: 0.875rem;
+				white-space: nowrap;
+			}
+			.cat {
+				width: 10em;
+			}
+			/* 手機上類別併到日期下方，標題才有足夠寬度。 */
+			@media (max-width: 599.98px) {
+				thead {
+					display: none;
+				}
+				tr {
+					display: grid;
+					grid-template-columns: auto 1fr;
+					column-gap: var(--s-3);
+					row-gap: var(--s-2);
+					padding-block: var(--s-3);
+					border-bottom: 1px solid var(--hairline);
+				}
+				td,
+				th {
+					width: auto;
+					padding: 0;
+					border: 0;
+				}
+				tbody th {
+					grid-column: 1 / -1;
+				}
+			}
+		</style>
+	</body>
+</html>
