@@ -74,7 +74,7 @@ const articleLd = {
 				<header class="page-head">
 					<div class="wrap">
 						<h1 class="rise">{title}</h1>
-						<p class="lead measure rise rise-2 description">{description}</p>
+						<p class="lead measure rise rise-2">{description}</p>
 					</div>
 				</header>
 
@@ -126,13 +126,6 @@ const articleLd = {
 		/>
 
 		<style>
-			/* 全站導言左右對齊（global.css），前提是導言只有中文。公告的導言常夾英數
-			   （CVE 編號、版本、日期），英數不能拆開，balance 排出的行比欄寬短，
-			   justify 再把多出的寬度全塞進英數旁的空白，字距會被拉開。這裡改回靠左，保留 balance。 */
-			:lang(zh) .page-head .lead.description {
-				text-align: start;
-			}
-
 			.meta {
 				display: grid;
 				grid-template-columns: auto 1fr;
