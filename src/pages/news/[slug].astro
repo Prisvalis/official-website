@@ -1,0 +1,12 @@
+---
+import NewsPost from "../../layouts/NewsPost.astro";
+import { newsPaths, type NewsEntry } from "../../lib/news";
+
+export async function getStaticPaths() {
+	return newsPaths("zh-Hant");
+}
+
+const { entry } = Astro.props as { entry: NewsEntry };
+---
+
+<NewsPost locale="zh-Hant" entry={entry} />

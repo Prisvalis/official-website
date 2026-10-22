@@ -13,6 +13,7 @@ import { SITE, LOCALE_HOME_PATH, type Locale } from "../consts";
 import { t } from "../i18n/ui";
 import { cooUrl, COO_NAME } from "../i18n/coo";
 import { about, ABOUT_PATH, FINDBIZ_URL, ETAX_URL } from "../i18n/about";
+import { news, NEWS_PATH } from "../i18n/news";
 
 interface Props {
 	locale: Locale;
@@ -43,6 +44,7 @@ const sections = [
 const nav = [
 	{ href: homeHref, label: t(locale, "contact.back") },
 	{ href: ABOUT_PATH[locale], label: c.navLabel, current: true },
+	{ href: NEWS_PATH[locale], label: news[locale].navLabel },
 	{ href: cooUrl(locale, "/"), label: COO_NAME },
 	{ href: contactHref, label: t(locale, "nav.contact") },
 ];
@@ -260,6 +262,7 @@ const nav = [
 			locale={locale}
 			links={[
 				{ href: homeHref, label: t(locale, "contact.back") },
+				{ href: NEWS_PATH[locale], label: news[locale].navLabel },
 				{ href: cooUrl(locale, "/"), label: COO_NAME },
 				{ href: contactHref, label: t(locale, "nav.contact") },
 			]}
